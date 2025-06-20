@@ -1,17 +1,30 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import bkgd2 from "../assets/regal.webp";
 import iskconlogo from "../assets/R.png";
 
-const navItems = [
-  { name: "Home", path: "/" },
-  { name: "About Us", path: "/about" },
-  { name: "Gurukul", path: "/gurukul" },
-  { name: "Yatras", path: "/yatras" },
-  { name: "Contact Us", path: "/contact" },
-];
-
 const Header = () => {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const toggleDropdown = () => {
+    setShowDropdown((prev) => !prev);
+  };
+
+  const closeDropdown = (e) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      setShowDropdown(false);
+    }
+  };
+
+  // Close dropdown on outside click
+  React.useEffect(() => {
+    document.addEventListener("click", closeDropdown);
+    return () => {
+      document.removeEventListener("click", closeDropdown);
+    };
+  }, []);
+
   return (
     <header
       className="relative text-white shadow-md"
@@ -30,7 +43,50 @@ const Header = () => {
           <div className="ml-10" />
 
           <nav className="flex items-center space-x-0 divide-x divide-white">
-            {navItems.map((item, index) => (
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                `px-6 text-lg font-semibold transition duration-300 transform hover:scale-110 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.9)] ${
+                  isActive ? "text-[#b34700]" : "text-white"
+                }`
+              }
+            >
+              Home
+            </NavLink>
+
+            <div className="relative px-6" ref={dropdownRef}>
+              <button
+                onClick={toggleDropdown}
+                className="text-lg font-semibold transition duration-300 transform hover:scale-110 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]"
+              >
+                About Us
+              </button>
+              {showDropdown && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-orange-300 text-orange-800 rounded-md shadow-lg z-50">
+                  <NavLink
+                    to="/about"
+                    onClick={() => setShowDropdown(false)}
+                    className="block px-4 py-2 hover:bg-orange-200 font-semibold"
+                  >
+                    About Us
+                  </NavLink>
+                  <NavLink
+                    to="/biography"
+                    onClick={() => setShowDropdown(false)}
+                    className="block px-4 py-2 hover:bg-orange-200 font-semibold"
+                  >
+                    About Govind Ghosh Das
+                  </NavLink>
+                </div>
+              )}
+            </div>
+
+            {/* Other NavLinks */}
+            {[
+              { name: "Gurukul", path: "/gurukul" },
+              { name: "Yatras", path: "/yatras" },
+              { name: "Contact Us", path: "/contact" },
+            ].map((item, index) => (
               <NavLink
                 key={index}
                 to={item.path}
@@ -46,6 +102,7 @@ const Header = () => {
           </nav>
         </div>
 
+        {/* Right Logo */}
         <div className="flex items-center">
           <img
             src={iskconlogo}

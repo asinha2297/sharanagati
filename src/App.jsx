@@ -6,6 +6,7 @@ import AboutUs from "./components/AboutUs";
 import Gurukul from "./components/Gurukul";
 import Yatras from "./components/Yatras";
 import ContactUs from "./components/ContactUs";
+import Biography from "./components/Biography";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />
+        <Route path="/biography" element={<Biography />} />
         <Route path="/gurukul" element={<Gurukul />} />
         <Route path="/yatras" element={<Yatras />} />
         <Route path="/contact" element={<ContactUs />} />
