@@ -17,7 +17,6 @@ const Header = () => {
     }
   };
 
-  // Close dropdown on outside click
   React.useEffect(() => {
     document.addEventListener("click", closeDropdown);
     return () => {
@@ -81,7 +80,6 @@ const Header = () => {
               )}
             </div>
 
-            {/* Other NavLinks */}
             {[
               { name: "Gurukul", path: "/gurukul" },
               { name: "Yatras", path: "/yatras" },
@@ -102,7 +100,6 @@ const Header = () => {
           </nav>
         </div>
 
-        {/* Right Logo */}
         <div className="flex items-center">
           <img
             src={iskconlogo}

@@ -7,6 +7,8 @@ import Gurukul from "./components/Gurukul";
 import Yatras from "./components/Yatras";
 import ContactUs from "./components/ContactUs";
 import Biography from "./components/Biography";
+import RegistrationForm from "./components/RegistrationForm";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -19,7 +21,9 @@ function App() {
         <Route path="/gurukul" element={<Gurukul />} />
         <Route path="/yatras" element={<Yatras />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/register" element={<RegistrationForm />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }

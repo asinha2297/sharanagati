@@ -46,3 +46,20 @@
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
+
+
+@keyframes bouncePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0px rgba(99, 102, 241, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.9);
+  }
+}
+
+.bounce-pulse {
+  animation: bouncePulse 1.5s infinite;
+}
+

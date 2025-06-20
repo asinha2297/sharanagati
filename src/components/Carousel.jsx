@@ -6,16 +6,21 @@ import "../styles/Carousel.css";
 
 const images = [
   {
-    src: "https://images.unsplash.com/photo-1604014238170-7ec19bde58ee?auto=format&fit=crop&w=1400&q=80",
-    caption: "Explore the Red Horizon",
+    src: "https://iskconnewtown.com/wp-content/uploads/2024/01/nitai-gauranga-iskconnewtown.jpg",
+    caption: "",
+  },
+
+  {
+    src: "https://iskconnewtown.com/wp-content/uploads/2024/02/ISKCON-Newtown-Mayapur-Kolkata-12-e1743884678688.jpeg",
+    caption: "",
   },
   {
-    src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80",
-    caption: "Black Serenity Ocean",
+    src: "https://iskconnewtown.com/wp-content/uploads/2024/01/nitai-gauranga-iskconnewtown.jpg",
+    caption: "",
   },
   {
-    src: "https://images.unsplash.com/photo-1604079628049-9434c3e92d19?auto=format&fit=crop&w=1400&q=80",
-    caption: "Blue Skies Calling",
+    src: "https://iskconnewtown.com/wp-content/uploads/2024/02/ISKCON-Newtown-Mayapur-Kolkata-12-e1743884678688.jpeg",
+    caption: "",
   },
 ];
 
