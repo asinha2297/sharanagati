@@ -77,7 +77,7 @@ export default function RegistrationForm() {
 
       if (res.ok) {
         setShowConfirmation(true);
-        setErrorMessage(""); // clear error
+        setErrorMessage("");
         setFormData({
           name: "",
           age: "",
@@ -92,6 +92,7 @@ export default function RegistrationForm() {
         setErrorMessage(errMsg || "Something went wrong. Please try again.");
       }
     } catch (err) {
+      console.error("Registration failed:", err);
       setErrorMessage("Network error. Please try again later.");
     }
   };
@@ -148,7 +149,10 @@ export default function RegistrationForm() {
             </h2>
 
             <div className="flex items-center space-x-4">
-              <label htmlFor="persons" className="w-40 text-white font-semibold">
+              <label
+                htmlFor="persons"
+                className="w-40 text-white font-semibold"
+              >
                 No. of Persons
               </label>
               <select
