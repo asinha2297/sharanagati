@@ -11,7 +11,7 @@ const Yatras = () => {
         Yatra
       </h1>
 
-      <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-8 text-center">
+      <div className="max-w-md mx-auto bg-orange-100 rounded-2xl shadow-lg p-8 text-center">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
           Ayodhya-Chitrakut Dham Yatra
         </h2>
@@ -23,7 +23,7 @@ const Yatras = () => {
 
         <button
           onClick={() => navigate("/register")}
-          className="bounce-pulse px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md shadow-md transition duration-300 cursor-pointer"
+          className="bounce-pulse px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md shadow-md transition duration-300 cursor-pointer"
         >
           Register for Yatra
         </button>
