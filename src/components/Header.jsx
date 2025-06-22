@@ -74,7 +74,7 @@ const Header = () => {
                     onClick={() => setShowDropdown(false)}
                     className="block px-4 py-2 hover:bg-orange-200 font-semibold"
                   >
-                    About Govind Ghosh Das
+                    About Shri Govind Ghosh Das
                   </NavLink>
                 </div>
               )}
