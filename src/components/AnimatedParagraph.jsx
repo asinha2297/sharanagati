@@ -1,7 +1,7 @@
 import React from "react";
 import { useInView } from "react-intersection-observer";
 
-const AnimatedParagraph = ({ text, index }) => {
+const AnimatedParagraph = ({ text, children, index }) => {
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.2,
@@ -16,12 +16,14 @@ const AnimatedParagraph = ({ text, index }) => {
   return (
     <div ref={ref} className={`paragraph ${animationClass}`}>
       <p>
-        {text.split("\n").map((line, i) => (
-          <React.Fragment key={i}>
-            {line}
-            {i < text.split("\n").length - 1 && <br />}
-          </React.Fragment>
-        ))}
+        {text !== undefined
+          ? text.split("\n").map((line, i) => (
+              <React.Fragment key={i}>
+                {line}
+                {i < text.split("\n").length - 1 && <br />}
+              </React.Fragment>
+            ))
+          : children}
       </p>
     </div>
   );

@@ -98,7 +98,7 @@ export default function RegistrationForm() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4 py-10 bg-cover bg-center"
+      className="min-h-screen flex items-center justify-center px-4 py-10 bg-cover bg-center bg-fixed"
       style={{
         backgroundImage: `url(${img})`,
         fontFamily: "'Poppins', sans-serif",
