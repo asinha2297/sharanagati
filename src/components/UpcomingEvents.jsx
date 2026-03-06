@@ -334,12 +334,6 @@ const vaishnavaEvents = [
     description: "Festival of chariots; celebration of Lord Jagannath.",
   },
   {
-    date: "22",
-    month: "JUN",
-    title: "Guru Purnima",
-    description: "Celebration of spiritual teachers; special prayers.",
-  },
-  {
     date: "06",
     month: "JUL",
     title: "Kanha Jayanti",
