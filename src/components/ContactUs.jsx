@@ -16,7 +16,7 @@ const ContactUs = () => {
             📞 <strong>Phone:</strong> +91 XXXXXXXXXX
           </p>
           <p>
-            📧 <strong>Email:</strong> XXXXXXXX@gmail.com
+            📧 <strong>Email:</strong> sharanagati.hk@gmail.com
           </p>
           <p>
             🕒 <strong>Timings:</strong> Mon–Sun: 7:00 AM – 8:30 PM

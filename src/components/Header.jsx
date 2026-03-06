@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import bkgd2 from "../assets/regal.webp";
 import iskconlogo from "../assets/R.png";
+import sharanagatilogo from "../assets/MainLogo2.jpg";
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -38,7 +39,7 @@ const Header = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
         <div className="flex items-center">
-          <img src="/logo.png" alt="Left Logo" className="h-12 w-auto" />
+          <img src={sharanagatilogo} alt="Left Logo" className="h-15 w-auto" />
           <div className="ml-10" />
 
           <nav className="flex items-center space-x-0 divide-x divide-white">
@@ -58,7 +59,7 @@ const Header = () => {
                 onClick={toggleDropdown}
                 className="text-lg font-semibold transition duration-300 transform hover:scale-110 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]"
               >
-                About Us
+                About
               </button>
               {showDropdown && (
                 <div className="absolute top-full left-0 mt-2 w-64 bg-orange-300 text-orange-800 rounded-md shadow-lg z-50">
@@ -67,14 +68,14 @@ const Header = () => {
                     onClick={() => setShowDropdown(false)}
                     className="block px-4 py-2 hover:bg-orange-200 font-semibold"
                   >
-                    About Us
+                    Mission & Vision
                   </NavLink>
                   <NavLink
                     to="/biography"
                     onClick={() => setShowDropdown(false)}
                     className="block px-4 py-2 hover:bg-orange-200 font-semibold"
                   >
-                    About Shri Govind Ghosh Das
+                    Our Spiritual Guide
                   </NavLink>
                 </div>
               )}

@@ -9,10 +9,10 @@ const Footer = () => {
           <a href="#" className="hover:scale-120 transition-transform">
             <FaFacebookF size={24} />
           </a>
-          <a href="#" className="hover:scale-120 transition-transform">
+          <a href="https://www.instagram.com/sharanagati_team?igsh=MTVnYmZpd3htbmhlYw==" className="hover:scale-120 transition-transform" target="_blank" rel="noopener noreferrer">
             <FaInstagram size={24} />
           </a>
-          <a href="#" className="hover:scale-120 transition-transform">
+          <a href="https://www.youtube.com/@Sharanagati" className="hover:scale-120 transition-transform" target="_blank" rel="noopener noreferrer">
             <FaYoutube size={24} />
           </a>
         </div>
