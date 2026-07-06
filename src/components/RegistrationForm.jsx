@@ -99,25 +99,24 @@ export default function RegistrationForm() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4 py-10 bg-cover bg-center bg-fixed"
+      className="min-h-screen flex items-center justify-center px-4 py-10 bg-[#FFF7E0]"
       style={{
-        backgroundImage: `url(${img})`,
         fontFamily: "'Poppins', sans-serif",
       }}
     >
       {showConfirmation ? (
-        <div className="bg-orange-100 rounded-2xl p-10 shadow-2xl max-w-md w-full text-center space-y-6">
-          <h1 className="text-3xl font-semibold text-orange-600">
+        <div className="bg-[#FFF7E0] rounded-2xl p-10 shadow-2xl max-w-md w-full text-center space-y-6 border border-[#D4AF37]/20">
+          <h1 className="text-3xl font-semibold text-[#1E3A8A]">
             || Hare Krishna ||
           </h1>
-          <p className="text-xl font-medium text-gray-800">
+          <p className="text-xl font-medium text-[#475569]">
             Thanks for the Registration
           </p>
           <button
             onClick={() => {
               setShowConfirmation(false);
             }}
-            className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+            className="mt-4 px-6 py-2 bg-[#F59E0B] text-white rounded-lg hover:bg-[#d97706]"
           >
             Close
           </button>
@@ -136,22 +135,22 @@ export default function RegistrationForm() {
           </button>
         </div>
       ) : (
-        <div className="w-full max-w-xl bg-white/40 backdrop-blur-md rounded-2xl border border-white/40 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
-          <div className="p-3 text-center border-b-2 border-white/60">
-            <h1 className="text-3xl sm:text-4xl font-semibold text-white tracking-wide">
-              Ayodhya & Chitrakut Dham Yatra 2025
+        <div className="w-full max-w-xl bg-white/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/20 shadow-[0_8px_32px_0_rgba(30,58,138,0.12)]">
+          <div className="p-3 text-center border-b-2 border-[#D4AF37]/30">
+            <h1 className="text-3xl sm:text-4xl font-semibold text-[#1E3A8A] tracking-wide">
+              Jaipur Dham Yatra 2026
             </h1>
           </div>
 
           <form onSubmit={handleSubmit} className="p-5 space-y-6">
-            <h2 className="text-2xl font-semibold text-white mb-4 text-center">
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] mb-4 text-center">
               Registration Form
             </h2>
 
             <div className="flex items-center space-x-4">
               <label
                 htmlFor="persons"
-                className="w-40 text-white font-semibold"
+                className="w-40 text-[#1E3A8A] font-semibold"
               >
                 No. of Persons
               </label>
@@ -230,10 +229,10 @@ export default function RegistrationForm() {
             {additionalPersons.map((person, index) => (
               <div
                 key={index}
-                className="p-4 mt-4 border border-white/30 bg-white/30 rounded-lg space-y-3"
+                className="p-4 mt-4 border border-[#D4AF37]/20 bg-white/90 rounded-lg space-y-3"
               >
-                <h3 className="text-lg font-semibold text-white text-center">
-                  Add Details {index + 2} Person
+                <h3 className="text-lg font-semibold text-[#1E3A8A] text-center">
+                  Add Details {index + 2} Devotee
                 </h3>
                 <input
                   type="text"
@@ -272,7 +271,7 @@ export default function RegistrationForm() {
             <div className="flex justify-center mt-6">
               <button
                 type="submit"
-                className="px-8 py-3 bg-gray-800 hover:bg-gray-900 text-white rounded-lg font-semibold tracking-wide shadow-lg cursor-pointer"
+                className="px-8 py-3 bg-[#F59E0B] hover:bg-[#d97706] text-white rounded-lg font-semibold tracking-wide shadow-lg cursor-pointer"
               >
                 Submit
               </button>

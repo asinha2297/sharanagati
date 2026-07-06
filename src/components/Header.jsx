@@ -1,86 +1,43 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import bkgd2 from "../assets/regal.webp";
 import iskconlogo from "../assets/R.png";
 import sharanagatilogo from "../assets/MainLogo2.jpg";
 
 const Header = () => {
-  const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef(null);
-
-  const toggleDropdown = () => {
-    setShowDropdown((prev) => !prev);
-  };
-
-  const closeDropdown = (e) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-      setShowDropdown(false);
-    }
-  };
-
-  React.useEffect(() => {
-    document.addEventListener("click", closeDropdown);
-    return () => {
-      document.removeEventListener("click", closeDropdown);
-    };
-  }, []);
+  const getNavLinkClass = (isActive) =>
+    `px-6 text-lg font-semibold transition duration-300 transform hover:scale-110 hover:text-[#1E3A8A] hover:drop-shadow-[0_0_8px_rgba(30,58,138,0.2)] ${
+      isActive
+        ? "text-[#1E3A8A] border border-[#1E3A8A] rounded-full bg-[#EFF6FF]"
+        : "text-[#475569]"
+    }`;
 
   return (
-    <header
-      className="relative text-white shadow-md"
-      style={{
-        backgroundImage: `url(${bkgd2})`,
-        backgroundRepeat: "repeat",
-        backgroundPosition: "center",
-        backgroundSize: "100px 100px",
-      }}
-    >
-      <div className="absolute inset-0 bg-orange-400/100 mix-blend-multiply pointer-events-none"></div>
-
+    <header className="relative text-[#1E3A8A] shadow-md bg-[#FFF7E0] border-b-4 border-[#F59E0B]">
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
         <div className="flex items-center">
-          <img src={sharanagatilogo} alt="Left Logo" className="h-15 w-auto" />
+          <img src={sharanagatilogo} alt="Left Logo" className="h-20 w-auto" />
           <div className="ml-10" />
 
           <nav className="flex items-center space-x-0 divide-x divide-white">
             <NavLink
               to="/"
-              className={({ isActive }) =>
-                `px-6 text-lg font-semibold transition duration-300 transform hover:scale-110 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.9)] ${
-                  isActive ? "text-[#b34700]" : "text-white"
-                }`
-              }
+              className={({ isActive }) => getNavLinkClass(isActive)}
             >
               Home
             </NavLink>
-
-            <div className="relative px-6" ref={dropdownRef}>
-              <button
-                onClick={toggleDropdown}
-                className="text-lg font-semibold transition duration-300 transform hover:scale-110 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]"
-              >
-                About
-              </button>
-              {showDropdown && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-orange-300 text-orange-800 rounded-md shadow-lg z-50">
-                  <NavLink
-                    to="/about"
-                    onClick={() => setShowDropdown(false)}
-                    className="block px-4 py-2 hover:bg-orange-200 font-semibold"
-                  >
-                    Mission & Vision
-                  </NavLink>
-                  <NavLink
-                    to="/biography"
-                    onClick={() => setShowDropdown(false)}
-                    className="block px-4 py-2 hover:bg-orange-200 font-semibold"
-                  >
-                    Our Spiritual Guide
-                  </NavLink>
-                </div>
-              )}
-            </div>
-
+            <NavLink
+              to="/about"
+              className={({ isActive }) => getNavLinkClass(isActive)}
+            >
+              Mission & Vision
+            </NavLink>
+            <NavLink
+              to="/biography"
+              className={({ isActive }) => getNavLinkClass(isActive)}
+            >
+              Our Spiritual Guide
+            </NavLink>
             {[
               { name: "Gurukul", path: "/gurukul" },
               { name: "Yatras", path: "/yatras" },
@@ -89,11 +46,7 @@ const Header = () => {
               <NavLink
                 key={index}
                 to={item.path}
-                className={({ isActive }) =>
-                  `px-6 text-lg font-semibold transition duration-300 transform hover:scale-110 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.9)] ${
-                    isActive ? "text-[#b34700]" : "text-white"
-                  }`
-                }
+                className={({ isActive }) => getNavLinkClass(isActive)}
               >
                 {item.name}
               </NavLink>
@@ -105,7 +58,7 @@ const Header = () => {
           <img
             src={iskconlogo}
             alt="ISKCON Logo"
-            className="h-14 w-auto pl-4"
+            className="h-20 w-auto pl-4"
           />
         </div>
       </div>

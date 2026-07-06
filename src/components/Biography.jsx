@@ -27,9 +27,9 @@ const Biography = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50 p-6 md:p-12 poppins-font">
+    <div className="min-h-screen bg-gradient-to-br from-[#FFF7E0] via-[#FEF3C7] to-[#F7E2A5] p-6 md:p-12 poppins-font">
       <div className="max-w-5xl mx-auto text-center">
-        <h1 className="text-4xl font-bold text-orange-600 mb-4">
+        <h1 className="text-4xl font-bold text-[#1E3A8A] mb-4">
           Shri Govind Ghosh Das
         </h1>
         <p className="text-lg text-gray-600 mb-10">
@@ -66,9 +66,9 @@ const Biography = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: paragraphs.length * 0.6 + 0.4, duration: 1.2 }}
             viewport={{ once: true }}
-            className="bg-orange-100 p-6 rounded-xl shadow-md mt-10"
+            className="bg-white/85 border border-[#D4AF37]/20 p-6 rounded-xl shadow-md mt-10"
           >
-            <h2 className="text-xl font-semibold text-orange-700 mb-2">
+            <h2 className="text-xl font-semibold text-[#F59E0B] mb-2">
               Mission & Activities
             </h2>
             <ul className="list-disc list-inside space-y-1 text-gray-800">

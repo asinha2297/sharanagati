@@ -428,11 +428,11 @@ export default function UpcomingSection() {
         `}
       </style>
 
-      <div className="min-h-screen text-orange-900 p-8 flex justify-center bg-gradient-to-b from-[#fdf6e3] via-[#f5e1c9] to-[#ede0d4]">
-        <div className="w-full max-w-6xl flex justify-start gap-8">
+      <div className="min-h-screen text-[#1E3A8A] p-8 flex justify-center bg-[#FFF7E0]">
+        <div className="w-full max-w-6xl flex flex-col lg:flex-row justify-start gap-8">
           {/* First Calendar */}
-          <div className="w-full md:w-1/2 h-[500px] rounded-xl shadow-2xl bg-gradient-to-b from-gray-100 to-gray-200 p-6 overflow-hidden relative">
-            <h2 className="text-3xl font-bold text-center mb-6">
+          <div className="w-full lg:w-1/2 h-[500px] rounded-xl border border-[#D4AF37]/20 bg-white p-6 overflow-hidden relative shadow-2xl">
+            <h2 className="text-3xl font-bold text-center mb-6 text-[#1E3A8A]">
               Ekadashi Calendar 2025
             </h2>
             <div className="overflow-y-auto h-[400px] pr-2 scroll-smooth custom-scrollbar">
@@ -440,29 +440,29 @@ export default function UpcomingSection() {
                 <div
                   key={index}
                   className={`flex items-start gap-4 mb-[3px] p-3 rounded-xl ${
-                    index % 2 === 0 ? "bg-orange-200/50" : "bg-gray-200/80"
+                    index % 2 === 0 ? "bg-[#FEF3C7]" : "bg-white/90"
                   }`}
                 >
                   <div
                     className={`w-16 h-16 flex flex-col items-center justify-center font-bold text-white text-sm ${
-                      index % 2 === 0 ? "bg-orange-500" : "bg-gray-500"
+                      index % 2 === 0 ? "bg-[#F59E0B]" : "bg-[#1E3A8A]"
                     }`}
                     style={{ borderRadius: "50%" }}
                   >
                     <span>{event.month}</span>
                     <span className="text-lg">{event.date}</span>
                   </div>
-                  <div className="text-orange-900">
+                  <div className="text-[#1E3A8A]">
                     <h3 className="text-lg font-semibold">{event.title}</h3>
-                    <p className="text-sm text-gray-800">{event.description}</p>
+                    <p className="text-sm text-[#475569]">{event.description}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
           {/* Second Calendar */}
-          <div className="w-full md:w-1/2 h-[500px] rounded-xl shadow-2xl bg-gradient-to-b from-gray-100 to-gray-200 p-6 overflow-hidden relative">
-            <h2 className="text-3xl font-bold text-center mb-6">
+          <div className="w-full lg:w-1/2 h-[500px] rounded-xl border border-[#D4AF37]/20 bg-white p-6 overflow-hidden relative shadow-2xl">
+            <h2 className="text-3xl font-bold text-center mb-6 text-[#1E3A8A]">
               Vaishnava Calendar 2025
             </h2>
             <div className="overflow-y-auto h-[400px] pr-2 scroll-smooth custom-scrollbar">
@@ -470,21 +470,21 @@ export default function UpcomingSection() {
                 <div
                   key={index}
                   className={`flex items-start gap-4 mb-[3px] p-3 rounded-xl ${
-                    index % 2 === 0 ? "bg-orange-200/50" : "bg-gray-200/80"
+                    index % 2 === 0 ? "bg-[#FEF3C7]" : "bg-white/90"
                   }`}
                 >
                   <div
                     className={`w-16 h-16 flex flex-col items-center justify-center font-bold text-white text-sm ${
-                      index % 2 === 0 ? "bg-orange-500" : "bg-gray-500"
+                      index % 2 === 0 ? "bg-[#F59E0B]" : "bg-[#1E3A8A]"
                     }`}
                     style={{ borderRadius: "50%" }}
                   >
                     <span>{event.month}</span>
                     <span className="text-lg">{event.date}</span>
                   </div>
-                  <div className="text-orange-900">
+                  <div className="text-[#1E3A8A]">
                     <h3 className="text-lg font-semibold">{event.title}</h3>
-                    <p className="text-sm text-gray-800">{event.description}</p>
+                    <p className="text-sm text-[#475569]">{event.description}</p>
                   </div>
                 </div>
               ))}

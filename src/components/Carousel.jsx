@@ -3,23 +3,26 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/Carousel.css";
+import Image1 from "../assets/NP-5.png";
+import Image2 from "../assets/IMG-20240911-WA0005.jpg";
+import Image3 from "../assets/IMG-20250119-WA0005.jpg";
+import Image4 from "../assets/IMG-20250119-WA0010.jpg";
 
 const images = [
   {
-    src: "https://iskconnewtown.com/wp-content/uploads/2024/01/nitai-gauranga-iskconnewtown.jpg",
-    caption: "",
-  },
-
-  {
-    src: "https://iskconnewtown.com/wp-content/uploads/2024/02/ISKCON-Newtown-Mayapur-Kolkata-12-e1743884678688.jpeg",
+    src: Image1,
     caption: "",
   },
   {
-    src: "https://iskconnewtown.com/wp-content/uploads/2024/01/nitai-gauranga-iskconnewtown.jpg",
+    src: Image2,
     caption: "",
   },
   {
-    src: "https://iskconnewtown.com/wp-content/uploads/2024/02/ISKCON-Newtown-Mayapur-Kolkata-12-e1743884678688.jpeg",
+    src: Image3,
+    caption: "",
+  },
+  {
+    src: Image4,
     caption: "",
   },
 ];
