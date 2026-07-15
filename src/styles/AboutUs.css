@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+.about-us-container {
+  padding: 2rem;
+  background-color: #FFF7E0;
+  font-family: 'Poppins', sans-serif;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #b35b00;
+  font-weight: 600;
+}
+
+
+.paragraph {
+  background: #FFF7E0;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), 0 6px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.8s ease, transform 1.8s ease;  
+}
+
+.paragraph p {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+
+.slide-in-left,
+.slide-in-right {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide-in-left {
+  animation: slideLeft 1.8s ease forwards;  
+}
+
+.slide-in-right {
+  animation: slideRight 1.8s ease forwards;  
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

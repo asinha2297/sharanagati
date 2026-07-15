@@ -1,0 +1,284 @@
+import React, { useState, useEffect } from "react";
+import img from "../assets/Image.jpg";
+
+export default function RegistrationForm() {
+  const [formData, setFormData] = useState({
+    name: "",
+    age: "",
+    gender: "",
+    mobile: "",
+    email: "",
+    persons: "1",
+  });
+
+  const [additionalPersons, setAdditionalPersons] = useState([]);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
+
+  const handleFormDataChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "persons") {
+      const count = parseInt(value) - 1;
+      const newPersons = Array(count)
+        .fill(0)
+        .map(
+          (_, idx) =>
+            additionalPersons[idx] || { name: "", age: "", gender: "" }
+        );
+      setAdditionalPersons(newPersons);
+    }
+
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleAdditionalChange = (index, e) => {
+    const { name, value } = e.target;
+    const updated = [...additionalPersons];
+    updated[index][name] = value;
+    setAdditionalPersons(updated);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const completeData = {
+      name: formData.name,
+      age: parseInt(formData.age),
+      gender: formData.gender,
+      mobile: formData.mobile,
+      email: formData.email,
+      persons: parseInt(formData.persons),
+      additionalPerson: additionalPersons.map((person, index) => ({
+        id: index + 1,
+        name: person.name,
+        age: parseInt(person.age),
+        gender: person.gender,
+      })),
+    };
+
+    try {
+      const res = await fetch("http://localhost:8080/api/user/registration", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(completeData),
+      });
+
+      if (res.ok) {
+        setShowConfirmation(true);
+        setErrorMessage("");
+        setFormData({
+          name: "",
+          age: "",
+          gender: "",
+          mobile: "",
+          email: "",
+          persons: "1",
+        });
+        setAdditionalPersons([]);
+      } else {
+        const errMsg = await res.text();
+        setErrorMessage(errMsg || "Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      console.error("Registration failed:", err);
+      setErrorMessage("Network error. Please try again later.");
+    }
+  };
+
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center px-4 py-10 bg-[#FFF7E0]"
+      style={{
+        fontFamily: "'Poppins', sans-serif",
+      }}
+    >
+      {showConfirmation ? (
+        <div className="bg-[#FFF7E0] rounded-2xl p-10 shadow-2xl max-w-md w-full text-center space-y-6 border border-[#D4AF37]/20">
+          <h1 className="text-3xl font-semibold text-[#1E3A8A]">
+            || Hare Krishna ||
+          </h1>
+          <p className="text-xl font-medium text-[#475569]">
+            Thanks for the Registration
+          </p>
+          <button
+            onClick={() => {
+              setShowConfirmation(false);
+            }}
+            className="mt-4 px-6 py-2 bg-[#F59E0B] text-white rounded-lg hover:bg-[#d97706]"
+          >
+            Close
+          </button>
+        </div>
+      ) : errorMessage ? (
+        <div className="bg-red-100 rounded-2xl p-10 shadow-2xl max-w-md w-full text-center space-y-6">
+          <h1 className="text-3xl font-semibold text-red-600">
+            ⚠️ Submission Failed
+          </h1>
+          <p className="text-base text-gray-700">{errorMessage}</p>
+          <button
+            onClick={() => setErrorMessage("")}
+            className="mt-4 px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+          >
+            Try Again
+          </button>
+        </div>
+      ) : (
+        <div className="w-full max-w-xl bg-white/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/20 shadow-[0_8px_32px_0_rgba(30,58,138,0.12)]">
+          <div className="p-3 text-center border-b-2 border-[#D4AF37]/30">
+            <h1 className="text-3xl sm:text-4xl font-semibold text-[#1E3A8A] tracking-wide">
+              Jaipur Dham Yatra 2026
+            </h1>
+          </div>
+
+          <form onSubmit={handleSubmit} className="p-5 space-y-6">
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] mb-4 text-center">
+              Registration Form
+            </h2>
+
+            <div className="flex items-center space-x-4">
+              <label
+                htmlFor="persons"
+                className="w-40 text-[#1E3A8A] font-semibold"
+              >
+                No. of Persons
+              </label>
+              <select
+                name="persons"
+                id="persons"
+                required
+                value={formData.persons}
+                onChange={handleFormDataChange}
+                className="flex-1 px-4 py-3 border rounded-lg bg-white/80"
+              >
+                <option value="">Select</option>
+                {[...Array(5)].map((_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              required
+              value={formData.name}
+              onChange={handleFormDataChange}
+              className="w-full px-4 py-3 border rounded-lg bg-white/80"
+            />
+
+            <input
+              type="number"
+              name="age"
+              min={1}
+              max={100}
+              placeholder="Age"
+              required
+              value={formData.age}
+              onChange={handleFormDataChange}
+              className="w-full px-4 py-3 border rounded-lg bg-white/80"
+            />
+
+            <select
+              name="gender"
+              required
+              value={formData.gender}
+              onChange={handleFormDataChange}
+              className="w-full px-4 py-3 border rounded-lg bg-white/80"
+            >
+              <option value="">Select Gender</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+
+            <input
+              type="tel"
+              name="mobile"
+              placeholder="Mobile Number"
+              required
+              value={formData.mobile}
+              onChange={handleFormDataChange}
+              className="w-full px-4 py-3 border rounded-lg bg-white/80"
+            />
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              required
+              value={formData.email}
+              onChange={handleFormDataChange}
+              className="w-full px-4 py-3 border rounded-lg bg-white/80"
+            />
+
+            {additionalPersons.map((person, index) => (
+              <div
+                key={index}
+                className="p-4 mt-4 border border-[#D4AF37]/20 bg-white/90 rounded-lg space-y-3"
+              >
+                <h3 className="text-lg font-semibold text-[#1E3A8A] text-center">
+                  Add Details {index + 2} Devotee
+                </h3>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Full Name"
+                  required
+                  value={person.name}
+                  onChange={(e) => handleAdditionalChange(index, e)}
+                  className="w-full px-4 py-3 border rounded-lg bg-white/80"
+                />
+                <input
+                  type="number"
+                  name="age"
+                  min={1}
+                  placeholder="Age"
+                  required
+                  value={person.age}
+                  onChange={(e) => handleAdditionalChange(index, e)}
+                  className="w-full px-4 py-3 border rounded-lg bg-white/80"
+                />
+                <select
+                  name="gender"
+                  required
+                  value={person.gender}
+                  onChange={(e) => handleAdditionalChange(index, e)}
+                  className="w-full px-4 py-3 border rounded-lg bg-white/80"
+                >
+                  <option value="">Select Gender</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            ))}
+
+            <div className="flex justify-center mt-6">
+              <button
+                type="submit"
+                className="px-8 py-3 bg-[#F59E0B] hover:bg-[#d97706] text-white rounded-lg font-semibold tracking-wide shadow-lg cursor-pointer"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+}
