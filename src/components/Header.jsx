@@ -14,12 +14,10 @@ const Header = () => {
 
   return (
     <header className="relative text-[#1E3A8A] shadow-md bg-[#FFF7E0] border-b-4 border-[#F59E0B]">
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
-        <div className="flex items-center">
-          <img src={sharanagatilogo} alt="Left Logo" className="h-20 w-auto" />
-          <div className="ml-10" />
-
-          <nav className="flex items-center space-x-0 divide-x divide-white">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center md:gap-6 w-full md:w-auto">
+          <img src={sharanagatilogo} alt="Left Logo" className="h-16 md:h-20 w-auto" />
+          <nav className="flex flex-wrap justify-center md:justify-start gap-2 md:gap-3 mt-3 md:mt-0">
             <NavLink
               to="/"
               className={({ isActive }) => getNavLinkClass(isActive)}
@@ -54,11 +52,11 @@ const Header = () => {
           </nav>
         </div>
 
-        <div className="flex items-center">
+        <div className="flex justify-center md:justify-end w-full md:w-auto">
           <img
             src={iskconlogo}
             alt="ISKCON Logo"
-            className="h-20 w-auto pl-4"
+            className="h-16 md:h-20 w-auto"
           />
         </div>
       </div>

@@ -8,12 +8,30 @@ export default function RegistrationForm() {
     gender: "",
     mobile: "",
     email: "",
+    category: "",
+    transactionId: "",
+    paymentScreenshot: "",
     persons: "1",
   });
-
+// Are you attending classes on regualr basis?
   const [additionalPersons, setAdditionalPersons] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [savedRegistrations, setSavedRegistrations] = useState(() => {
+    const stored = localStorage.getItem("registrations");
+    return stored ? JSON.parse(stored) : [];
+  });
+  const [isLoadingRegistrations, setIsLoadingRegistrations] = useState(false);
+  const [isAccessGranted, setIsAccessGranted] = useState(() => {
+    return Boolean(localStorage.getItem("registrationAccessPassword"));
+  });
+  const [accessPassword, setAccessPassword] = useState("");
+  const [accessError, setAccessError] = useState("");
+  const [isCheckingAccess, setIsCheckingAccess] = useState(false);
+
+  // Category A rooms available = 22
+  const MAX_CATEGORY_A_REGISTRATIONS = 35;
+  const isCategoryADisabled = savedRegistrations.length >= MAX_CATEGORY_A_REGISTRATIONS;
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -25,6 +43,175 @@ export default function RegistrationForm() {
       document.head.removeChild(link);
     };
   }, []);
+
+  // Lock body scroll when confirmation modal is shown
+  useEffect(() => {
+    if (showConfirmation) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+    return;
+  }, [showConfirmation]);
+
+  useEffect(() => {
+    if (isCategoryADisabled && formData.category === "A") {
+      setFormData((prev) => ({ ...prev, category: "" }));
+    }
+  }, [isCategoryADisabled, formData.category]);
+
+  const loadRegistrations = async (passwordOverride = null) => {
+    const password = passwordOverride || localStorage.getItem("registrationAccessPassword");
+    if (!password) return;
+
+    setIsLoadingRegistrations(true);
+    try {
+      const stored = localStorage.getItem("registrations");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setSavedRegistrations(parsed);
+        }
+      }
+
+      const response = await fetch("http://localhost:5000/api/registration/registrations", {
+        headers: { "x-registration-password": password },
+      });
+      if (!response.ok) throw new Error("Unable to load registrations");
+
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setSavedRegistrations(data);
+        localStorage.setItem("registrations", JSON.stringify(data));
+      }
+    } catch (err) {
+      console.error("Failed to load registrations:", err);
+    } finally {
+      setIsLoadingRegistrations(false);
+    }
+  };
+
+  useEffect(() => {
+    const storedPassword = localStorage.getItem("registrationAccessPassword");
+    if (storedPassword) {
+      setIsAccessGranted(true);
+      loadRegistrations(storedPassword);
+    }
+  }, []);
+
+  const getBaseAmountForCategory = (category) => {
+    if (category === "A") return 4000;
+    if (category === "B") return 3800;
+    return 0;
+  };
+
+  const getAmountForAge = (age, category) => {
+    const numericAge = parseInt(age, 10);
+    if (numericAge >= 3 && numericAge <= 17) return 2500;
+    return getBaseAmountForCategory(category);
+  };
+
+  const calculateTotalAmount = () => {
+    const mainAmount = getAmountForAge(formData.age, formData.category);
+    const additionalAmount = additionalPersons.reduce((total, person) => {
+      return total + getAmountForAge(person.age, formData.category);
+    }, 0);
+    return mainAmount + additionalAmount;
+  };
+
+  const formatCurrency = (value) => {
+    return value ? `₹${value.toLocaleString()}` : "-";
+  };
+
+  const handleAccessSubmit = async (e) => {
+    e.preventDefault();
+    setIsCheckingAccess(true);
+    setAccessError("");
+
+    try {
+      const response = await fetch("http://localhost:5000/api/registration/verify-access", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: accessPassword }),
+      });
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Invalid access code");
+      }
+
+      localStorage.setItem("registrationAccessPassword", accessPassword);
+      setIsAccessGranted(true);
+      setAccessPassword("");
+      await loadRegistrations(accessPassword);
+    } catch (err) {
+      localStorage.removeItem("registrationAccessPassword");
+      setIsAccessGranted(false);
+      setAccessError(err.message || "Unable to verify access code");
+    } finally {
+      setIsCheckingAccess(false);
+    }
+  };
+
+  const exportToCsv = () => {
+    if (!savedRegistrations.length || !isAccessGranted) return;
+
+    const headers = [
+      "Name",
+      "Mobile",
+      "Email",
+      "Category",
+      "Age",
+      "Gender",
+      "Persons",
+      "Total Amount",
+      "Transaction ID",
+      "Payment Screenshot",
+      "Additional Persons",
+    ];
+
+    const rows = savedRegistrations.map((entry) => {
+      const additionalPeople = Array.isArray(entry.additionalPerson)
+        ? entry.additionalPerson
+            .map((person) => `${person.name} (${person.age}, ${person.gender})`)
+            .join(" | ")
+        : "";
+
+      return [
+        entry.name || "",
+        entry.mobile || "",
+        entry.email || "",
+        entry.category || "",
+        entry.age || "",
+        entry.gender || "",
+        entry.persons || "",
+        entry.totalAmount || "",
+        entry.transactionId || "",
+        entry.paymentScreenshot || "",
+        additionalPeople,
+      ];
+    });
+
+    const csvContent = [headers, ...rows]
+      .map((row) =>
+        row
+          .map((value) => `"${String(value).replace(/"/g, '""')}"`)
+          .join(",")
+      )
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "registrations.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
 
   const handleFormDataChange = (e) => {
     const { name, value } = e.target;
@@ -50,76 +237,140 @@ export default function RegistrationForm() {
     setAdditionalPersons(updated);
   };
 
-  const handleSubmit = async (e) => {
+  const handlePaymentScreenshotChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFormData({ ...formData, paymentScreenshot: reader.result });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    const completeData = {
+    const completeDataBase = {
       name: formData.name,
       age: parseInt(formData.age),
       gender: formData.gender,
+      category: formData.category,
       mobile: formData.mobile,
       email: formData.email,
+      transactionId: formData.transactionId,
+      // paymentScreenshot will be ensured below
       persons: parseInt(formData.persons),
+      amountPerPerson: getAmountForAge(formData.age, formData.category),
+      totalAmount: calculateTotalAmount(),
       additionalPerson: additionalPersons.map((person, index) => ({
         id: index + 1,
         name: person.name,
         age: parseInt(person.age),
         gender: person.gender,
+        amount: getAmountForAge(person.age, formData.category),
       })),
     };
 
-    try {
-      const res = await fetch("http://localhost:8080/api/user/registration", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(completeData),
-      });
+    const submitToServer = (completeData) => {
+      try {
+        const payload = new FormData();
+        const fileInput = document.getElementById("paymentScreenshot");
+        const file = fileInput && fileInput.files && fileInput.files[0];
+        const submissionData = {
+          ...completeData,
+          paymentScreenshot: file ? file.name : "",
+        };
 
-      if (res.ok) {
-        setShowConfirmation(true);
-        setErrorMessage("");
-        setFormData({
-          name: "",
-          age: "",
-          gender: "",
-          mobile: "",
-          email: "",
-          persons: "1",
-        });
-        setAdditionalPersons([]);
-      } else {
-        const errMsg = await res.text();
-        setErrorMessage(errMsg || "Something went wrong. Please try again.");
+        payload.append("name", submissionData.name);
+        payload.append("age", submissionData.age);
+        payload.append("gender", submissionData.gender);
+        payload.append("category", submissionData.category);
+        payload.append("mobile", submissionData.mobile);
+        payload.append("email", submissionData.email);
+        payload.append("transactionId", submissionData.transactionId);
+        payload.append("persons", submissionData.persons);
+        payload.append("amountPerPerson", submissionData.amountPerPerson);
+        payload.append("totalAmount", submissionData.totalAmount);
+        payload.append(
+          "additionalPerson",
+          JSON.stringify(submissionData.additionalPerson)
+        );
+
+        if (file) {
+          payload.append("paymentScreenshot", file);
+        }
+
+        fetch("http://localhost:5000/api/registration/save-to-json", {
+          method: "POST",
+          body: payload,
+        })
+          .then((res) => {
+            if (!res.ok) {
+              return res.text().then((text) => {
+                throw new Error(`Server responded with ${res.status}: ${text}`);
+              });
+            }
+            return res.json();
+          })
+          .then((data) => {
+            setSavedRegistrations((prev) => {
+              const updated = [...prev, submissionData];
+              localStorage.setItem("registrations", JSON.stringify(updated));
+              return updated;
+            });
+
+            setShowConfirmation(true);
+            setErrorMessage("");
+            setFormData({
+              name: "",
+              age: "",
+              gender: "",
+              mobile: "",
+              email: "",
+              category: "",
+              transactionId: "",
+              paymentScreenshot: "",
+              persons: "1",
+            });
+            setAdditionalPersons([]);
+          })
+          .catch((err) => {
+            console.error("Save failed:", err);
+            setErrorMessage(`Failed to save registration. ${err.message}`);
+          });
+      } catch (err) {
+        console.error("Registration save failed:", err);
+        setErrorMessage("Failed to save registration. Please try again.");
       }
-    } catch (err) {
-      console.error("Registration failed:", err);
-      setErrorMessage("Network error. Please try again later.");
-    }
+    };
+
+    submitToServer(completeDataBase);
   };
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4 py-10 bg-[#FFF7E0]"
+      className="relative min-h-screen flex items-center justify-center px-4 py-10 bg-[#FFF7E0]"
       style={{
         fontFamily: "'Poppins', sans-serif",
       }}
     >
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 rounded-full bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white shadow-lg">
+        Registrations: {savedRegistrations.length}
+      </div>
       {showConfirmation ? (
-        <div className="bg-[#FFF7E0] rounded-2xl p-10 shadow-2xl max-w-md w-full text-center space-y-6 border border-[#D4AF37]/20">
-          <h1 className="text-3xl font-semibold text-[#1E3A8A]">
-            || Hare Krishna ||
-          </h1>
-          <p className="text-xl font-medium text-[#475569]">
-            Thanks for the Registration
-          </p>
-          <button
-            onClick={() => {
-              setShowConfirmation(false);
-            }}
-            className="mt-4 px-6 py-2 bg-[#F59E0B] text-white rounded-lg hover:bg-[#d97706]"
-          >
-            Close
-          </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40" />
+          <div className="relative bg-[#FFF7E0] rounded-2xl p-10 shadow-2xl max-w-lg w-full text-center space-y-6 border border-[#D4AF37]/20">
+            <h1 className="text-4xl font-semibold text-[#1E3A8A]">|| Hare Krishna ||</h1>
+            <p className="text-2xl font-medium text-[#475569]">Thanks for the Registration</p>
+            <button
+              onClick={() => setShowConfirmation(false)}
+              className="mt-6 px-8 py-3 bg-[#F59E0B] text-white rounded-lg hover:bg-[#d97706] text-lg"
+            >
+              Close
+            </button>
+          </div>
         </div>
       ) : errorMessage ? (
         <div className="bg-red-100 rounded-2xl p-10 shadow-2xl max-w-md w-full text-center space-y-6">
@@ -137,9 +388,9 @@ export default function RegistrationForm() {
       ) : (
         <div className="w-full max-w-xl bg-white/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/20 shadow-[0_8px_32px_0_rgba(30,58,138,0.12)]">
           <div className="p-3 text-center border-b-2 border-[#D4AF37]/30">
-            <h1 className="text-3xl sm:text-4xl font-semibold text-[#1E3A8A] tracking-wide">
-              Jaipur Dham Yatra 2026
-            </h1>
+            <h2 className="text-3xl sm:text-4xl font-semibold text-[#1E3A8A] tracking-wide">
+              Ahobilam - Vijayawada Dham Yatra 2026
+            </h2>
           </div>
 
           <form onSubmit={handleSubmit} className="p-5 space-y-6">
@@ -147,10 +398,10 @@ export default function RegistrationForm() {
               Registration Form
             </h2>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
               <label
                 htmlFor="persons"
-                className="w-40 text-[#1E3A8A] font-semibold"
+                className="w-full sm:w-40 text-[#1E3A8A] font-semibold"
               >
                 No. of Persons
               </label>
@@ -171,6 +422,32 @@ export default function RegistrationForm() {
               </select>
             </div>
 
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
+              <label htmlFor="category" className="w-full sm:w-40 text-[#1E3A8A] font-semibold">
+                Category
+              </label>
+              <div className="flex-1">
+                <select
+                  name="category"
+                  id="category"
+                  required
+                  value={formData.category}
+                  onChange={handleFormDataChange}
+                  className="w-full px-4 py-3 border rounded-lg bg-white/80"
+                >
+                  <option value="">Select Category</option>
+                  <option value="A" disabled={isCategoryADisabled}>
+                    Category A
+                  </option>
+                  <option value="B">Category B</option>
+                </select>
+                {isCategoryADisabled && (
+                  <p className="mt-2 text-sm text-amber-600">
+                    Category A is currently unavailable because 10 registrations have already been recorded.
+                  </p>
+                )}
+              </div>
+            </div>
             <input
               type="text"
               name="name"
@@ -203,7 +480,7 @@ export default function RegistrationForm() {
               <option value="">Select Gender</option>
               <option>Male</option>
               <option>Female</option>
-              <option>Other</option>
+              {/* <option>Other</option> */}
             </select>
 
             <input
@@ -225,6 +502,7 @@ export default function RegistrationForm() {
               onChange={handleFormDataChange}
               className="w-full px-4 py-3 border rounded-lg bg-white/80"
             />
+
 
             {additionalPersons.map((person, index) => (
               <div
@@ -263,10 +541,72 @@ export default function RegistrationForm() {
                   <option value="">Select Gender</option>
                   <option>Male</option>
                   <option>Female</option>
-                  <option>Other</option>
+                  {/* <option>Other</option> */}
                 </select>
               </div>
             ))}
+
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
+              <label htmlFor="amount" className="w-full sm:w-40 text-[#1E3A8A] font-semibold">
+                Amount
+              </label>
+              <input
+                type="text"
+                id="amount"
+                name="amount"
+                value={formatCurrency(calculateTotalAmount())}
+                readOnly
+                className="flex-1 px-4 py-3 border rounded-lg bg-gray-100 text-[#1E3A8A]"
+              />
+            </div>
+
+            <div className="p-4 rounded-2xl border border-[#D4AF37]/20 bg-[#FFF7E0] shadow-sm space-y-4">
+              <h3 className="text-xl font-semibold text-[#1E3A8A]">Payment Information</h3>
+              <div className="text-sm text-[#475569] space-y-2">
+                <p className="font-semibold text-[#1E3A8A]">Account Details</p>
+                <p>Account Name: Shri Ahobilam Yatra</p>
+                <p>Account Number: 1234567890</p>
+                <p>IFSC: SBIN0000000</p>
+                <p>Bank: State Bank of India</p>
+                <p>Category A Amount: ₹4000</p>
+                <p>Category B Amount: ₹3800</p>
+                <p>Child Amount (age 3-17): ₹2500</p>
+                <p className="font-semibold text-[#1E3A8A]">
+                  Total Payable: {formatCurrency(calculateTotalAmount())}
+                </p>
+              </div>
+              <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-4 space-y-4 lg:space-y-0">
+                <div className="flex-1">
+                  <label htmlFor="transactionId" className="block text-[#1E3A8A] font-semibold mb-2">
+                    Transaction ID
+                  </label>
+                  <input
+                    type="text"
+                    id="transactionId"
+                    name="transactionId"
+                    value={formData.transactionId}
+                    onChange={handleFormDataChange}
+                    placeholder="Enter transaction ID"
+                    className="w-full px-4 py-3 border rounded-lg bg-white/80"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label htmlFor="paymentScreenshot" className="block text-[#1E3A8A] font-semibold mb-2">
+                    Upload Payment Screenshot
+                  </label>
+                  <input
+                    type="file"
+                    id="paymentScreenshot"
+                    accept="image/*"
+                    onChange={handlePaymentScreenshotChange}
+                    className="w-full text-sm text-gray-700"
+                  />
+                  {formData.paymentScreenshot && (
+                    <p className="mt-2 text-sm text-green-600">Screenshot ready to submit.</p>
+                  )}
+                </div>
+              </div>
+            </div>
 
             <div className="flex justify-center mt-6">
               <button
@@ -275,6 +615,79 @@ export default function RegistrationForm() {
               >
                 Submit
               </button>
+            </div>
+
+            <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4 shadow-sm">
+              {!isAccessGranted ? (
+                <div className="space-y-3">
+                  <h3 className="text-xl font-semibold text-[#1E3A8A]">Restricted Registrations View</h3>
+                  <p className="text-sm text-[#475569]">
+                    Enter the access code to view registered entries and export the CSV file.
+                  </p>
+                  <form onSubmit={handleAccessSubmit} className="flex flex-col gap-2 sm:flex-row">
+                    <input
+                      type="password"
+                      value={accessPassword}
+                      onChange={(e) => setAccessPassword(e.target.value)}
+                      placeholder="Enter access code"
+                      className="flex-1 rounded-lg border border-[#D4AF37]/30 bg-white px-4 py-2"
+                    />
+                    <button
+                      type="submit"
+                      disabled={isCheckingAccess}
+                      className="rounded-lg bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white hover:bg-[#142a63] disabled:opacity-70"
+                    >
+                      {isCheckingAccess ? "Checking..." : "Unlock"}
+                    </button>
+                  </form>
+                  {accessError ? <p className="text-sm text-red-600">{accessError}</p> : null}
+                </div>
+              ) : (
+                <>
+                  <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <h3 className="text-xl font-semibold text-[#1E3A8A]">Registered Entries</h3>
+                    <button
+                      type="button"
+                      onClick={exportToCsv}
+                      className="rounded-lg bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white hover:bg-[#142a63]"
+                    >
+                      Export CSV
+                    </button>
+                  </div>
+                  {isLoadingRegistrations ? (
+                    <p className="text-sm text-[#475569]">Loading registrations...</p>
+                  ) : savedRegistrations.length === 0 ? (
+                    <p className="text-sm text-[#475569]">No registrations yet.</p>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full text-left text-sm">
+                        <thead>
+                          <tr className="border-b border-[#D4AF37]/20 text-[#1E3A8A]">
+                            <th className="px-2 py-2">Name</th>
+                            <th className="px-2 py-2">Mobile</th>
+                            <th className="px-2 py-2">Category</th>
+                            <th className="px-2 py-2">Persons</th>
+                            <th className="px-2 py-2">Amount</th>
+                            <th className="px-2 py-2">Transaction ID</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {savedRegistrations.map((entry, index) => (
+                            <tr key={`${entry.mobile || index}-${index}`} className="border-b border-[#D4AF37]/10">
+                              <td className="px-2 py-2">{entry.name}</td>
+                              <td className="px-2 py-2">{entry.mobile}</td>
+                              <td className="px-2 py-2">{entry.category}</td>
+                              <td className="px-2 py-2">{entry.persons}</td>
+                              <td className="px-2 py-2">{formatCurrency(entry.totalAmount)}</td>
+                              <td className="px-2 py-2">{entry.transactionId}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </form>
         </div>
