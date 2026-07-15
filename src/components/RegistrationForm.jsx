@@ -64,18 +64,33 @@ export default function RegistrationForm() {
     return 0;
   };
 
-  const getAmountForAge = (age, category) => {
-    const numericAge = parseInt(age, 10);
-    if (numericAge >= 3 && numericAge <= 17) return 2500;
-    return getBaseAmountForCategory(category);
+  const getAmountsForGroup = (ages, category) => {
+    const baseAmount = getBaseAmountForCategory(category);
+    let discountedChildUsed = false;
+
+    return ages.map((age) => {
+      const numericAge = parseInt(age, 10);
+
+      if (Number.isNaN(numericAge)) return 0;
+      if (numericAge < 3) return 0;
+
+      if (numericAge >= 3 && numericAge <= 17) {
+        if (!discountedChildUsed) {
+          discountedChildUsed = true;
+          return 2500;
+        }
+
+        return baseAmount;
+      }
+
+      return baseAmount;
+    });
   };
 
   const calculateTotalAmount = () => {
-    const mainAmount = getAmountForAge(formData.age, formData.category);
-    const additionalAmount = additionalPersons.reduce((total, person) => {
-      return total + getAmountForAge(person.age, formData.category);
-    }, 0);
-    return mainAmount + additionalAmount;
+    const groupAges = [formData.age, ...additionalPersons.map((person) => person.age)];
+    const perPersonAmounts = getAmountsForGroup(groupAges, formData.category);
+    return perPersonAmounts.reduce((total, amount) => total + amount, 0);
   };
 
   const formatCurrency = (value) => {
@@ -180,6 +195,9 @@ export default function RegistrationForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const groupAges = [formData.age, ...additionalPersons.map((person) => person.age)];
+    const perPersonAmounts = getAmountsForGroup(groupAges, formData.category);
+
     const completeDataBase = {
       name: formData.name,
       age: parseInt(formData.age),
@@ -190,14 +208,14 @@ export default function RegistrationForm() {
       transactionId: formData.transactionId,
       // paymentScreenshot will be ensured below
       persons: parseInt(formData.persons),
-      amountPerPerson: getAmountForAge(formData.age, formData.category),
+      amountPerPerson: perPersonAmounts[0] || 0,
       totalAmount: calculateTotalAmount(),
       additionalPerson: additionalPersons.map((person, index) => ({
         id: index + 1,
         name: person.name,
         age: parseInt(person.age),
         gender: person.gender,
-        amount: getAmountForAge(person.age, formData.category),
+        amount: perPersonAmounts[index + 1] || 0,
       })),
     };
 
@@ -501,7 +519,9 @@ export default function RegistrationForm() {
                 {/* <p>UPI ID: <a href="upi://pay?pa=rounakrock.singh07-2@okhdfcbank&pn=Rounak%20Ranjan%20Singh&cu=INR" className="text-blue-600 underline">rounakrock.singh07-2@okhdfcbank</a></p> */}
                 <p>Category A Amount: ₹4000</p>
                 <p>Category B Amount: ₹3800</p>
-                <p>Child Amount (age 3-17): ₹2500</p>
+                <p>Child Amount (age 3-17): ₹2500 (only one child)</p>
+                <p>Additional child (age 3-17): Category fare applies</p>
+                <p>Child below 3 years: ₹0</p>
                 <p className="font-semibold text-[#1E3A8A]">
                   Total Payable: {formatCurrency(calculateTotalAmount())}
                 </p>
