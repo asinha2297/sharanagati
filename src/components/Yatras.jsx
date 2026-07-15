@@ -19,7 +19,7 @@ const Yatras = () => {
       <h1 className="page-title !text-left text-4xl !font-normal text-[#1E3A8A] mb-10">
         Upcoming Yatra
       </h1>
-      <div className="max-w-8xl mx-auto bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-8 text-center">
+      <div className="max-w-full mx-auto bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-6 md:p-8 text-center">
         <h2 className="text-2xl font-semibold text-[#1E3A8A] mb-4">
           Ahobilam-Vijayawada Dhaam Yatra
         </h2>
@@ -167,9 +167,9 @@ const Yatras = () => {
           <br />
           Registration Amount per devotee (to reserve your accommodation, as rooms are limited)
           <br />
-          Category A: ₹4200/-
+          Category A: ₹4000/-
           <br />
-          Category B: ₹3900/-
+          Category B: ₹3800/-
           <br />
           Child: ₹2500/-
           <br />
@@ -202,7 +202,7 @@ const Yatras = () => {
       {/* Image Section */}
       <div className="w-full md:w-1/2 flex justify-center items-center">
         <div className="w-full flex flex-wrap gap-4 justify-center">
-          <img src={Y1Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-150 h-75 object-cover" />
+          <img src={Y1Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-full max-w-md h-auto object-cover" />
         </div>
       </div>
       {/* Write-up Section */}
@@ -240,7 +240,7 @@ const Yatras = () => {
     {/* Carousel Section */}
     <div className="w-full md:w-1/2 flex justify-center items-center">
       <div className="w-full flex flex-wrap gap-4 justify-center">
-          <img src={Y1Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-150 h-75 object-cover" />
+          <img src={Y1Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-full max-w-md h-auto object-cover" />
       </div>
     </div>
     </div>
@@ -248,7 +248,7 @@ const Yatras = () => {
       {/* Carousel Section */}
       <div className="w-full md:w-1/2 flex justify-center items-center">
         <div className="w-full flex flex-wrap gap-4 justify-center">
-          <img src={Y3Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-150 h-75 object-cover" />
+          <img src={Y3Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-full max-w-md h-auto object-cover" />
         </div>
       </div>
       {/* Write-up Section */}
@@ -289,7 +289,7 @@ const Yatras = () => {
     {/* Carousel Section */}
     <div className="w-full md:w-1/2 flex justify-center items-center">
       <div className="w-full flex flex-wrap gap-4 justify-center">
-          <img src={Y4Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-150 h-75 object-cover" />
+          <img src={Y4Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-full max-w-md h-auto object-cover" />
       </div>
     </div>
     </div>
@@ -297,7 +297,7 @@ const Yatras = () => {
       {/* Carousel Section */}
       <div className="w-full md:w-1/2 flex justify-center items-center">
         <div className="w-full flex flex-wrap gap-4 justify-center">
-          <img src={Y5Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-150 h-75 object-cover" />
+          <img src={Y5Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-full max-w-md h-auto object-cover" />
         </div>
       </div>
       {/* Write-up Section */}
@@ -341,7 +341,7 @@ const Yatras = () => {
     {/* Carousel Section */}
     <div className="w-full md:w-1/2 flex justify-center items-center">
       <div className="w-full flex flex-wrap gap-4 justify-center">
-          <img src={Y6Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-150 h-75 object-cover" />
+          <img src={Y6Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-full max-w-md h-auto object-cover" />
       </div>
     </div>
     </div>

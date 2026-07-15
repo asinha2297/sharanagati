@@ -431,11 +431,11 @@ export default function UpcomingSection() {
       <div className="min-h-screen text-[#1E3A8A] p-8 flex justify-center bg-[#FFF7E0]">
         <div className="w-full max-w-6xl flex flex-col lg:flex-row justify-start gap-8">
           {/* First Calendar */}
-          <div className="w-full lg:w-1/2 h-[500px] rounded-xl border border-[#D4AF37]/20 bg-white p-6 overflow-hidden relative shadow-2xl">
+          <div className="w-full lg:w-1/2 h-[420px] lg:h-[500px] rounded-xl border border-[#D4AF37]/20 bg-white p-6 overflow-hidden relative shadow-2xl">
             <h2 className="text-3xl font-bold text-center mb-6 text-[#1E3A8A]">
               Ekadashi Calendar 2025
             </h2>
-            <div className="overflow-y-auto h-[400px] pr-2 scroll-smooth custom-scrollbar">
+            <div className="overflow-y-auto h-[340px] lg:h-[400px] pr-2 scroll-smooth custom-scrollbar">
               {events.map((event, index) => (
                 <div
                   key={index}
@@ -461,11 +461,11 @@ export default function UpcomingSection() {
             </div>
           </div>
           {/* Second Calendar */}
-          <div className="w-full lg:w-1/2 h-[500px] rounded-xl border border-[#D4AF37]/20 bg-white p-6 overflow-hidden relative shadow-2xl">
+          <div className="w-full lg:w-1/2 h-[420px] lg:h-[500px] rounded-xl border border-[#D4AF37]/20 bg-white p-6 overflow-hidden relative shadow-2xl">
             <h2 className="text-3xl font-bold text-center mb-6 text-[#1E3A8A]">
               Vaishnava Calendar 2025
             </h2>
-            <div className="overflow-y-auto h-[400px] pr-2 scroll-smooth custom-scrollbar">
+            <div className="overflow-y-auto h-[340px] lg:h-[400px] pr-2 scroll-smooth custom-scrollbar">
               {vaishnavaEvents.map((event, index) => (
                 <div
                   key={index}
