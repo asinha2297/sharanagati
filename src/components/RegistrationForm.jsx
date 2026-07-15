@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import img from "../assets/Image.jpg";
 
 export default function RegistrationForm() {
+  const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+  const apiUrl = (path) => `${apiBaseUrl}${path}`;
+
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -21,13 +24,6 @@ export default function RegistrationForm() {
     const stored = localStorage.getItem("registrations");
     return stored ? JSON.parse(stored) : [];
   });
-  const [isLoadingRegistrations, setIsLoadingRegistrations] = useState(false);
-  const [isAccessGranted, setIsAccessGranted] = useState(() => {
-    return Boolean(localStorage.getItem("registrationAccessPassword"));
-  });
-  const [accessPassword, setAccessPassword] = useState("");
-  const [accessError, setAccessError] = useState("");
-  const [isCheckingAccess, setIsCheckingAccess] = useState(false);
 
   // Category A rooms available = 22
   const MAX_CATEGORY_A_REGISTRATIONS = 35;
@@ -62,45 +58,6 @@ export default function RegistrationForm() {
     }
   }, [isCategoryADisabled, formData.category]);
 
-  const loadRegistrations = async (passwordOverride = null) => {
-    const password = passwordOverride || localStorage.getItem("registrationAccessPassword");
-    if (!password) return;
-
-    setIsLoadingRegistrations(true);
-    try {
-      const stored = localStorage.getItem("registrations");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          setSavedRegistrations(parsed);
-        }
-      }
-
-      const response = await fetch("http://localhost:5000/api/registration/registrations", {
-        headers: { "x-registration-password": password },
-      });
-      if (!response.ok) throw new Error("Unable to load registrations");
-
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        setSavedRegistrations(data);
-        localStorage.setItem("registrations", JSON.stringify(data));
-      }
-    } catch (err) {
-      console.error("Failed to load registrations:", err);
-    } finally {
-      setIsLoadingRegistrations(false);
-    }
-  };
-
-  useEffect(() => {
-    const storedPassword = localStorage.getItem("registrationAccessPassword");
-    if (storedPassword) {
-      setIsAccessGranted(true);
-      loadRegistrations(storedPassword);
-    }
-  }, []);
-
   const getBaseAmountForCategory = (category) => {
     if (category === "A") return 4000;
     if (category === "B") return 3800;
@@ -125,38 +82,9 @@ export default function RegistrationForm() {
     return value ? `₹${value.toLocaleString()}` : "-";
   };
 
-  const handleAccessSubmit = async (e) => {
-    e.preventDefault();
-    setIsCheckingAccess(true);
-    setAccessError("");
-
-    try {
-      const response = await fetch("http://localhost:5000/api/registration/verify-access", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: accessPassword }),
-      });
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || "Invalid access code");
-      }
-
-      localStorage.setItem("registrationAccessPassword", accessPassword);
-      setIsAccessGranted(true);
-      setAccessPassword("");
-      await loadRegistrations(accessPassword);
-    } catch (err) {
-      localStorage.removeItem("registrationAccessPassword");
-      setIsAccessGranted(false);
-      setAccessError(err.message || "Unable to verify access code");
-    } finally {
-      setIsCheckingAccess(false);
-    }
-  };
-
+  /*
   const exportToCsv = () => {
-    if (!savedRegistrations.length || !isAccessGranted) return;
+    if (!savedRegistrations.length) return;
 
     const headers = [
       "Name",
@@ -212,6 +140,7 @@ export default function RegistrationForm() {
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   };
+  */
 
   const handleFormDataChange = (e) => {
     const { name, value } = e.target;
@@ -301,7 +230,7 @@ export default function RegistrationForm() {
           payload.append("paymentScreenshot", file);
         }
 
-        fetch("http://localhost:5000/api/registration/save-to-json", {
+        fetch(apiUrl("/api/registration/save-to-json"), {
           method: "POST",
           body: payload,
         })
@@ -564,10 +493,12 @@ export default function RegistrationForm() {
               <h3 className="text-xl font-semibold text-[#1E3A8A]">Payment Information</h3>
               <div className="text-sm text-[#475569] space-y-2">
                 <p className="font-semibold text-[#1E3A8A]">Account Details</p>
-                <p>Account Name: Shri Ahobilam Yatra</p>
-                <p>Account Number: 1234567890</p>
-                <p>IFSC: SBIN0000000</p>
-                <p>Bank: State Bank of India</p>
+                <p>Account Name: Rounak Ranjan Singh</p>
+                <p>Account Number: 470410110004309</p>
+                <p>IFSC: BKID0004704</p>
+                <p>Bank: Bank of India</p>
+                <p>UPI ID: rounakrock.singh07-2@okhdfcbank</p>
+                {/* <p>UPI ID: <a href="upi://pay?pa=rounakrock.singh07-2@okhdfcbank&pn=Rounak%20Ranjan%20Singh&cu=INR" className="text-blue-600 underline">rounakrock.singh07-2@okhdfcbank</a></p> */}
                 <p>Category A Amount: ₹4000</p>
                 <p>Category B Amount: ₹3800</p>
                 <p>Child Amount (age 3-17): ₹2500</p>
@@ -599,7 +530,7 @@ export default function RegistrationForm() {
                     id="paymentScreenshot"
                     accept="image/*"
                     onChange={handlePaymentScreenshotChange}
-                    className="w-full text-sm text-gray-700"
+                    className="w-full text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-[#1E3A8A] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white file:cursor-pointer hover:file:bg-[#142a63]"
                   />
                   {formData.paymentScreenshot && (
                     <p className="mt-2 text-sm text-green-600">Screenshot ready to submit.</p>
@@ -616,80 +547,59 @@ export default function RegistrationForm() {
                 Submit
               </button>
             </div>
+          </form>
+
+          {/* <div className={activeTab === "export" ? "p-5 space-y-4" : "hidden"}>
+            <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4 shadow-sm">
+              <h3 className="text-xl font-semibold text-[#1E3A8A]">
+                Shri Ahobilam-Vijayawada Dhaam Yatra
+              </h3>
+              <p className="text-sm text-[#475569] mt-1">Placeholder</p>
+            </div>
 
             <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4 shadow-sm">
-              {!isAccessGranted ? (
-                <div className="space-y-3">
-                  <h3 className="text-xl font-semibold text-[#1E3A8A]">Restricted Registrations View</h3>
-                  <p className="text-sm text-[#475569]">
-                    Enter the access code to view registered entries and export the CSV file.
-                  </p>
-                  <form onSubmit={handleAccessSubmit} className="flex flex-col gap-2 sm:flex-row">
-                    <input
-                      type="password"
-                      value={accessPassword}
-                      onChange={(e) => setAccessPassword(e.target.value)}
-                      placeholder="Enter access code"
-                      className="flex-1 rounded-lg border border-[#D4AF37]/30 bg-white px-4 py-2"
-                    />
-                    <button
-                      type="submit"
-                      disabled={isCheckingAccess}
-                      className="rounded-lg bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white hover:bg-[#142a63] disabled:opacity-70"
-                    >
-                      {isCheckingAccess ? "Checking..." : "Unlock"}
-                    </button>
-                  </form>
-                  {accessError ? <p className="text-sm text-red-600">{accessError}</p> : null}
-                </div>
+              <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <h3 className="text-xl font-semibold text-[#1E3A8A]">Registered Entries</h3>
+                <button
+                  type="button"
+                  onClick={exportToCsv}
+                  className="rounded-lg bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white hover:bg-[#142a63]"
+                >
+                  Export CSV
+                </button>
+              </div>
+              {savedRegistrations.length === 0 ? (
+                <p className="text-sm text-[#475569]">No registrations yet.</p>
               ) : (
-                <>
-                  <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <h3 className="text-xl font-semibold text-[#1E3A8A]">Registered Entries</h3>
-                    <button
-                      type="button"
-                      onClick={exportToCsv}
-                      className="rounded-lg bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white hover:bg-[#142a63]"
-                    >
-                      Export CSV
-                    </button>
-                  </div>
-                  {isLoadingRegistrations ? (
-                    <p className="text-sm text-[#475569]">Loading registrations...</p>
-                  ) : savedRegistrations.length === 0 ? (
-                    <p className="text-sm text-[#475569]">No registrations yet.</p>
-                  ) : (
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full text-left text-sm">
-                        <thead>
-                          <tr className="border-b border-[#D4AF37]/20 text-[#1E3A8A]">
-                            <th className="px-2 py-2">Name</th>
-                            <th className="px-2 py-2">Mobile</th>
-                            <th className="px-2 py-2">Category</th>
-                            <th className="px-2 py-2">Persons</th>
-                            <th className="px-2 py-2">Amount</th>
-                            <th className="px-2 py-2">Transaction ID</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {savedRegistrations.map((entry, index) => (
-                            <tr key={`${entry.mobile || index}-${index}`} className="border-b border-[#D4AF37]/10">
-                              <td className="px-2 py-2">{entry.name}</td>
-                              <td className="px-2 py-2">{entry.mobile}</td>
-                              <td className="px-2 py-2">{entry.category}</td>
-                              <td className="px-2 py-2">{entry.persons}</td>
-                              <td className="px-2 py-2">{formatCurrency(entry.totalAmount)}</td>
-                              <td className="px-2 py-2">{entry.transactionId}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-[#D4AF37]/20 text-[#1E3A8A]">
+                        <th className="px-2 py-2">Name</th>
+                        <th className="px-2 py-2">Mobile</th>
+                        <th className="px-2 py-2">Category</th>
+                        <th className="px-2 py-2">Persons</th>
+                        <th className="px-2 py-2">Amount</th>
+                        <th className="px-2 py-2">Transaction ID</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {savedRegistrations.map((entry, index) => (
+                        <tr key={`${entry.mobile || index}-${index}`} className="border-b border-[#D4AF37]/10">
+                          <td className="px-2 py-2">{entry.name}</td>
+                          <td className="px-2 py-2">{entry.mobile}</td>
+                          <td className="px-2 py-2">{entry.category}</td>
+                          <td className="px-2 py-2">{entry.persons}</td>
+                          <td className="px-2 py-2">{formatCurrency(entry.totalAmount)}</td>
+                          <td className="px-2 py-2">{entry.transactionId}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
-          </form>
+          </div> */}
         </div>
       )}
     </div>

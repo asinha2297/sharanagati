@@ -10,6 +10,86 @@ import Y6Img1 from "../assets/Malda.jpg";
 const Yatras = () => {
   const navigate = useNavigate();
 
+  const upcomingYatra = {
+    intro: [
+      "We are very happy to let you know that we are having this year's Durga Puja yatra from 16-10-2026 to 20-10-2026.",
+      "Shri Ahobilam Dham is the holy place where Lord Narasimha appeared to protect His dear devotee Prahlad. We will take darshan of 9 special forms of Sri Nrsimhadev there.",
+      "Along with darshan of Panaka Nrsimha at Vijayawada, devotees can offer panakam (gur water) and also take darshan of Sri Lakshmi Narasimha established by the Pandavas, with a visit to Vedadri Nrsimhadev.",
+    ],
+    itinerary: [
+      "16-10-2026: Train departs from Kolkata to Vijayawada.",
+      "17-10-2026: Arrival at Vijayawada and hotel accommodation.",
+      "17-10-2026 (after lunch, by bus): Departure for Vedadri.",
+      "18-10-2026 (early morning, by bus): Darshan at Panakala Lakshmi Narasimha Swamy Temple, Mangalagiri.",
+      "18-10-2026 afternoon (by train): Vijayawada to Nandyal departure at 13:10.",
+      "18-10-2026 night (by bus): Arrival at Nandyal; onward drive to Ahobilam and guest house check-in.",
+      "19-10-2026 and 20-10-2026: Lower and Upper Ahobilam darshan; Ugra Stambha trekking on 20th Oct.",
+      "20-10-2026 night: Ahobilam to Nandyal by bus and night train onward journey.",
+    ],
+    trainDetails: [
+      {
+        title: "Kolkata to Vijayawada",
+        date: "Friday 16-10-2026",
+        notes: [
+          "Daily trains: From Howrah 12841 (15:10 - 10:10 next day), From Shalimar 18045 (11:15 - 10:30 next day).",
+          "Weekly Friday train: From Howrah 22817 (16:00 - 11:50 next day).",
+          "Recommended: Star-marked option can better match yatra start timings.",
+        ],
+      },
+      {
+        title: "Vijayawada to Nandyal",
+        date: "Sunday 18-10-2026",
+        notes: ["17330 (13:10 - 20:10 same day)."],
+      },
+      {
+        title: "Nandyal to Kolkata",
+        date: "Tuesday 20-10-2026",
+        notes: [
+          "18048 (20:25 - 23:45 next day).",
+          "As there is only one train from Nandyal, tickets should be booked quickly.",
+          "Possible advance booking stations: VSG, UBL, HPT, BAY (boarding point can later be updated to Nandyal).",
+        ],
+      },
+    ],
+    fareDetails: [
+      {
+        title: "Kolkata to Vijayawada",
+        booking: "Booking opens 17-08-2026 at 8:00 AM IST",
+        fares: ["SL: 620", "3E: 1475", "3A: 1575", "2A: 2230", "1A: 3735"],
+      },
+      {
+        title: "Vijayawada to Nandyal",
+        booking: "Booking opens 19-08-2026 at 8:00 AM IST",
+        fares: ["SL: 210", "3A: 520", "2A: 725"],
+      },
+      {
+        title: "Nandyal to Kolkata",
+        booking: "Booking opens 21-08-2026 at 8:00 AM IST",
+        fares: ["SL: 670", "3A: 1735", "2A: 2480"],
+      },
+    ],
+    hotelCategories: [
+      "Category A - AC Double Bed Rooms: 8300",
+      "Category B - AC Triple Bed Rooms: 7800",
+      "Children below 3 years: No charges",
+      "Children 3-17 years (till class 12): 5000 per child",
+      "Above 17 years: Full charges",
+      "Charges include pickup/drop from station, prasadam during yatra, accommodation, and internal travel.",
+      "Train journey fare and train prasadam charges are not included.",
+      "Room allotment is first-come, first-served. Early registration gets priority at the main hotel.",
+      "After first hotel fills up, nearby hotels will be allotted.",
+    ],
+    registrationGuidelines: [
+      "Registration begins online from 12-07-2026.",
+      "Registration amount per devotee: Category A 4000, Category B 3800, Child 2500 (adjusted in total amount).",
+      "Last Date of Registration: 31-07-2026.",
+      "Last Date of Full Payment: 01-09-2026.",
+      "Only registered devotees (with registration payment) will be added to the yatra WhatsApp group for updates.",
+    ],
+    cancellationPolicy:
+      "Any cancellation made after 15-08-2026 will incur a deduction of 50% of the total amount per person.",
+  };
+
   return (
     <div className="contact-us-container px-4 py-10 bg-[#FFF7E0] min-h-screen">
       <h1 className="page-title text-center text-4xl font-bold text-[#1E3A8A] mb-10">
@@ -24,168 +104,83 @@ const Yatras = () => {
           Ahobilam-Vijayawada Dhaam Yatra
         </h2>
 
-        <p className="text-gray-600 mb-6 text-left">
-          We are very happy to let you know that we are having this year's Durga Puja yatra from 16-10-2026 to 20-10-2026, to
-          <br />
-          👉 Shri Ahobilam Dham, the holy place where Lord Narasimha appeared to protect His dear devotee Prahlad. We will take darshan of 9 special forms of Sri Nrsimhadev there.
-          <br />
-          👉 Along with darshan of Panaka Nrsimha at Vijayawada, where you can feed panakam/gur water to Sri Nrsimhadev as well taking darshan of Sri Lakshmi Narsimha established by pandavas and going to Vedadri Nrsimhadev around 80 kms one way.
-          <br />
-          <br />
-          📆 Tentative Itinerary:
-          <br />
-          16-10-2026: Train will depart from Kolkata to Vijayawada
-          <br />
-          17-10-2026: Arrival at Vijayawada and accommodation at hotel.
-          <br />
-          17-10-2026 (After Lunch prasadam; By Bus): Leaving for Vedadri
-          <br />
-          18-10-2026 (Early Morning by Bus): Visit to the Sacred Panakala Lakshmi Narasimha Swamy Temple, Mangalagiri, for Divine Darshan.
-          <br />
-          18-10-2026 afternoon (By train): Departure for Nandyal Station from Vijayawada @ 13:10 hrs.
-          <br />
-          18-10-2026 night (By Bus): Arrival at Nandyal Railway Station.
-          <br />
-          Upon arrival, Devotees will board buses for Ahobilam (1 hour drive). On reaching Ahobilam, room check in to guest house.
-          <br />
-          19-10-2026 & 20-10-2026: Darshan of Lower Ahobilam and Upper Ahobilam temples. Trekking to Ugra stambha on 20th Oct.
-          <br />
-          20-10-2026 (Night): Leave from Ahobilam to Nandyal by 1 hour bus drive and then take train at night.
-          <br />
-          ------------------------------------------------------------------------------------------------------------------------
-          🚆 Train Details:
-          <br />
-          ● Kolkata to Vijayawada:
-          <br />
-          (On Friday 16-10-2026)
-          <br />
-          (Daily basis Trains)
-          <br />
-          From Howrah:
-          <br />
-          *(12841)= 15:10pm -- 10:10am Next day
-          <br />
-          From Shalimar
-          <br />
-          (18045)= 11:15am -- 10:30 AM next day
-          <br />
-          (Weekly Trains on Friday)
-          <br />
-          From Howrah
-          <br />
-          (22817)= 16:00pm -- 11:50am next day
-          <br />
-          Note: For the yatra, it would be better to travel by the star-marked (*) trains so that the timings match the beginning of the yatra.
-          <br />
-          =========================================================================================
-          <br />
-          ● Vijayawada to Nandyal:
-          <br />
-          (On Sunday 18-10-2026)
-          <br />
-          (17330)= 13:10 PM -- 20:10 PM same day
-          <br />
-          =========================================================================================
-          <br />
-          ● Nandyal to Kolkata:
-          <br />
-          (On Tuesday 20-10-2026)
-          <br />
-          (18048)= 20:25pm -- 23:45 pm next day
-          <br />
-          NOTE: As there is only one train available from Nandyal, we will need to make the bookings as quickly as possible. To improve our chances of getting confirmed seats, we may have to book the tickets from an earlier boarding station (before Nandyal) and later change the boarding point to Nandyal.
-          <br />
-          (Possible booking stations include: VSG, UBL, HPT, and BAY).
-          <br />
-          =========================================================================================
-          <br />
-          🚆 Train Fare Details & Booking Dates:
-          <br />
-          ● Kolkata to Vijayawada:
-          <br />
-          (advance booking will open on 17-08-2026 at 8:00 AM IST)
-          <br />
-          SL: ₹ 620/-
-          <br />
-          3E: ₹ 1475/-
-          <br />
-          3A: ₹ 1575/-
-          <br />
-          2A: ₹ 2230/-
-          <br />
-          1A: ₹ 3735/-
-          <br />
-          ● Vijayawada to Nandyal
-          <br />
-          (advance booking will open on 19-08-2026 at 8:00 AM IST)
-          <br />
-          SL: ₹ 210/-
-          <br />
-          3A: ₹ 520/-
-          <br />
-          2A: ₹ 725/-
-          <br />
-          ● Nandyal to Kolkata:
-          <br />
-          (advance booking will open on 21-08-2026 at 8:00 AM IST)
-          <br />
-          SL: ₹ 670/-
-          <br />
-          3A: ₹ 1735/-
-          <br />
-          2A: ₹ 2480/-
-          <br />
-          =========================================================================================
-          <br />
-          🏨 Hotel Categories:
-          <br />
-          Category A- AC Double Bed Rooms: ₹8300/-
-          <br />
-          Category B- AC Triple Bed Rooms: ₹7800/-
-          <br />
-          NOTE:
-          <br />
-          * Children below 3 years of age - No charges
-          <br />
-          * Children 03-17 years(till class 12th) - ₹5000 per child
-          <br />
-          * Above 17 years - full charges
-          <br />
-          All charges mentioned are inclusive of pickup and drop from the journey station, prasadam during yatra, accommodation, and internal travel.
-          <br />
-          Please note that the train journey fare and train prasadam charges are not included in the yatra budget.
-          <br />
-          Room allotment will be done on a first-come, first-served basis. Those who register earlier will be given priority in room allocation at hotel where the programs, classes, and kirtans will be held (No Changes will be done in any condition).
-          <br />
-          After the first hotel gets filled, we will alott devotees in nearby hotels.
-          <br />
-          ------------------------------------------------------------------------------------------------------------------------
-          <br />
-          Registration Guidelines:
-          <br />
-          📌 Registration begins online from 12-07-2026.
-          <br />
-          Registration Amount per devotee (to reserve your accommodation, as rooms are limited)
-          <br />
-          Category A: ₹4000/-
-          <br />
-          Category B: ₹3800/-
-          <br />
-          Child: ₹2500/-
-          <br />
-          (will be adjusted with total amount)
-          <br />
-          Last Date of Registration – 31-07-2026
-          <br />
-          Last Date of Full Payment – 01-09-2026
-          <br />
-          (Only those who register by paying the registration amount will be added to the Yatra WhatsApp group. All further updates and notifications will be shared there).
-          <br />
-          <br />
-          ⚠️ Cancellation Policy:
-          <br />
-          We kindly request you to note that any cancellation made after 15-08-2026 will incur a deduction of 50% of the total amount per person.
-        </p>
+        <div className="text-gray-700 text-left space-y-6 mb-6">
+          <div className="space-y-2">
+            {upcomingYatra.intro.map((line) => (
+              <p key={line} className="leading-relaxed">
+                {line}
+              </p>
+            ))}
+          </div>
+
+          <section className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+            <h3 className="text-lg font-semibold text-[#1E3A8A] mb-3">Tentative Itinerary</h3>
+            <ul className="space-y-2 text-sm md:text-base">
+              {upcomingYatra.itinerary.map((item) => (
+                <li key={item} className="leading-relaxed">• {item}</li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="space-y-3">
+            <h3 className="text-lg font-semibold text-[#1E3A8A]">Train Details</h3>
+            <div className="grid gap-3 md:grid-cols-3">
+              {upcomingYatra.trainDetails.map((section) => (
+                <div key={section.title} className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+                  <h4 className="font-semibold text-[#1E3A8A] mb-2">{section.title}</h4>
+                  <p className="text-md font-medium text-[#1E3A8A] mb-3">{section.date}</p>
+                  <ul className="space-y-1 text-sm leading-relaxed">
+                    {section.notes.map((note) => (
+                      <li key={note}>• {note}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="space-y-3">
+            <h3 className="text-lg font-semibold text-[#1E3A8A]">Train Fare Details and Booking Dates</h3>
+            <div className="grid gap-3 md:grid-cols-3">
+              {upcomingYatra.fareDetails.map((fare) => (
+                <div key={fare.title} className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+                  <h4 className="font-semibold text-[#1E3A8A]">{fare.title}</h4>
+                  <p className="text-sm text-gray-600 mt-1">{fare.booking}</p>
+                  <ul className="mt-2 space-y-1 text-sm">
+                    {fare.fares.map((entry) => (
+                      <li key={entry}>• {entry}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <section className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+              <h3 className="text-lg font-semibold text-[#1E3A8A] mb-3">Hotel Categories and Notes</h3>
+              <ul className="space-y-2 text-sm leading-relaxed">
+                {upcomingYatra.hotelCategories.map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
+              </ul>
+            </section>
+
+            <section className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+              <h3 className="text-lg font-semibold text-[#1E3A8A] mb-3">Registration Guidelines</h3>
+              <ul className="space-y-2 text-sm leading-relaxed">
+                {upcomingYatra.registrationGuidelines.map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
+              </ul>
+            </section>
+          </div>
+
+          <section className="rounded-xl border border-red-200 bg-red-50 p-4">
+            <h3 className="text-lg font-semibold text-red-700 mb-2">Cancellation Policy</h3>
+            <p className="text-sm text-red-700 leading-relaxed">{upcomingYatra.cancellationPolicy}</p>
+          </section>
+        </div>
 
         <button
           onClick={() => navigate("/register")}
@@ -303,7 +298,10 @@ const Yatras = () => {
       {/* Write-up Section */}
       <div className="w-full md:w-1/2">
         <div className="p-4 md:p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-[#1E3A8A]">Dakor/Somnath/Dwarka/Srinath-Jee Dhaam Yatra</h2>
+          <h2 className="mx-auto mb-4 max-w-md text-xl font-semibold leading-tight text-[#1E3A8A] text-balance sm:text-2xl md:max-w-none md:text-3xl">
+            <span className="block">Dakor / Somnath / Dwarka</span>
+            <span className="block">Srinath-Jee Dhaam Yatra</span>
+          </h2>
           <p className="text-gray-700 text-justify">
             A sacred and soul-enriching yatra to four prominent Vaishnava pilgrimage sites—Dakor, Somnath, Dwarka, and Srinathji (Nathdwara)—was held from 9th to 15th October 2024.
           </p>
