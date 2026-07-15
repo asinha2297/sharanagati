@@ -433,7 +433,7 @@ export default function UpcomingSection() {
           {/* First Calendar */}
           <div className="w-full lg:w-1/2 h-[420px] lg:h-[500px] rounded-xl border border-[#D4AF37]/20 bg-white p-6 overflow-hidden relative shadow-2xl">
             <h2 className="text-3xl font-bold text-center mb-6 text-[#1E3A8A]">
-              Ekadashi Calendar 2025
+              Ekadashi Calendar 2026
             </h2>
             <div className="overflow-y-auto h-[340px] lg:h-[400px] pr-2 scroll-smooth custom-scrollbar">
               {events.map((event, index) => (
@@ -463,7 +463,7 @@ export default function UpcomingSection() {
           {/* Second Calendar */}
           <div className="w-full lg:w-1/2 h-[420px] lg:h-[500px] rounded-xl border border-[#D4AF37]/20 bg-white p-6 overflow-hidden relative shadow-2xl">
             <h2 className="text-3xl font-bold text-center mb-6 text-[#1E3A8A]">
-              Vaishnava Calendar 2025
+              Vaishnava Calendar 2026
             </h2>
             <div className="overflow-y-auto h-[340px] lg:h-[400px] pr-2 scroll-smooth custom-scrollbar">
               {vaishnavaEvents.map((event, index) => (

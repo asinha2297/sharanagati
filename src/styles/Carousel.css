@@ -1,22 +1,28 @@
 .carousel-wrapper {
   width: 100%;
   /* max-width: 1300px; */
-  margin: 1rem auto; 
+  margin: 1rem auto;
   position: relative;
   overflow: hidden;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
 }
 
+.carousel-slide {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 18 / 9;
+  overflow: hidden;
+}
 
 .carousel-img {
   width: 100%;
-  height: 700px;
-  object-fit: cover;         
-  border-radius: 0;         
-  background-color: transparent; 
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  background-color: transparent;
   display: block;
-  line-height: 0;  
-  object-position: 50% 20%;
+  line-height: 0;
+  object-position: center;
 
 
   
@@ -79,8 +85,41 @@ Height: 550px ---use this size for carousel Image for perfect fit
 }
 
 .carousel-wrapper,
-.carousel-slide
- {
+.carousel-slide {
   display: block;
-  line-height: 0; 
+  line-height: 0;
+}
+
+@media (max-width: 768px) {
+  .carousel-slide {
+    aspect-ratio: 16 / 9;
+  }
+
+  .carousel-caption {
+    bottom: 16px;
+    left: 16px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  .arrow {
+    width: 38px;
+    height: 38px;
+    line-height: 38px;
+    font-size: 1.5rem;
+  }
+
+  .next {
+    right: 8px;
+  }
+
+  .prev {
+    left: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-slide {
+    aspect-ratio: 3 / 2;
+  }
 }

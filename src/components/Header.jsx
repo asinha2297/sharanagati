@@ -16,7 +16,11 @@ const Header = () => {
     <header className="relative text-[#1E3A8A] shadow-md bg-[#FFF7E0] border-b-4 border-[#F59E0B]">
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex flex-col md:flex-row md:items-center md:gap-6 w-full md:w-auto">
-          <img src={sharanagatilogo} alt="Left Logo" className="h-16 md:h-20 w-auto" />
+          <img
+            src={sharanagatilogo}
+            alt="Left Logo"
+            className="block h-16 w-auto max-w-[180px] object-contain flex-shrink-0 md:h-20 md:max-w-[220px]"
+          />
           <nav className="flex flex-wrap justify-center md:justify-start gap-2 md:gap-3 mt-3 md:mt-0">
             <NavLink
               to="/"
@@ -56,7 +60,7 @@ const Header = () => {
           <img
             src={iskconlogo}
             alt="ISKCON Logo"
-            className="h-16 md:h-20 w-auto"
+            className="block h-16 w-auto max-w-[180px] object-contain flex-shrink-0 md:h-20 md:max-w-[220px]"
           />
         </div>
       </div>
