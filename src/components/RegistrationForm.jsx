@@ -9,6 +9,7 @@ export default function RegistrationForm() {
     name: "",
     age: "",
     gender: "",
+    attendingClasses: "",
     mobile: "",
     email: "",
     category: "",
@@ -16,7 +17,7 @@ export default function RegistrationForm() {
     paymentScreenshot: "",
     persons: "1",
   });
-// Are you attending classes on regualr basis?
+
   const [additionalPersons, setAdditionalPersons] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -28,6 +29,10 @@ export default function RegistrationForm() {
   // Category A rooms available = 22
   const MAX_CATEGORY_A_REGISTRATIONS = 35;
   const isCategoryADisabled = savedRegistrations.length >= MAX_CATEGORY_A_REGISTRATIONS;
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, []);
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -166,7 +171,12 @@ export default function RegistrationForm() {
         .fill(0)
         .map(
           (_, idx) =>
-            additionalPersons[idx] || { name: "", age: "", gender: "" }
+            additionalPersons[idx] || {
+              attendingClasses: "",
+              name: "",
+              age: "",
+              gender: "",
+            }
         );
       setAdditionalPersons(newPersons);
     }
@@ -202,6 +212,7 @@ export default function RegistrationForm() {
       name: formData.name,
       age: parseInt(formData.age),
       gender: formData.gender,
+      attendingClasses: formData.attendingClasses,
       category: formData.category,
       mobile: formData.mobile,
       email: formData.email,
@@ -215,6 +226,7 @@ export default function RegistrationForm() {
         name: person.name,
         age: parseInt(person.age),
         gender: person.gender,
+        attendingClasses: person.attendingClasses,
         amount: perPersonAmounts[index + 1] || 0,
       })),
     };
@@ -273,6 +285,7 @@ export default function RegistrationForm() {
               name: "",
               age: "",
               gender: "",
+              attendingClasses: "",
               mobile: "",
               email: "",
               category: "",
@@ -344,6 +357,27 @@ export default function RegistrationForm() {
             <h2 className="text-2xl font-semibold text-[#1E3A8A] mb-4 text-center">
               Registration Form
             </h2>
+
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
+              <label
+                htmlFor="attendingClasses"
+                className="w-full sm:w-40 text-[#1E3A8A] font-semibold"
+              >
+                Do you attend classes regularly?
+              </label>
+              <select
+                name="attendingClasses"
+                id="attendingClasses"
+                required
+                value={formData.attendingClasses}
+                onChange={handleFormDataChange}
+                className="flex-1 px-4 py-3 border rounded-lg bg-white/80"
+              >
+                <option value="">Select</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
               <label
@@ -459,6 +493,22 @@ export default function RegistrationForm() {
                 <h3 className="text-lg font-semibold text-[#1E3A8A] text-center">
                   Add Details {index + 2} Devotee
                 </h3>
+                {/* <div>
+                  <label className="block text-[#1E3A8A] font-semibold mb-2">
+                    Are you attending classes on regualr basis?
+                  </label>
+                  <select
+                    name="attendingClasses"
+                    required
+                    value={person.attendingClasses || ""}
+                    onChange={(e) => handleAdditionalChange(index, e)}
+                    className="w-full px-4 py-3 border rounded-lg bg-white/80"
+                  >
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div> */}
                 <input
                   type="text"
                   name="name"
