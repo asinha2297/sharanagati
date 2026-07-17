@@ -1,8 +1,11 @@
 
+require("dotenv").config({ path: require("path").join(__dirname, ".env") });
+
 
 const express = require("express"); const path = require("path"); const cors = require("cors"); const helmet = require("helmet"); const morgan = require("morgan");
 
 const registrationRoutes = require("./routes/registrationRoutes"); const adminRoutes = require("./routes/adminRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 const errorHandler = require("./middlewares/errorHandler");
 
@@ -21,7 +24,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/health", (req, res) => { res.status(200).json({ status: "OK" }); });
 
-app.use("/api/registration", registrationRoutes); app.use("/api/admin", adminRoutes);
+app.use("/api/registration", registrationRoutes); app.use("/api/admin", adminRoutes); app.use("/api", paymentRoutes);
 
 app.use(errorHandler);
 
