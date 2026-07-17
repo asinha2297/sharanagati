@@ -22,24 +22,25 @@ const Yatras = () => {
     intro: [
       "We are very happy to let you know that we are having this year's Durga Puja yatra from 16-10-2026 to 20-10-2026.",
       "Shri Ahobilam Dham is the holy place where Lord Narasimha appeared to protect His dear devotee Prahlad. We will take darshan of 9 special forms of Sri Nrsimhadev there.",
-      "Along with darshan of Panaka Nrsimha at Vijayawada, devotees can offer panakam (gur water) and also take darshan of Sri Lakshmi Narasimha established by the Pandavas, with a visit to Vedadri Nrsimhadev.",
+      "Along with darshan of Panaka Nrsimha at Vijayawada, where devotees can offer panakam/gur water to Sri Nrsimhadev, we will also take darshan of Sri Lakshmi Narsimha established by the Pandavas and visit Vedadri Nrsimhadev (around 80 kms one way).",
     ],
     itinerary: [
-      "16-10-2026: Train departs from Kolkata to Vijayawada.",
+      "16-10-2026: Train will depart from Kolkata to Vijayawada.",
       "17-10-2026: Arrival at Vijayawada and hotel accommodation.",
-      "17-10-2026 (after lunch, by bus): Departure for Vedadri.",
-      "18-10-2026 (early morning, by bus): Darshan at Panakala Lakshmi Narasimha Swamy Temple, Mangalagiri.",
-      "18-10-2026 afternoon (by train): Vijayawada to Nandyal departure at 13:10.",
-      "18-10-2026 night (by bus): Arrival at Nandyal; onward drive to Ahobilam and guest house check-in.",
-      "19-10-2026 and 20-10-2026: Lower and Upper Ahobilam darshan; Ugra Stambha trekking on 20th Oct.",
-      "20-10-2026 night: Ahobilam to Nandyal by bus and night train onward journey.",
+      "17-10-2026 (After lunch prasadam; by bus): Leaving for Vedadri.",
+      "18-10-2026 (Early morning by bus): Visit to the sacred Panakala Lakshmi Narasimha Swamy Temple, Mangalagiri, for divine darshan.",
+      "18-10-2026 afternoon (By train): Departure for Nandyal Station from Vijayawada at 13:10 hrs.",
+      "18-10-2026 night (By bus): Arrival at Nandyal Railway Station.",
+      "Upon arrival, devotees will board buses for Ahobilam (1 hour drive). On reaching Ahobilam, room check-in to guest house.",
+      "19-10-2026 and 20-10-2026: Darshan of Lower Ahobilam and Upper Ahobilam temples. Trekking to Ugra6 stambha on 20th Oct.",
+      "20-10-2026 (Night): Leave from Ahobilam to Nandyal by 1 hour bus drive and then take train at night.",
     ],
     trainDetails: [
       {
         title: "Kolkata to Vijayawada",
         date: "Friday 16-10-2026",
         notes: [
-          "Daily trains: From Howrah 12841 (15:10 - 10:10 next day), From Shalimar 18045 (11:15 - 10:30 next day).",
+          "Daily trains: From Howrah 12841 (15:10pm --> 10:10am next day), From Shalimar 18045 (11:15am --> 10:30 AM next day).",
           "Weekly Friday train: From Howrah 22817 (16:00 - 11:50 next day).",
           "Recommended: Star-marked option can better match yatra start timings.",
         ],
@@ -53,7 +54,7 @@ const Yatras = () => {
         title: "Nandyal to Kolkata",
         date: "Tuesday 20-10-2026",
         notes: [
-          "18048 (20:25 - 23:45 next day).",
+          "18048 (20:25pm --> 23:45 pm next day).",
           "As there is only one train from Nandyal, tickets should be booked quickly.",
           "Possible advance booking stations: VSG, UBL, HPT, BAY (boarding point can later be updated to Nandyal).",
         ],
@@ -77,25 +78,36 @@ const Yatras = () => {
       },
     ],
     hotelCategories: [
-      "Category A - AC Double Bed Rooms: 8300",
-      "Category B - AC Triple Bed Rooms: 7800",
+      "Category A - AC Double Bed Rooms: 8000",
+      "Category B - AC Triple Bed Rooms: 7500",
       "Children below 3 years: No charges",
       "Children 3-17 years (till class 12): 5000 per child",
       "Above 17 years: Full charges",
       "Charges include pickup/drop from station, prasadam during yatra, accommodation, and internal travel.",
       "Train journey fare and train prasadam charges are not included.",
-      "Room allotment is first-come, first-served. Early registration gets priority at the main hotel.",
+      "Room allotment will be first-come, first-served. We can take only 80 devotees in the first hotel.",
+      "Those who register earlier will be given priority in room allocation at the hotel where the programs, classes, and kirtans will be held (no changes in any condition).",
+      "Priority will be given to those who attend classes on a regular basis.",
       "After first hotel fills up, nearby hotels will be allotted.",
     ],
     registrationGuidelines: [
-      "Registration begins online from 12-07-2026.",
+      "Registration begins online from 15-07-2026.",
       "Registration amount per devotee: Category A 4000, Category B 3800, Child 2500 (adjusted in total amount).",
       "Last Date of Registration: 31-07-2026.",
+      "After 31st July - Late registration fee Rs 500 per person extra.",
       "Last Date of Full Payment: 01-09-2026.",
+      "Advance booking will open on 19-08-2026 at 8:00 AM IST.",
       "Only registered devotees (with registration payment) will be added to the yatra WhatsApp group for updates.",
     ],
-    cancellationPolicy:
-      "Any cancellation made after 15-08-2026 will incur a deduction of 50% of the total amount per person.",
+    cancellationPolicy: [
+      "02-09-2026 to 14-09-2026 = 25% of total amount per person",
+      "15-09-2026 to 08-10-2026 = 50% of total amount per person",
+      "After 09-10-2026 = No refund",
+    ],
+    contactDetails: [
+      { name: "Rounak Ranjan Singh", phone: "7972185705" },
+      { name: "Pritam Saha", phone: "7980949913" },
+    ],
   };
 
   return (
@@ -186,7 +198,22 @@ const Yatras = () => {
 
           <section className="rounded-xl border border-red-200 bg-red-50 p-4">
             <h3 className="text-lg font-semibold text-red-700 mb-2">Cancellation Policy</h3>
-            <p className="text-sm text-red-700 leading-relaxed">{upcomingYatra.cancellationPolicy}</p>
+            <ul className="space-y-1 text-sm text-red-700 leading-relaxed">
+              {upcomingYatra.cancellationPolicy.map((item) => (
+                <li key={item}>• {item}</li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+            <h3 className="text-lg font-semibold text-[#1E3A8A] mb-2">Contact Details</h3>
+            <ul className="space-y-1 text-sm leading-relaxed">
+              {upcomingYatra.contactDetails.map((contact) => (
+                <li key={contact.phone}>
+                  • {contact.name}: {contact.phone}
+                </li>
+              ))}
+            </ul>
           </section>
         </div>
 
