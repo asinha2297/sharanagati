@@ -102,6 +102,21 @@ export default function RegistrationForm() {
     return value ? `₹${value.toLocaleString()}` : "-";
   };
 
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   /*
   const exportToCsv = () => {
     if (!savedRegistrations.length) return;
@@ -202,7 +217,7 @@ export default function RegistrationForm() {
     reader.readAsDataURL(file);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const groupAges = [formData.age, ...additionalPersons.map((person) => person.age)];
@@ -231,7 +246,7 @@ export default function RegistrationForm() {
       })),
     };
 
-    const submitToServer = (completeData) => {
+    const submitToServer = async (completeData, paymentData) => {
       try {
         const payload = new FormData();
         const fileInput = document.getElementById("paymentScreenshot");
@@ -239,6 +254,9 @@ export default function RegistrationForm() {
         const submissionData = {
           ...completeData,
           paymentScreenshot: file ? file.name : "",
+          razorpayPaymentId: paymentData?.razorpay_payment_id || "",
+          razorpayOrderId: paymentData?.razorpay_order_id || "",
+          razorpaySignature: paymentData?.razorpay_signature || "",
         };
 
         payload.append("name", submissionData.name);
@@ -251,6 +269,9 @@ export default function RegistrationForm() {
         payload.append("persons", submissionData.persons);
         payload.append("amountPerPerson", submissionData.amountPerPerson);
         payload.append("totalAmount", submissionData.totalAmount);
+        payload.append("razorpayPaymentId", submissionData.razorpayPaymentId);
+        payload.append("razorpayOrderId", submissionData.razorpayOrderId);
+        payload.append("razorpaySignature", submissionData.razorpaySignature);
         payload.append(
           "additionalPerson",
           JSON.stringify(submissionData.additionalPerson)
@@ -260,52 +281,125 @@ export default function RegistrationForm() {
           payload.append("paymentScreenshot", file);
         }
 
-        fetch(apiUrl("/api/registration/save-to-json"), {
+        const saveResponse = await fetch(apiUrl("/api/registration/save-to-json"), {
           method: "POST",
           body: payload,
-        })
-          .then((res) => {
-            if (!res.ok) {
-              return res.text().then((text) => {
-                throw new Error(`Server responded with ${res.status}: ${text}`);
-              });
-            }
-            return res.json();
-          })
-          .then((data) => {
-            setSavedRegistrations((prev) => {
-              const updated = [...prev, submissionData];
-              localStorage.setItem("registrations", JSON.stringify(updated));
-              return updated;
-            });
+        });
 
-            setShowConfirmation(true);
-            setErrorMessage("");
-            setFormData({
-              name: "",
-              age: "",
-              gender: "",
-              attendingClasses: "",
-              mobile: "",
-              email: "",
-              category: "",
-              transactionId: "",
-              paymentScreenshot: "",
-              persons: "1",
-            });
-            setAdditionalPersons([]);
-          })
-          .catch((err) => {
-            console.error("Save failed:", err);
-            setErrorMessage(`Failed to save registration. ${err.message}`);
-          });
+        if (!saveResponse.ok) {
+          const text = await saveResponse.text();
+          throw new Error(`Server responded with ${saveResponse.status}: ${text}`);
+        }
+
+        await saveResponse.json();
+
+        setSavedRegistrations((prev) => {
+          const updated = [...prev, submissionData];
+          localStorage.setItem("registrations", JSON.stringify(updated));
+          return updated;
+        });
+
+        setShowConfirmation(true);
+        setErrorMessage("");
+        setFormData({
+          name: "",
+          age: "",
+          gender: "",
+          attendingClasses: "",
+          mobile: "",
+          email: "",
+          category: "",
+          transactionId: "",
+          paymentScreenshot: "",
+          persons: "1",
+        });
+        setAdditionalPersons([]);
       } catch (err) {
         console.error("Registration save failed:", err);
         setErrorMessage("Failed to save registration. Please try again.");
       }
     };
 
-    submitToServer(completeDataBase);
+    try {
+      const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID;
+      if (!razorpayKeyId) {
+        setErrorMessage("Payment is not configured. Please contact support.");
+        return;
+      }
+
+      const totalAmount = calculateTotalAmount();
+      if (!Number.isFinite(totalAmount) || totalAmount <= 0) {
+        setErrorMessage("Invalid payment amount.");
+        return;
+      }
+
+      const sdkLoaded = await loadRazorpayScript();
+      if (!sdkLoaded) {
+        setErrorMessage("Unable to load Razorpay Checkout. Please try again.");
+        return;
+      }
+
+      const createOrderResponse = await fetch(apiUrl("/api/create-order"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: Math.round(totalAmount * 100),
+          currency: "INR",
+          receipt: `rcpt_${Date.now()}`,
+        }),
+      });
+
+      const orderData = await createOrderResponse.json();
+      if (!createOrderResponse.ok || !orderData?.order_id) {
+        throw new Error(orderData?.message || "Unable to create payment order");
+      }
+
+      const paymentData = await new Promise((resolve, reject) => {
+        const razorpay = new window.Razorpay({
+          key: razorpayKeyId,
+          amount: orderData.amount,
+          currency: orderData.currency,
+          order_id: orderData.order_id,
+          name: "Sharanagati",
+          description: "Yatra Registration Payment",
+          handler: (response) => resolve(response),
+          modal: {
+            ondismiss: () => reject(new Error("Payment cancelled by user")),
+          },
+          prefill: {
+            name: formData.name,
+            email: formData.email,
+            contact: formData.mobile,
+          },
+          theme: {
+            color: "#1E3A8A",
+          },
+        });
+
+        razorpay.on("payment.failed", (response) => {
+          const reason = response?.error?.description || "Payment failed";
+          reject(new Error(reason));
+        });
+
+        razorpay.open();
+      });
+
+      const verifyResponse = await fetch(apiUrl("/api/verify-payment"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(paymentData),
+      });
+      const verifyData = await verifyResponse.json();
+
+      if (!verifyResponse.ok || !verifyData?.success) {
+        throw new Error(verifyData?.message || "Payment verification failed");
+      }
+
+      await submitToServer(completeDataBase, paymentData);
+    } catch (err) {
+      console.error("Payment flow failed:", err);
+      setErrorMessage(`Payment failed. ${err.message}`);
+    }
   };
 
   return (
@@ -576,7 +670,7 @@ export default function RegistrationForm() {
                   Total Payable: {formatCurrency(calculateTotalAmount())}
                 </p>
               </div>
-              <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-4 space-y-4 lg:space-y-0">
+              {/* <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-4 space-y-4 lg:space-y-0">
                 <div className="flex-1">
                   <label htmlFor="transactionId" className="block text-[#1E3A8A] font-semibold mb-2">
                     Transaction ID
@@ -606,7 +700,7 @@ export default function RegistrationForm() {
                     <p className="mt-2 text-sm text-green-600">Screenshot ready to submit.</p>
                   )}
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex justify-center mt-6">
