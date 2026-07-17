@@ -2,10 +2,18 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ContactUs.css";
 import Y1Img1 from "../assets/Ekachakra.jpg";
+import Y2Img1 from "../assets/IMG_20241215_114935.jpg";
 import Y3Img1 from "../assets/Medicos.jpg";
 import Y4Img1 from "../assets/Snehodiya.jpg";
 import Y5Img1 from "../assets/Dwarka.jpg";
 import Y6Img1 from "../assets/Malda.jpg";
+import Y7Img1 from "../assets/IMG_0880.jpg";
+import Y8Img1 from "../assets/IMG_0535.jpg";
+import Y9Img1 from "../assets/IMG_8725.jpg";
+import Y10Img1 from "../assets/IMG_20240127_141036.jpg"; //Sri Remuna Khirchor Gopinath Yatra 2024
+import Y11Img1 from "../assets/20231026_115857.jpg"; //Sri Jaipur Yatra 2023
+import Y12Img1 from "../assets/20221003_090827.jpg"; //Sri Vrindavan Dhaam Yatra 2022
+
 
 const Yatras = () => {
   const navigate = useNavigate();
@@ -14,24 +22,25 @@ const Yatras = () => {
     intro: [
       "We are very happy to let you know that we are having this year's Durga Puja yatra from 16-10-2026 to 20-10-2026.",
       "Shri Ahobilam Dham is the holy place where Lord Narasimha appeared to protect His dear devotee Prahlad. We will take darshan of 9 special forms of Sri Nrsimhadev there.",
-      "Along with darshan of Panaka Nrsimha at Vijayawada, devotees can offer panakam (gur water) and also take darshan of Sri Lakshmi Narasimha established by the Pandavas, with a visit to Vedadri Nrsimhadev.",
+      "Along with darshan of Panaka Nrsimha at Vijayawada, where devotees can offer panakam/gur water to Sri Nrsimhadev, we will also take darshan of Sri Lakshmi Narsimha established by the Pandavas and visit Vedadri Nrsimhadev (around 80 kms one way).",
     ],
     itinerary: [
-      "16-10-2026: Train departs from Kolkata to Vijayawada.",
+      "16-10-2026: Train will depart from Kolkata to Vijayawada.",
       "17-10-2026: Arrival at Vijayawada and hotel accommodation.",
-      "17-10-2026 (after lunch, by bus): Departure for Vedadri.",
-      "18-10-2026 (early morning, by bus): Darshan at Panakala Lakshmi Narasimha Swamy Temple, Mangalagiri.",
-      "18-10-2026 afternoon (by train): Vijayawada to Nandyal departure at 13:10.",
-      "18-10-2026 night (by bus): Arrival at Nandyal; onward drive to Ahobilam and guest house check-in.",
-      "19-10-2026 and 20-10-2026: Lower and Upper Ahobilam darshan; Ugra Stambha trekking on 20th Oct.",
-      "20-10-2026 night: Ahobilam to Nandyal by bus and night train onward journey.",
+      "17-10-2026 (After lunch prasadam; by bus): Leaving for Vedadri.",
+      "18-10-2026 (Early morning by bus): Visit to the sacred Panakala Lakshmi Narasimha Swamy Temple, Mangalagiri, for divine darshan.",
+      "18-10-2026 afternoon (By train): Departure for Nandyal Station from Vijayawada at 13:10 hrs.",
+      "18-10-2026 night (By bus): Arrival at Nandyal Railway Station.",
+      "Upon arrival, devotees will board buses for Ahobilam (1 hour drive). On reaching Ahobilam, room check-in to guest house.",
+      "19-10-2026 and 20-10-2026: Darshan of Lower Ahobilam and Upper Ahobilam temples. Trekking to Ugra6 stambha on 20th Oct.",
+      "20-10-2026 (Night): Leave from Ahobilam to Nandyal by 1 hour bus drive and then take train at night.",
     ],
     trainDetails: [
       {
         title: "Kolkata to Vijayawada",
         date: "Friday 16-10-2026",
         notes: [
-          "Daily trains: From Howrah 12841 (15:10 - 10:10 next day), From Shalimar 18045 (11:15 - 10:30 next day).",
+          "Daily trains: From Howrah 12841 (15:10pm --> 10:10am next day), From Shalimar 18045 (11:15am --> 10:30 AM next day).",
           "Weekly Friday train: From Howrah 22817 (16:00 - 11:50 next day).",
           "Recommended: Star-marked option can better match yatra start timings.",
         ],
@@ -45,7 +54,7 @@ const Yatras = () => {
         title: "Nandyal to Kolkata",
         date: "Tuesday 20-10-2026",
         notes: [
-          "18048 (20:25 - 23:45 next day).",
+          "18048 (20:25pm --> 23:45 pm next day).",
           "As there is only one train from Nandyal, tickets should be booked quickly.",
           "Possible advance booking stations: VSG, UBL, HPT, BAY (boarding point can later be updated to Nandyal).",
         ],
@@ -69,25 +78,36 @@ const Yatras = () => {
       },
     ],
     hotelCategories: [
-      "Category A - AC Double Bed Rooms: 8300",
-      "Category B - AC Triple Bed Rooms: 7800",
+      "Category A - AC Double Bed Rooms: 8000",
+      "Category B - AC Triple Bed Rooms: 7500",
       "Children below 3 years: No charges",
       "Children 3-17 years (till class 12): 5000 per child",
       "Above 17 years: Full charges",
       "Charges include pickup/drop from station, prasadam during yatra, accommodation, and internal travel.",
       "Train journey fare and train prasadam charges are not included.",
-      "Room allotment is first-come, first-served. Early registration gets priority at the main hotel.",
+      "Room allotment will be first-come, first-served. We can take only 80 devotees in the first hotel.",
+      "Those who register earlier will be given priority in room allocation at the hotel where the programs, classes, and kirtans will be held (no changes in any condition).",
+      "Priority will be given to those who attend classes on a regular basis.",
       "After first hotel fills up, nearby hotels will be allotted.",
     ],
     registrationGuidelines: [
-      "Registration begins online from 12-07-2026.",
+      "Registration begins online from 15-07-2026.",
       "Registration amount per devotee: Category A 4000, Category B 3800, Child 2500 (adjusted in total amount).",
       "Last Date of Registration: 31-07-2026.",
+      "After 31st July - Late registration fee Rs 500 per person extra.",
       "Last Date of Full Payment: 01-09-2026.",
+      "Advance booking will open on 19-08-2026 at 8:00 AM IST.",
       "Only registered devotees (with registration payment) will be added to the yatra WhatsApp group for updates.",
     ],
-    cancellationPolicy:
-      "Any cancellation made after 15-08-2026 will incur a deduction of 50% of the total amount per person.",
+    cancellationPolicy: [
+      "02-09-2026 to 14-09-2026 = 25% of total amount per person",
+      "15-09-2026 to 08-10-2026 = 50% of total amount per person",
+      "After 09-10-2026 = No refund",
+    ],
+    contactDetails: [
+      { name: "Rounak Ranjan Singh", phone: "7972185705" },
+      { name: "Pritam Saha", phone: "7980949913" },
+    ],
   };
 
   return (
@@ -178,7 +198,22 @@ const Yatras = () => {
 
           <section className="rounded-xl border border-red-200 bg-red-50 p-4">
             <h3 className="text-lg font-semibold text-red-700 mb-2">Cancellation Policy</h3>
-            <p className="text-sm text-red-700 leading-relaxed">{upcomingYatra.cancellationPolicy}</p>
+            <ul className="space-y-1 text-sm text-red-700 leading-relaxed">
+              {upcomingYatra.cancellationPolicy.map((item) => (
+                <li key={item}>• {item}</li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+            <h3 className="text-lg font-semibold text-[#1E3A8A] mb-2">Contact Details</h3>
+            <ul className="space-y-1 text-sm leading-relaxed">
+              {upcomingYatra.contactDetails.map((contact) => (
+                <li key={contact.phone}>
+                  • {contact.name}: {contact.phone}
+                </li>
+              ))}
+            </ul>
           </section>
         </div>
 
@@ -193,156 +228,83 @@ const Yatras = () => {
       <h1 className="page-title !text-left text-4xl !font-normal text-[#1E3A8A] mt-10 mb-10">
         Previous Yatra
       </h1>
-      <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4 flex flex-col md:flex-row gap-8 items-stretch mt-10">
-      {/* Image Section */}
-      <div className="w-full md:w-1/2 flex justify-center items-center">
-        <div className="w-full flex flex-wrap gap-4 justify-center">
-          <img src={Y1Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-full max-w-md h-auto object-cover" />
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-10">
+        <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4">
+          <div className="flex flex-col items-center gap-4">
+            <img src={Y7Img1} alt="Medicos Ekachakra Yatra 2026" className="h-56 w-full rounded-lg object-cover shadow sm:h-64 lg:h-72" />
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] text-center">Medicos Ekachakra Yatra 2026</h2>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4">
+          <div className="flex flex-col items-center gap-4">
+            <img src={Y8Img1} alt="Tirupati Kanchipuram Srirangam Yatra 2025" className="h-56 w-full rounded-lg object-cover shadow sm:h-64 lg:h-72" />
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] text-center">Tirupati Kanchipuram Srirangam Yatra 2025</h2>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4">
+          <div className="flex flex-col items-center gap-4">
+            <img src={Y9Img1} alt="Sri Chitrakoot Ayodhya Yatra 2025" className="h-56 w-full rounded-lg object-cover shadow sm:h-64 lg:h-72" />
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] text-center">Sri Chitrakoot Ayodhya Yatra 2025</h2>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4">
+          <div className="flex flex-col items-center gap-4">
+            <img src={Y1Img1} alt="Ekachakra Dhaam Yatra" className="h-56 w-full rounded-lg object-cover shadow sm:h-64 lg:h-72" />
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] text-center">Ekachakra Dhaam Yatra</h2>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4">
+          <div className="flex flex-col items-center gap-4">
+            <img src={Y2Img1} alt="Gangasagar Dhaam Yatra" className="h-56 w-full rounded-lg object-cover shadow sm:h-64 lg:h-72" />
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] text-center">Gangasagar Dhaam Yatra</h2>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4">
+          <div className="flex flex-col items-center gap-4">
+            <img src={Y3Img1} alt="Sri Mayapur Dhaam Yatra for Medicos" className="h-56 w-full rounded-lg object-cover shadow sm:h-64 lg:h-72" />
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] text-center">Sri Mayapur Dhaam Yatra for Medicos</h2>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4">
+          <div className="flex flex-col items-center gap-4">
+            <img src={Y4Img1} alt="Sri Mayapur Dhaam Yatra for Seniors" className="h-56 w-full rounded-lg object-cover shadow sm:h-64 lg:h-72" />
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] text-center">Sri Mayapur Dhaam Yatra for Seniors</h2>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4">
+          <div className="flex flex-col items-center gap-4">
+            <img src={Y5Img1} alt="Dakor / Somnath / Dwarka / Srinath-Jee Dhaam Yatra" className="h-56 w-full rounded-lg object-cover shadow sm:h-64 lg:h-72" />
+            <h2 className="mx-auto max-w-xs text-sm font-semibold leading-tight text-[#1E3A8A] text-center text-balance sm:max-w-sm sm:text-base md:max-w-md md:text-lg">
+              <span className="block">Dakor / Somnath / Dwarka</span>
+              <span className="block">Srinath-Jee Dhaam Yatra</span>
+            </h2>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4">
+          <div className="flex flex-col items-center gap-4">
+            <img src={Y6Img1} alt="Malda Yatra" className="h-56 w-full rounded-lg object-cover shadow sm:h-64 lg:h-72" />
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] text-center">Malda Yatra</h2>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4">
+          <div className="flex flex-col items-center gap-4">
+            <img src={Y10Img1} alt="Sri Remuna Khirchor Gopinath Yatra 2024" className="h-56 w-full rounded-lg object-cover shadow sm:h-64 lg:h-72" />
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] text-center">Sri Remuna Khirchor Gopinath Yatra 2024</h2>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4">
+          <div className="flex flex-col items-center gap-4">
+            <img src={Y11Img1} alt="Sri Jaipur Yatra 2023" className="h-56 w-full rounded-lg object-cover shadow sm:h-64 lg:h-72" />
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] text-center">Sri Jaipur Yatra 2023</h2>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4">
+          <div className="flex flex-col items-center gap-4">
+            <img src={Y12Img1} alt="Sri Vrindavan Dhaam Yatra 2022" className="h-56 w-full rounded-lg object-cover shadow sm:h-64 lg:h-72" />
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] text-center">Sri Vrindavan Dhaam Yatra 2022</h2>
+          </div>
         </div>
       </div>
-      {/* Write-up Section */}
-      <div className="w-full md:w-1/2">
-        <div className="p-4 md:p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-[#1E3A8A]">Ekachakra Dhaam Yatra</h2>
-          <p className="text-gray-700 text-justify">
-            The Ekachakra Dham Yatra was held from March 21st to 23rd, 2025, with the participation of approximately 180 to 200 devotees. During the pilgrimage, devotees visited several spiritually significant sites associated with the pastimes of Sri Nityananda Prabhu.
-          </p>
-          <p className="text-gray-700 text-justify">
-            These included Sri Nityananda Prabhu’s birthplace and residence, Bakultala, Nabhipota, Pandava Tala, Kadamba Khandi, Sri Bankim Raya Temple, ISKCON Temple and Padmavati Kunda.
-          </p>
-          <p className="text-gray-700 text-justify">
-            The yatra offered a deeply devotional experience, allowing participants to immerse themselves in the sacred atmosphere of Ekachakra Dham.
-          </p>
-        </div>
-      </div>
-    </div>
-    <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4 flex flex-col md:flex-row gap-8 items-stretch mt-10">
-    {/* Write-up Section */}
-    <div className="w-full md:w-1/2">
-      <div className="p-4 md:p-6">
-        <h2 className="text-2xl font-semibold mb-4 text-[#1E3A8A]">Gangasagar Dhaam Yatra</h2>
-        <p className="text-gray-700 text-justify">
-          The Gangasagar Dham Yatra was held from December 14th to 16th, 2024, a spiritually enriching pilgrimage to the sacred confluence of the Ganga River and the Bay of Bengal, a site revered for its purifying and liberating energies. This yatra attracted approx. 150-180 devotees, all united in their aspiration for spiritual upliftment and blessings.
-        </p>
-        <p className="text-gray-700 text-justify">
-          Pilgrims visited the holy Kapil Muni Ashram, where Sage Kapil performed his penance, as well as the Gangasagar Sangam, where a holy dip is believed to absolve lifetimes of sins. The yatra also included kirtan, satsang, and devotional gatherings that deepened the spiritual atmosphere.
-        </p>
-        <p className="text-gray-700 text-justify">
-          With hearts filled with devotion, participants returned with lasting impressions of divine grace, sacred memories, and a renewed commitment to their spiritual path.
-        </p>
-      </div>
-    </div>
-    {/* Carousel Section */}
-    <div className="w-full md:w-1/2 flex justify-center items-center">
-      <div className="w-full flex flex-wrap gap-4 justify-center">
-          <img src={Y1Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-full max-w-md h-auto object-cover" />
-      </div>
-    </div>
-    </div>
-      <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4 flex flex-col md:flex-row gap-8 items-stretch mt-10">
-      {/* Carousel Section */}
-      <div className="w-full md:w-1/2 flex justify-center items-center">
-        <div className="w-full flex flex-wrap gap-4 justify-center">
-          <img src={Y3Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-full max-w-md h-auto object-cover" />
-        </div>
-      </div>
-      {/* Write-up Section */}
-      <div className="w-full md:w-1/2">
-        <div className="p-4 md:p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-[#1E3A8A]">Sri Mayapur Dhaam Yatra for Medicos</h2>
-          <p className="text-gray-700 text-justify">
-            From 26th to 29th November 2024, a special yatra to Sri Mayapur Dhaam was organized exclusively for medical professionals. Over the course of four days, the participating medicos immersed themselves in devotional practices, including mangalarati, japa meditation, kirtan, and scriptural discourses.
-          </p>
-          <p className="text-gray-700 text-justify">
-            Key sites visited during the yatra included: Yogpeeth, Srila, Prabhupada’s Pushpa Samadhi Mandir, ISKCON Mayapur Mandir, Rajapur Jagannath Mandir, Goshala, Ganga Safari.
-          </p>
-          <p className="text-gray-700 text-justify">
-            The participants returned uplifted and spiritually nourished, carrying the divine impressions of Mayapur Dhaam in their hearts.
-          </p>
-        </div>
-      </div>
-    </div>
-    <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4 flex flex-col md:flex-row gap-8 items-stretch mt-10">
-    {/* Write-up Section */}
-    <div className="w-full md:w-1/2">
-      <div className="p-4 md:p-6">
-        <h2 className="text-2xl font-semibold mb-4 text-[#1E3A8A]">Sri Mayapur Dhaam Yatra for Seniors</h2>
-        <p className="text-gray-700 text-justify">
-          A special Sri Mayapur Dham Yatra was organized for senior devotees, offering them a peaceful and spiritually uplifting retreat in the holy land of Sri Chaitanya Mahaprabhu.
-        </p>
-        <p className="text-gray-700 text-justify">
-          The yatra provided a serene opportunity to reconnect with the sacred through daily temple darshans, kirtans, scriptural classes and japa sessions.
-        </p>
-        <p className="text-gray-700 text-justify">
-          Time was also set aside for rest, reflection, and association, ensuring a balanced and fulfilling experience for the seniors.
-        </p>
-        <p className="text-gray-700 text-justify">
-          The senior devotees returned home not only spiritually rejuvenated but also with hearts filled with gratitude and joy, carrying the holy vibrations of Mayapur Dham into their daily lives.
-        </p>
-      </div>
-    </div>
-    {/* Carousel Section */}
-    <div className="w-full md:w-1/2 flex justify-center items-center">
-      <div className="w-full flex flex-wrap gap-4 justify-center">
-          <img src={Y4Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-full max-w-md h-auto object-cover" />
-      </div>
-    </div>
-    </div>
-    <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4 flex flex-col md:flex-row gap-8 items-stretch mt-10">
-      {/* Carousel Section */}
-      <div className="w-full md:w-1/2 flex justify-center items-center">
-        <div className="w-full flex flex-wrap gap-4 justify-center">
-          <img src={Y5Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-full max-w-md h-auto object-cover" />
-        </div>
-      </div>
-      {/* Write-up Section */}
-      <div className="w-full md:w-1/2">
-        <div className="p-4 md:p-6">
-          <h2 className="mx-auto mb-4 max-w-md text-xl font-semibold leading-tight text-[#1E3A8A] text-balance sm:text-2xl md:max-w-none md:text-3xl">
-            <span className="block">Dakor / Somnath / Dwarka</span>
-            <span className="block">Srinath-Jee Dhaam Yatra</span>
-          </h2>
-          <p className="text-gray-700 text-justify">
-            A sacred and soul-enriching yatra to four prominent Vaishnava pilgrimage sites—Dakor, Somnath, Dwarka, and Srinathji (Nathdwara)—was held from 9th to 15th October 2024.
-          </p>
-          <p className="text-gray-700 text-justify">
-            The yatra began at Dakor Dham, the abode of Sri Ranchhodrai. From there, devotees proceeded to the Somnath Jyotirlinga, one of the twelve sacred Shiva temples.
-          </p>
-          <p className="text-gray-700 text-justify">
-            The yatra continued to Dwarka, the legendary city of Lord Krishna, where pilgrims visited: Dwarkadhish Temple, Rukmini Devi Temple, Bet Dwarka, Gopi Talab, Nageshwar Jyotirlinga.
-          </p>
-          <p className="text-gray-700 text-justify">
-            Finally, the yatra concluded with darshan at Srinathji Temple in Nathdwara, Udaipur.
-          </p>
-          <p className="text-gray-700 text-justify">
-            Throughout the pilgrimage, devotees engaged in bhajans, kirtans, satsangs, and daily scriptural reflections, which elevated the collective consciousness of the group.
-          </p>
-        </div>
-      </div>
-    </div>
-    <div className="bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-4 flex flex-col md:flex-row gap-8 items-stretch mt-10">
-    {/* Write-up Section */}
-    <div className="w-full md:w-1/2">
-      <div className="p-4 md:p-6">
-        <h2 className="text-2xl font-semibold mb-4 text-[#1E3A8A]">Malda Yatra</h2>
-        <p className="text-gray-700 text-justify">
-          The Malda Dham Yatra held in August 2024 was a spiritually enriching pilgrimage. Key places visited included Kanai Natshala, where Mahaprabhu had a divine vision of Lord Krishna, and Ramkeli, the historic meeting place of Rupa and Sanatana Goswamis with the Lord.
-        </p>
-        <p className="text-gray-700 text-justify">
-          A special highlight was the theatrical drama performed by the devotees, beautifully depicting the life and teachings of Sri Chaitanya Mahaprabhu.
-        </p>
-        <p className="text-gray-700 text-justify">
-          The atmosphere was filled with joy, devotion, and heartfelt association, allowing participants to deepen their connection to Mahaprabhu’s mission and mood. The yatra left devotees spiritually nourished and inspired, carrying the blessings and divine impressions of Malda Dham and its sacred surroundings.
-        </p>
-      </div>
-    </div>
-    {/* Carousel Section */}
-    <div className="w-full md:w-1/2 flex justify-center items-center">
-      <div className="w-full flex flex-wrap gap-4 justify-center">
-          <img src={Y6Img1} alt="Yatra 1 Img1" className="rounded-lg shadow w-full max-w-md h-auto object-cover" />
-      </div>
-    </div>
-    </div>
     </div>
   );
 };
