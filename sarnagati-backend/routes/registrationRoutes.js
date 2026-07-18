@@ -2,11 +2,10 @@
 
 const express = require("express"); 
 const router = express.Router();
-const fs = require("fs").promises;
-const path = require("path");
 const crypto = require("crypto");
 
 const upload = require("../middlewares/uploadMiddleware"); 
+const Registration = require("../models/Registration");
 const { registerUser } = require("../controllers/registrationController");
 
 const ACCESS_PASSWORD = process.env.REGISTRATION_ACCESS_PASSWORD || "Sharanagati@2026";
@@ -100,7 +99,10 @@ const getLatestRegistrationByMobile = (registrations, mobile) => {
 const mapPaymentSummary = (entry) => {
   const paidAmount = toNumber(entry.paidAmount, toNumber(entry.totalAmount, 0));
   const fullAmount = toNumber(entry.fullAmount, paidAmount);
-  const remainingAmount = Math.max(0, fullAmount - paidAmount);
+  const remainingAmount = toNumber(
+    entry.remainingAmount,
+    Math.max(0, fullAmount - paidAmount)
+  );
 
   return {
     paidAmount,
@@ -111,6 +113,10 @@ const mapPaymentSummary = (entry) => {
     lateFeeApplied: Boolean(entry.lateFeeApplied),
     lateFeeAmount: toNumber(entry.lateFeeAmount, 0),
   };
+};
+
+const findLatestRegistrationByMobile = async (mobile) => {
+  return Registration.find({ mobile: normalizeMobile(mobile) }).sort({ createdAt: -1 }).limit(1).lean().then((rows) => rows[0] || null);
 };
 
 router.post("/register", upload.single("paymentScreenshot"), registerUser);
@@ -132,9 +138,7 @@ router.get("/registrations", async (req, res) => {
     return res.status(401).json({ success: false, message: "Access denied" });
   }
   try {
-    const filePath = path.join(__dirname, "../registrations.json");
-    const fileContent = await fs.readFile(filePath, "utf-8");
-    const registrations = JSON.parse(fileContent);
+    const registrations = await Registration.find().sort({ createdAt: -1 }).lean();
     res.status(200).json(Array.isArray(registrations) ? registrations : []);
   } catch (err) {
     console.error("Read registrations error:", err);
@@ -218,21 +222,13 @@ router.get("/pending-dues", async (req, res) => {
   }
 
   try {
-    const filePath = path.join(__dirname, "../registrations.json");
-    let registrations = [];
-
-    try {
-      const fileContent = await fs.readFile(filePath, "utf-8");
-      registrations = JSON.parse(fileContent);
-    } catch {
-      registrations = [];
-    }
+    const registrations = await Registration.find().lean();
 
     const pending = (Array.isArray(registrations) ? registrations : [])
       .map((entry) => {
         const payment = mapPaymentSummary(entry);
         return {
-          id: entry.id,
+          id: entry._id,
           name: entry.name,
           mobile: entry.mobile,
           category: entry.category,
@@ -272,20 +268,7 @@ router.get("/status", async (req, res) => {
       });
     }
 
-    const filePath = path.join(__dirname, "../registrations.json");
-    let registrations = [];
-
-    try {
-      const fileContent = await fs.readFile(filePath, "utf-8");
-      registrations = JSON.parse(fileContent);
-    } catch {
-      registrations = [];
-    }
-
-    const latest = getLatestRegistrationByMobile(
-      Array.isArray(registrations) ? registrations : [],
-      mobile
-    );
+    const latest = await findLatestRegistrationByMobile(mobile);
 
     if (!latest) {
       return res.status(200).json({
@@ -300,7 +283,7 @@ router.get("/status", async (req, res) => {
       success: true,
       requiresRegistration: false,
       registration: {
-        id: latest.id,
+        id: latest._id,
         name: latest.name,
         mobile: latest.mobile,
         category: latest.category,
@@ -328,28 +311,9 @@ router.post("/complete-payment", async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid payment amount" });
     }
 
-    const filePath = path.join(__dirname, "../registrations.json");
-    let registrations = [];
-
-    try {
-      const fileContent = await fs.readFile(filePath, "utf-8");
-      registrations = JSON.parse(fileContent);
-    } catch {
-      registrations = [];
-    }
-
-    if (!Array.isArray(registrations) || registrations.length === 0) {
-      return res.status(404).json({ success: false, message: "No registrations found" });
-    }
-
-    const latest = getLatestRegistrationByMobile(registrations, normalizedMobile);
+    const latest = await findLatestRegistrationByMobile(normalizedMobile);
     if (!latest) {
       return res.status(404).json({ success: false, message: "No registration found for this mobile" });
-    }
-
-    const latestIndex = registrations.findIndex((entry) => entry.id === latest.id);
-    if (latestIndex === -1) {
-      return res.status(404).json({ success: false, message: "Registration record missing" });
     }
 
     const payment = mapPaymentSummary(latest);
@@ -368,8 +332,7 @@ router.post("/complete-payment", async (req, res) => {
     const updatedPaidAmount = payment.paidAmount + paidDelta;
     const updatedRemaining = Math.max(0, payment.fullAmount - updatedPaidAmount);
 
-    registrations[latestIndex] = {
-      ...latest,
+    await Registration.findByIdAndUpdate(latest._id, {
       paidAmount: updatedPaidAmount,
       fullAmount: payment.fullAmount,
       remainingAmount: updatedRemaining,
@@ -381,10 +344,7 @@ router.post("/complete-payment", async (req, res) => {
         razorpaySignature: razorpaySignature || "",
         paidAt: new Date().toISOString(),
       },
-      updatedAt: new Date().toISOString(),
-    };
-
-    await fs.writeFile(filePath, JSON.stringify(registrations, null, 2));
+    });
 
     return res.status(200).json({
       success: true,
@@ -402,15 +362,6 @@ router.post("/complete-payment", async (req, res) => {
 router.post("/save-to-json", upload.single("paymentScreenshot"), async (req, res) => {
   try {
     const data = req.body;
-    const filePath = path.join(__dirname, "../registrations.json");
-
-    let existing = [];
-    try {
-      const fileContent = await fs.readFile(filePath, "utf-8");
-      existing = JSON.parse(fileContent);
-    } catch (err) {
-      existing = [];
-    }
 
     const parsedAdditionalPerson =
       typeof data.additionalPerson === "string"
@@ -424,7 +375,19 @@ router.post("/save-to-json", upload.single("paymentScreenshot"), async (req, res
         : data.additionalPerson;
 
     const registration = {
-      ...data,
+      name: data.name,
+      age: toNumber(data.age, 0),
+      gender: data.gender,
+      medicalStudent: data.medicalStudent === "true" || data.medicalStudent === true,
+      attendingClasses: data.attendingClasses,
+      category: data.category,
+      paymentType: data.paymentType,
+      mobile: normalizeMobile(data.mobile),
+      email: data.email,
+      transactionId: data.transactionId,
+      persons: toNumber(data.persons, 1),
+      amountPerPerson: toNumber(data.amountPerPerson, 0),
+      totalAmount: toNumber(data.totalAmount, 0),
       additionalPerson: parsedAdditionalPerson,
       paidAmount: toNumber(data.paidAmount, toNumber(data.totalAmount, 0)),
       fullAmount: toNumber(data.fullAmount, toNumber(data.totalAmount, 0)),
@@ -440,17 +403,21 @@ router.post("/save-to-json", upload.single("paymentScreenshot"), async (req, res
       paymentScreenshot: req.file
         ? `/uploads/${req.file.filename}`
         : data.paymentScreenshot || "",
-      timestamp: new Date().toISOString(),
-      id: existing.length + 1,
+      razorpayPaymentId: data.razorpayPaymentId || "",
+      razorpayOrderId: data.razorpayOrderId || "",
+      razorpaySignature: data.razorpaySignature || "",
     };
 
-    existing.push(registration);
-    await fs.writeFile(filePath, JSON.stringify(existing, null, 2));
+    const savedRegistration = await Registration.findOneAndUpdate(
+      { mobile: registration.mobile },
+      { $set: registration },
+      { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true }
+    );
 
     res.status(200).json({
       message: "Registration saved successfully",
-      id: existing.length,
-      paymentScreenshot: registration.paymentScreenshot,
+      id: savedRegistration._id,
+      paymentScreenshot: savedRegistration.paymentScreenshot,
     });
   } catch (err) {
     console.error("JSON save error:", err);
