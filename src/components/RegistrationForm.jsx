@@ -429,6 +429,7 @@ export default function RegistrationForm() {
         payload.append("age", submissionData.age);
         payload.append("gender", submissionData.gender);
         payload.append("medicalStudent", submissionData.medicalStudent);
+        payload.append("attendingClasses", submissionData.attendingClasses);
         payload.append("category", submissionData.category);
         payload.append("paymentType", submissionData.paymentType);
         payload.append("mobile", submissionData.mobile);
@@ -1151,6 +1152,9 @@ export default function RegistrationForm() {
                 <p>Bank: Bank of India</p>
                 <p>UPI ID: rounakrock.singh07-2@okhdfcbank</p>
                 {/* <p>UPI ID: <a href="upi://pay?pa=rounakrock.singh07-2@okhdfcbank&pn=Rounak%20Ranjan%20Singh&cu=INR" className="text-blue-600 underline">rounakrock.singh07-2@okhdfcbank</a></p> */}
+                <p>
+                  <b>Advance Lakshami details given below:</b>
+                </p>
                 <p>
                   Category A Amount: {formData.paymentType === "full" ? "₹8000" : "₹4000"}
                 </p>
