@@ -16,6 +16,20 @@
   font-weight: 600;
 }
 
+.mission-image-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 2rem;
+}
+
+.mission-image {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 14px;
+  object-fit: cover;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
 
 .paragraph {
   background: #FFF7E0;
@@ -69,5 +83,19 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .about-us-container {
+    padding: 1.25rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .mission-image {
+    max-width: 100%;
   }
 }
