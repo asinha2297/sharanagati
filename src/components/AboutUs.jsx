@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/AboutUs.css";
 import AnimatedParagraph from "./AnimatedParagraph";
+import prabhupadaImage from "../assets/Prabhupada.jpg";
 
 const paragraphs = [
   "Rooted in the teachings of His Divine Grace A.C. Bhaktivedanta Swami Shrila Prabhupada, and inspired by the mercy of Sri Sri Nitai Gauranga and Lord Narasimhadeva, Sharnagati department serves as a bridge between Vedic knowledge and modern life.\nThe Sharnagati Department, led by Shri Govind Ghosh Das Prabhuji under the divine guidance of ISKCON Newtown, is dedicated to spreading the timeless wisdom of the Bhagavad-gita and nurturing spiritual values across all sections of society.",
@@ -16,6 +17,13 @@ const AboutUs = () => {
   return (
     <div className="about-us-container">
       <h1 className="page-title">Mission & Vision</h1>
+      <div className="mission-image-wrapper">
+        <img
+          src={prabhupadaImage}
+          alt="His Divine Grace A.C. Bhaktivedanta Swami Shrila Prabhupada"
+          className="mission-image"
+        />
+      </div>
       {paragraphs.map((text, index) =>
         typeof text === "string" ? (
           <AnimatedParagraph key={index} text={text} index={index} />
