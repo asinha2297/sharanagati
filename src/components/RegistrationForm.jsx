@@ -752,6 +752,9 @@ export default function RegistrationForm() {
               onChange={(e) => setAuthMobile(e.target.value)}
               className="w-full px-4 py-3 border rounded-lg bg-white/80"
             />
+            <p className="text-sm text-[#475569]">
+              Kindly use only this number for future login purposes.
+            </p>
             <button
               type="submit"
               disabled={isCheckingStatus}
