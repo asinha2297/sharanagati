@@ -36,9 +36,27 @@ export default function RegistrationForm() {
   const [viewMode, setViewMode] = useState("login");
   const [existingRegistration, setExistingRegistration] = useState(null);
 
-  // Category A rooms available = 22
-  const MAX_CATEGORY_A_REGISTRATIONS = 35;
-  const isCategoryADisabled = savedRegistrations.length >= MAX_CATEGORY_A_REGISTRATIONS;
+  // Disable Category A once total registered person names reach the cap.
+  const MAX_CATEGORY_A_REGISTRATIONS = 42;
+  const totalRegisteredPersons = savedRegistrations.reduce((total, entry) => {
+    let personsCount = 0;
+
+    if (typeof entry?.name === "string" && entry.name.trim()) {
+      personsCount += 1;
+    }
+
+    if (Array.isArray(entry?.additionalPerson)) {
+      personsCount += entry.additionalPerson.reduce((count, person) => {
+        if (typeof person?.name === "string" && person.name.trim()) {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+    }
+
+    return total + personsCount;
+  }, 0);
+  const isCategoryADisabled = totalRegisteredPersons >= MAX_CATEGORY_A_REGISTRATIONS;
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -194,6 +212,31 @@ export default function RegistrationForm() {
       script.onerror = () => resolve(false);
       document.body.appendChild(script);
     });
+  };
+
+  const upiOnlyCheckoutConfig = {
+    config: {
+      display: {
+        blocks: {
+          upi: {
+            name: "Pay via UPI",
+            instruments: [{ method: "upi" }],
+          },
+        },
+        sequence: ["block.upi"],
+        preferences: {
+          show_default_blocks: false,
+        },
+      },
+    },
+    method: {
+      upi: true,
+      card: false,
+      netbanking: false,
+      wallet: false,
+      emi: false,
+      paylater: false,
+    },
   };
 
   /*
@@ -505,6 +548,7 @@ export default function RegistrationForm() {
           theme: {
             color: "#1E3A8A",
           },
+          ...upiOnlyCheckoutConfig,
         });
 
         razorpay.on("payment.failed", (response) => {
@@ -645,6 +689,7 @@ export default function RegistrationForm() {
           theme: {
             color: "#1E3A8A",
           },
+          ...upiOnlyCheckoutConfig,
         });
 
         razorpay.on("payment.failed", (response) => {
@@ -707,7 +752,7 @@ export default function RegistrationForm() {
       }}
     >
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6 rounded-full bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white shadow-lg">
-        Registrations: {savedRegistrations.length}
+        Registrations: {totalRegisteredPersons}
       </div>
       <div className="w-full max-w-xl bg-white/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/20 shadow-[0_8px_32px_0_rgba(30,58,138,0.12)]">
         <div className="p-3 text-center border-b-2 border-[#D4AF37]/30">
@@ -895,7 +940,7 @@ export default function RegistrationForm() {
                 </select>
                 {isCategoryADisabled && (
                   <p className="mt-2 text-sm text-amber-600">
-                    Category A is currently unavailable because 10 registrations have already been recorded.
+                    Category A is temporarily unavailable because the quota limit has been reached.
                   </p>
                 )}
               </div>
