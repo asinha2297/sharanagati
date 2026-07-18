@@ -45,6 +45,7 @@ const getPricing = (paymentType) => {
       categoryB: 7500,
       childDiscount: 5000,
       medicalStudent: 6000,
+      medicalInternPgtHouseStaff: 7500,
     };
   }
 
@@ -53,7 +54,20 @@ const getPricing = (paymentType) => {
     categoryB: 3800,
     childDiscount: 2500,
     medicalStudent: 3000,
+    medicalInternPgtHouseStaff: 3800,
   };
+};
+
+const getMedicalRole = (value) => {
+  if (value === true || value === "Yes" || value === "Medical Student") {
+    return "Medical Student";
+  }
+
+  if (value === "Medical Intern/PGT/House Staff") {
+    return "Medical Intern/PGT/House Staff";
+  }
+
+  return "No";
 };
 
 const getBaseAmountForCategory = (category, paymentType) => {
@@ -70,12 +84,16 @@ const getAmountsForGroup = (participants, category, paymentType) => {
 
   return participants.map((person) => {
     const numericAge = parseInt(person.age, 10);
-    const isMedicalStudent = person.medicalStudent === true || person.medicalStudent === "Yes";
+    const medicalRole = getMedicalRole(person.medicalStudent);
 
     if (Number.isNaN(numericAge)) return 0;
     if (numericAge < 3) return 0;
 
-    if (isMedicalStudent) {
+    if (medicalRole === "Medical Intern/PGT/House Staff") {
+      return pricing.medicalInternPgtHouseStaff;
+    }
+
+    if (medicalRole === "Medical Student") {
       return pricing.medicalStudent;
     }
 

@@ -115,6 +115,18 @@ const mapPaymentSummary = (entry) => {
   };
 };
 
+const getMedicalRole = (value) => {
+  if (value === true || value === "Yes" || value === "Medical Student") {
+    return "Medical Student";
+  }
+
+  if (value === "Medical Intern/PGT/House Staff") {
+    return "Medical Intern/PGT/House Staff";
+  }
+
+  return "No";
+};
+
 const findLatestRegistrationByMobile = async (mobile) => {
   return Registration.find({ mobile: normalizeMobile(mobile) }).sort({ createdAt: -1 }).limit(1).lean().then((rows) => rows[0] || null);
 };
@@ -374,11 +386,16 @@ router.post("/save-to-json", upload.single("paymentScreenshot"), async (req, res
           })()
         : data.additionalPerson;
 
+    const medicalStudent =
+      data.medicalStudent === "true" || data.medicalStudent === true
+        ? "Medical Student"
+        : data.medicalStudent || "No";
+
     const registration = {
       name: data.name,
       age: toNumber(data.age, 0),
       gender: data.gender,
-      medicalStudent: data.medicalStudent === "true" || data.medicalStudent === true,
+      medicalStudent,
       attendingClasses: data.attendingClasses,
       category: data.category,
       paymentType: data.paymentType,

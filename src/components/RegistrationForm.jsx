@@ -98,6 +98,7 @@ export default function RegistrationForm() {
         categoryB: 7500,
         childDiscount: 5000,
         medicalStudent: 6000,
+        medicalInternPgtHouseStaff: 7500,
       };
     }
 
@@ -106,7 +107,20 @@ export default function RegistrationForm() {
       categoryB: 3800,
       childDiscount: 2500,
       medicalStudent: 3000,
+      medicalInternPgtHouseStaff: 3800,
     };
+  };
+
+  const getMedicalRole = (value) => {
+    if (value === true || value === "Yes" || value === "Medical Student") {
+      return "Medical Student";
+    }
+
+    if (value === "Medical Intern/PGT/House Staff") {
+      return "Medical Intern/PGT/House Staff";
+    }
+
+    return "No";
   };
 
   const getBaseAmountForCategory = (category, paymentType) => {
@@ -123,12 +137,16 @@ export default function RegistrationForm() {
 
     return participants.map((person) => {
       const numericAge = parseInt(person.age, 10);
-      const isMedicalStudent = person.medicalStudent === "Yes" || person.medicalStudent === true;
+      const medicalRole = getMedicalRole(person.medicalStudent);
 
       if (Number.isNaN(numericAge)) return 0;
       if (numericAge < 3) return 0;
 
-      if (isMedicalStudent) {
+      if (medicalRole === "Medical Intern/PGT/House Staff") {
+        return pricing.medicalInternPgtHouseStaff;
+      }
+
+      if (medicalRole === "Medical Student") {
         return pricing.medicalStudent;
       }
 
@@ -147,7 +165,10 @@ export default function RegistrationForm() {
 
   const calculateTotalAmount = () => {
     const participants = [
-      { age: formData.age, medicalStudent: formData.medicalStudent },
+      {
+        age: formData.age,
+        medicalStudent: formData.medicalStudent,
+      },
       ...additionalPersons.map((person) => ({
         age: person.age,
         medicalStudent: person.medicalStudent,
@@ -165,7 +186,10 @@ export default function RegistrationForm() {
 
   const calculatePaymentSummary = () => {
     const participants = [
-      { age: formData.age, medicalStudent: formData.medicalStudent },
+      {
+        age: formData.age,
+        medicalStudent: formData.medicalStudent,
+      },
       ...additionalPersons.map((person) => ({
         age: person.age,
         medicalStudent: person.medicalStudent,
@@ -344,7 +368,10 @@ export default function RegistrationForm() {
     e.preventDefault();
 
     const participants = [
-      { age: formData.age, medicalStudent: formData.medicalStudent },
+      {
+        age: formData.age,
+        medicalStudent: formData.medicalStudent,
+      },
       ...additionalPersons.map((person) => ({
         age: person.age,
         medicalStudent: person.medicalStudent,
@@ -357,7 +384,7 @@ export default function RegistrationForm() {
       name: formData.name,
       age: parseInt(formData.age),
       gender: formData.gender,
-      medicalStudent: formData.medicalStudent === "Yes",
+      medicalStudent: formData.medicalStudent,
       attendingClasses: formData.attendingClasses,
       category: formData.category,
       paymentType: formData.paymentType,
@@ -379,7 +406,7 @@ export default function RegistrationForm() {
         name: person.name,
         age: parseInt(person.age),
         gender: person.gender,
-        medicalStudent: person.medicalStudent === "Yes",
+        medicalStudent: person.medicalStudent,
         attendingClasses: person.attendingClasses,
         amount: perPersonAmounts[index + 1] || 0,
       })),
@@ -401,7 +428,7 @@ export default function RegistrationForm() {
         payload.append("name", submissionData.name);
         payload.append("age", submissionData.age);
         payload.append("gender", submissionData.gender);
-        payload.append("medicalStudent", String(submissionData.medicalStudent));
+        payload.append("medicalStudent", submissionData.medicalStudent);
         payload.append("category", submissionData.category);
         payload.append("paymentType", submissionData.paymentType);
         payload.append("mobile", submissionData.mobile);
@@ -1004,8 +1031,9 @@ export default function RegistrationForm() {
               onChange={handleFormDataChange}
               className="w-full px-4 py-3 border rounded-lg bg-white/80"
             >
-              <option value="No">Not a Medical Student</option>
-              <option value="Yes">Medical Student</option>
+              <option value="No">Not a Medical Student / Medical Intern / PGT / House Staff</option>
+              <option value="Medical Student">Medical Student</option>
+              <option value="Medical Intern/PGT/House Staff">Medical Intern/PGT/House Staff</option>
             </select>
 
             <input
@@ -1092,8 +1120,9 @@ export default function RegistrationForm() {
                   onChange={(e) => handleAdditionalChange(index, e)}
                   className="w-full px-4 py-3 border rounded-lg bg-white/80"
                 >
-                  <option value="No">Not a Medical Student</option>
-                  <option value="Yes">Medical Student</option>
+                  <option value="No">Not a Medical Student / Medical Intern / PGT / House Staff</option>
+                  <option value="Medical Student">Medical Student</option>
+                  <option value="Medical Intern/PGT/House Staff">Medical Intern/PGT/House Staff</option>
                 </select>
               </div>
             ))}
@@ -1133,6 +1162,9 @@ export default function RegistrationForm() {
                 </p>
                 <p>
                   Medical Student Amount: {formData.paymentType === "full" ? "₹6000" : "₹3000"}
+                </p>
+                <p>
+                  Medical Intern/PGT/House Staff Amount: {formData.paymentType === "full" ? "₹7500" : "₹3800"}
                 </p>
                 <p>Additional child (age 3-17): Category fare applies</p>
                 <p>Child below 3 years: ₹0</p>
