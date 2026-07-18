@@ -4,8 +4,35 @@ import img from "../assets/Image.jpg";
 const LATE_FEE_CUTOFF = new Date("2026-07-31T23:59:59+05:30");
 const LATE_FEE_AMOUNT = 500;
 
+const countRegisteredPersons = (registrations) => {
+  if (!Array.isArray(registrations)) {
+    return 0;
+  }
+
+  return registrations.reduce((total, entry) => {
+    let personsCount = 0;
+
+    if (typeof entry?.name === "string" && entry.name.trim()) {
+      personsCount += 1;
+    }
+
+    if (Array.isArray(entry?.additionalPerson)) {
+      personsCount += entry.additionalPerson.reduce((count, person) => {
+        if (typeof person?.name === "string" && person.name.trim()) {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+    }
+
+    return total + personsCount;
+  }, 0);
+};
+
 export default function RegistrationForm() {
-  const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
+  const API_URL = (
+    import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || ""
+  ).replace(/\/$/, "");
   const apiUrl = (path) => `${API_URL}${path}`;
 
   const [formData, setFormData] = useState({
@@ -30,6 +57,9 @@ export default function RegistrationForm() {
     const stored = localStorage.getItem("registrations");
     return stored ? JSON.parse(stored) : [];
   });
+  const [registeredPersonsCount, setRegisteredPersonsCount] = useState(() =>
+    countRegisteredPersons(savedRegistrations)
+  );
   const [authMobile, setAuthMobile] = useState("");
   const [isCheckingStatus, setIsCheckingStatus] = useState(false);
   const [isPayingRemaining, setIsPayingRemaining] = useState(false);
@@ -38,28 +68,27 @@ export default function RegistrationForm() {
 
   // Disable Category A once total registered person names reach the cap.
   const MAX_CATEGORY_A_REGISTRATIONS = 42;
-  const totalRegisteredPersons = savedRegistrations.reduce((total, entry) => {
-    let personsCount = 0;
+  const isCategoryADisabled = registeredPersonsCount >= MAX_CATEGORY_A_REGISTRATIONS;
 
-    if (typeof entry?.name === "string" && entry.name.trim()) {
-      personsCount += 1;
+  const refreshRegistrationSummary = async () => {
+    try {
+      const response = await fetch(apiUrl("/api/registration/summary"));
+      const data = await response.json();
+
+      if (response.ok && data?.success) {
+        setRegisteredPersonsCount(Number(data.totalRegisteredPersons) || 0);
+      }
+    } catch (err) {
+      console.error("Unable to fetch registration summary:", err);
     }
-
-    if (Array.isArray(entry?.additionalPerson)) {
-      personsCount += entry.additionalPerson.reduce((count, person) => {
-        if (typeof person?.name === "string" && person.name.trim()) {
-          return count + 1;
-        }
-        return count;
-      }, 0);
-    }
-
-    return total + personsCount;
-  }, 0);
-  const isCategoryADisabled = totalRegisteredPersons >= MAX_CATEGORY_A_REGISTRATIONS;
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, []);
+
+  useEffect(() => {
+    refreshRegistrationSummary();
   }, []);
 
   useEffect(() => {
@@ -473,6 +502,7 @@ export default function RegistrationForm() {
           localStorage.setItem("registrations", JSON.stringify(updated));
           return updated;
         });
+        await refreshRegistrationSummary();
 
         setShowConfirmation(true);
         setErrorMessage("");
@@ -780,7 +810,7 @@ export default function RegistrationForm() {
       }}
     >
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6 rounded-full bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white shadow-lg">
-        Registrations: {totalRegisteredPersons}
+        Registrations: {registeredPersonsCount}
       </div>
       <div className="w-full max-w-xl bg-white/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/20 shadow-[0_8px_32px_0_rgba(30,58,138,0.12)]">
         <div className="p-3 text-center border-b-2 border-[#D4AF37]/30">

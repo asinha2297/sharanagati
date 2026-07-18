@@ -115,6 +115,25 @@ const mapPaymentSummary = (entry) => {
   };
 };
 
+const countPersonsInEntry = (entry) => {
+  let personsCount = 0;
+
+  if (typeof entry?.name === "string" && entry.name.trim()) {
+    personsCount += 1;
+  }
+
+  if (Array.isArray(entry?.additionalPerson)) {
+    personsCount += entry.additionalPerson.reduce((count, person) => {
+      if (typeof person?.name === "string" && person.name.trim()) {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+  }
+
+  return personsCount;
+};
+
 const getMedicalRole = (value) => {
   if (value === true || value === "Yes" || value === "Medical Student") {
     return "Medical Student";
@@ -155,6 +174,29 @@ router.get("/registrations", async (req, res) => {
   } catch (err) {
     console.error("Read registrations error:", err);
     res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/summary", async (req, res) => {
+  try {
+    const registrations = await Registration.find().lean();
+    const list = Array.isArray(registrations) ? registrations : [];
+    const totalRegisteredPersons = list.reduce(
+      (total, entry) => total + countPersonsInEntry(entry),
+      0
+    );
+
+    return res.status(200).json({
+      success: true,
+      totalRegistrations: list.length,
+      totalRegisteredPersons,
+    });
+  } catch (err) {
+    console.error("Registration summary error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Unable to fetch registration summary",
+    });
   }
 });
 
