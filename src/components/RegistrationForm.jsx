@@ -9,10 +9,12 @@ export default function RegistrationForm() {
     name: "",
     age: "",
     gender: "",
+    medicalStudent: "No",
     attendingClasses: "",
     mobile: "",
     email: "",
     category: "",
+    paymentType: "advance",
     transactionId: "",
     paymentScreenshot: "",
     persons: "1",
@@ -63,26 +65,51 @@ export default function RegistrationForm() {
     }
   }, [isCategoryADisabled, formData.category]);
 
-  const getBaseAmountForCategory = (category) => {
-    if (category === "A") return 4000;
-    if (category === "B") return 3800;
+  const getPricing = (paymentType) => {
+    if (paymentType === "full") {
+      return {
+        categoryA: 8000,
+        categoryB: 7500,
+        childDiscount: 5000,
+        medicalStudent: 6000,
+      };
+    }
+
+    return {
+      categoryA: 4000,
+      categoryB: 3800,
+      childDiscount: 2500,
+      medicalStudent: 3000,
+    };
+  };
+
+  const getBaseAmountForCategory = (category, paymentType) => {
+    const pricing = getPricing(paymentType);
+    if (category === "A") return pricing.categoryA;
+    if (category === "B") return pricing.categoryB;
     return 0;
   };
 
-  const getAmountsForGroup = (ages, category) => {
-    const baseAmount = getBaseAmountForCategory(category);
+  const getAmountsForGroup = (participants, category, paymentType) => {
+    const pricing = getPricing(paymentType);
+    const baseAmount = getBaseAmountForCategory(category, paymentType);
     let discountedChildUsed = false;
 
-    return ages.map((age) => {
-      const numericAge = parseInt(age, 10);
+    return participants.map((person) => {
+      const numericAge = parseInt(person.age, 10);
+      const isMedicalStudent = person.medicalStudent === "Yes" || person.medicalStudent === true;
 
       if (Number.isNaN(numericAge)) return 0;
       if (numericAge < 3) return 0;
 
+      if (isMedicalStudent) {
+        return pricing.medicalStudent;
+      }
+
       if (numericAge >= 3 && numericAge <= 17) {
         if (!discountedChildUsed) {
           discountedChildUsed = true;
-          return 2500;
+          return pricing.childDiscount;
         }
 
         return baseAmount;
@@ -93,8 +120,18 @@ export default function RegistrationForm() {
   };
 
   const calculateTotalAmount = () => {
-    const groupAges = [formData.age, ...additionalPersons.map((person) => person.age)];
-    const perPersonAmounts = getAmountsForGroup(groupAges, formData.category);
+    const participants = [
+      { age: formData.age, medicalStudent: formData.medicalStudent },
+      ...additionalPersons.map((person) => ({
+        age: person.age,
+        medicalStudent: person.medicalStudent,
+      })),
+    ];
+    const perPersonAmounts = getAmountsForGroup(
+      participants,
+      formData.category,
+      formData.paymentType
+    );
     return perPersonAmounts.reduce((total, amount) => total + amount, 0);
   };
 
@@ -191,6 +228,7 @@ export default function RegistrationForm() {
               name: "",
               age: "",
               gender: "",
+              medicalStudent: "No",
             }
         );
       setAdditionalPersons(newPersons);
@@ -220,15 +258,27 @@ export default function RegistrationForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const groupAges = [formData.age, ...additionalPersons.map((person) => person.age)];
-    const perPersonAmounts = getAmountsForGroup(groupAges, formData.category);
+    const participants = [
+      { age: formData.age, medicalStudent: formData.medicalStudent },
+      ...additionalPersons.map((person) => ({
+        age: person.age,
+        medicalStudent: person.medicalStudent,
+      })),
+    ];
+    const perPersonAmounts = getAmountsForGroup(
+      participants,
+      formData.category,
+      formData.paymentType
+    );
 
     const completeDataBase = {
       name: formData.name,
       age: parseInt(formData.age),
       gender: formData.gender,
+      medicalStudent: formData.medicalStudent === "Yes",
       attendingClasses: formData.attendingClasses,
       category: formData.category,
+      paymentType: formData.paymentType,
       mobile: formData.mobile,
       email: formData.email,
       transactionId: formData.transactionId,
@@ -241,6 +291,7 @@ export default function RegistrationForm() {
         name: person.name,
         age: parseInt(person.age),
         gender: person.gender,
+        medicalStudent: person.medicalStudent === "Yes",
         attendingClasses: person.attendingClasses,
         amount: perPersonAmounts[index + 1] || 0,
       })),
@@ -262,7 +313,9 @@ export default function RegistrationForm() {
         payload.append("name", submissionData.name);
         payload.append("age", submissionData.age);
         payload.append("gender", submissionData.gender);
+        payload.append("medicalStudent", String(submissionData.medicalStudent));
         payload.append("category", submissionData.category);
+        payload.append("paymentType", submissionData.paymentType);
         payload.append("mobile", submissionData.mobile);
         payload.append("email", submissionData.email);
         payload.append("transactionId", submissionData.transactionId);
@@ -305,10 +358,12 @@ export default function RegistrationForm() {
           name: "",
           age: "",
           gender: "",
+          medicalStudent: "No",
           attendingClasses: "",
           mobile: "",
           email: "",
           category: "",
+          paymentType: "advance",
           transactionId: "",
           paymentScreenshot: "",
           persons: "1",
@@ -523,6 +578,23 @@ export default function RegistrationForm() {
                 )}
               </div>
             </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
+              <label htmlFor="paymentType" className="w-full sm:w-40 text-[#1E3A8A] font-semibold">
+                Payment Type
+              </label>
+              <select
+                name="paymentType"
+                id="paymentType"
+                required
+                value={formData.paymentType}
+                onChange={handleFormDataChange}
+                className="flex-1 px-4 py-3 border rounded-lg bg-white/80"
+              >
+                <option value="advance">Advance Payment</option>
+                <option value="full">Full Payment</option>
+              </select>
+            </div>
             <input
               type="text"
               name="name"
@@ -556,6 +628,17 @@ export default function RegistrationForm() {
               <option>Male</option>
               <option>Female</option>
               {/* <option>Other</option> */}
+            </select>
+
+            <select
+              name="medicalStudent"
+              required
+              value={formData.medicalStudent}
+              onChange={handleFormDataChange}
+              className="w-full px-4 py-3 border rounded-lg bg-white/80"
+            >
+              <option value="No">Not a Medical Student</option>
+              <option value="Yes">Medical Student</option>
             </select>
 
             <input
@@ -634,6 +717,17 @@ export default function RegistrationForm() {
                   <option>Female</option>
                   {/* <option>Other</option> */}
                 </select>
+
+                <select
+                  name="medicalStudent"
+                  required
+                  value={person.medicalStudent || "No"}
+                  onChange={(e) => handleAdditionalChange(index, e)}
+                  className="w-full px-4 py-3 border rounded-lg bg-white/80"
+                >
+                  <option value="No">Not a Medical Student</option>
+                  <option value="Yes">Medical Student</option>
+                </select>
               </div>
             ))}
 
@@ -661,9 +755,18 @@ export default function RegistrationForm() {
                 <p>Bank: Bank of India</p>
                 <p>UPI ID: rounakrock.singh07-2@okhdfcbank</p>
                 {/* <p>UPI ID: <a href="upi://pay?pa=rounakrock.singh07-2@okhdfcbank&pn=Rounak%20Ranjan%20Singh&cu=INR" className="text-blue-600 underline">rounakrock.singh07-2@okhdfcbank</a></p> */}
-                <p>Category A Amount: ₹4000</p>
-                <p>Category B Amount: ₹3800</p>
-                <p>Child Amount (age 3-17): ₹2500 (only one child)</p>
+                <p>
+                  Category A Amount: {formData.paymentType === "full" ? "₹8000" : "₹4000"}
+                </p>
+                <p>
+                  Category B Amount: {formData.paymentType === "full" ? "₹7500" : "₹3800"}
+                </p>
+                <p>
+                  Child Amount (age 3-17): {formData.paymentType === "full" ? "₹5000" : "₹2500"} (only one child)
+                </p>
+                <p>
+                  Medical Student Amount: {formData.paymentType === "full" ? "₹6000" : "₹3000"}
+                </p>
                 <p>Additional child (age 3-17): Category fare applies</p>
                 <p>Child below 3 years: ₹0</p>
                 <p className="font-semibold text-[#1E3A8A]">
