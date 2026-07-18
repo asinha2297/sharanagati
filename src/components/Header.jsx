@@ -41,7 +41,7 @@ const Header = () => {
               Our Spiritual Guide
             </NavLink>
             {[
-              { name: "Gurukul", path: "/gurukul" },
+              // { name: "Gurukul", path: "/gurukul" },
               { name: "Yatras", path: "/yatras" },
               { name: "Contact Us", path: "/contact" },
             ].map((item, index) => (
