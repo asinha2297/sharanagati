@@ -12,12 +12,12 @@ const ContactUs = () => {
             📍 <strong>Address:</strong> ISKCON Newtown Temple, Rajarhat,
             Kolkata, West Bengal 700156
           </p>
-          <p>
+          {/* <p>
             📞 <strong>Phone:</strong> +91 XXXXXXXXXX
           </p>
           <p>
             📧 <strong>Email:</strong> sharanagati.hk@gmail.com
-          </p>
+          </p> */}
           <p>
             🕒 <strong>Timings:</strong> Mon–Sun: 7:00 AM – 8:30 PM
           </p>

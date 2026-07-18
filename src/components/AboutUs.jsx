@@ -4,7 +4,7 @@ import AnimatedParagraph from "./AnimatedParagraph";
 
 const paragraphs = [
   "Rooted in the teachings of His Divine Grace A.C. Bhaktivedanta Swami Shrila Prabhupada, and inspired by the mercy of Sri Sri Nitai Gauranga and Lord Narasimhadeva, Sharnagati department serves as a bridge between Vedic knowledge and modern life.\nThe Sharnagati Department, led by Shri Govind Ghosh Das Prabhuji under the divine guidance of ISKCON Newtown, is dedicated to spreading the timeless wisdom of the Bhagavad-gita and nurturing spiritual values across all sections of society.",
-  <><strong>Gurukul Programs:</strong> Cultivating character, values, and devotion in children through structured spiritual and value-based education.</>,
+  <><strong>Nimai Pathshala Programs:</strong> Cultivating character, values, and devotion in children through structured spiritual and value-based education.</>,
   <><strong>Medical Student Programs:</strong> Equipping future doctors with inner strength and clarity through Bhagavad-gita wisdom, supporting their mental and emotional well-being.</>,
   <><strong>Elderly & Youth Classes:</strong> Engaging senior citizens and young individuals with practical teachings to lead a meaningful, Krishna-conscious life.</>,
   <><strong>Online Courses:</strong> Reaching hearts far and wide through virtual classes, allowing anyone to access authentic spiritual education from the comfort of their home.</>,

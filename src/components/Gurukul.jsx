@@ -4,7 +4,7 @@ import "../styles/ContactUs.css";
 const Gurukul = () => {
   return (
     <div className="contact-us-container">
-      <h1 className="page-title">Gurukul</h1>
+      <h1 className="page-title">Nimai Pathshala</h1>
     </div>
   );
 };
