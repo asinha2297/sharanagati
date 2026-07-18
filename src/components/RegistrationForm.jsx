@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import img from "../assets/Image.jpg";
 
+const LATE_FEE_CUTOFF = new Date("2026-07-31T23:59:59+05:30");
+const LATE_FEE_AMOUNT = 500;
+
 export default function RegistrationForm() {
   const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
   const apiUrl = (path) => `${API_URL}${path}`;
@@ -27,6 +30,11 @@ export default function RegistrationForm() {
     const stored = localStorage.getItem("registrations");
     return stored ? JSON.parse(stored) : [];
   });
+  const [authMobile, setAuthMobile] = useState("");
+  const [isCheckingStatus, setIsCheckingStatus] = useState(false);
+  const [isPayingRemaining, setIsPayingRemaining] = useState(false);
+  const [viewMode, setViewMode] = useState("login");
+  const [existingRegistration, setExistingRegistration] = useState(null);
 
   // Category A rooms available = 22
   const MAX_CATEGORY_A_REGISTRATIONS = 35;
@@ -133,6 +141,40 @@ export default function RegistrationForm() {
       formData.paymentType
     );
     return perPersonAmounts.reduce((total, amount) => total + amount, 0);
+  };
+
+  const isLateFeeApplicable = new Date() > LATE_FEE_CUTOFF;
+
+  const calculatePaymentSummary = () => {
+    const participants = [
+      { age: formData.age, medicalStudent: formData.medicalStudent },
+      ...additionalPersons.map((person) => ({
+        age: person.age,
+        medicalStudent: person.medicalStudent,
+      })),
+    ];
+
+    const advancePerPerson = getAmountsForGroup(participants, formData.category, "advance");
+    const fullPerPerson = getAmountsForGroup(participants, formData.category, "full");
+    const selectedPerPerson =
+      formData.paymentType === "full" ? fullPerPerson : advancePerPerson;
+
+    const advanceTotal = advancePerPerson.reduce((total, amount) => total + amount, 0);
+    const fullTotal = fullPerPerson.reduce((total, amount) => total + amount, 0);
+    const lateFeeAmount = isLateFeeApplicable ? LATE_FEE_AMOUNT : 0;
+    const payableNow =
+      (formData.paymentType === "full" ? fullTotal : advanceTotal) + lateFeeAmount;
+    const fullAmount = fullTotal + lateFeeAmount;
+    const remainingAmount = Math.max(0, fullAmount - payableNow);
+
+    return {
+      selectedPerPerson,
+      payableNow,
+      fullAmount,
+      remainingAmount,
+      lateFeeApplied: isLateFeeApplicable,
+      lateFeeAmount,
+    };
   };
 
   const formatCurrency = (value) => {
@@ -265,11 +307,8 @@ export default function RegistrationForm() {
         medicalStudent: person.medicalStudent,
       })),
     ];
-    const perPersonAmounts = getAmountsForGroup(
-      participants,
-      formData.category,
-      formData.paymentType
-    );
+    const paymentSummary = calculatePaymentSummary();
+    const perPersonAmounts = paymentSummary.selectedPerPerson;
 
     const completeDataBase = {
       name: formData.name,
@@ -285,7 +324,13 @@ export default function RegistrationForm() {
       // paymentScreenshot will be ensured below
       persons: parseInt(formData.persons),
       amountPerPerson: perPersonAmounts[0] || 0,
-      totalAmount: calculateTotalAmount(),
+      totalAmount: paymentSummary.payableNow,
+      paidAmount: paymentSummary.payableNow,
+      fullAmount: paymentSummary.fullAmount,
+      remainingAmount: paymentSummary.remainingAmount,
+      paymentStatus: paymentSummary.remainingAmount > 0 ? "pending" : "completed",
+      lateFeeApplied: paymentSummary.lateFeeApplied,
+      lateFeeAmount: paymentSummary.lateFeeAmount,
       additionalPerson: additionalPersons.map((person, index) => ({
         id: index + 1,
         name: person.name,
@@ -322,6 +367,12 @@ export default function RegistrationForm() {
         payload.append("persons", submissionData.persons);
         payload.append("amountPerPerson", submissionData.amountPerPerson);
         payload.append("totalAmount", submissionData.totalAmount);
+        payload.append("paidAmount", submissionData.paidAmount);
+        payload.append("fullAmount", submissionData.fullAmount);
+        payload.append("remainingAmount", submissionData.remainingAmount);
+        payload.append("paymentStatus", submissionData.paymentStatus);
+        payload.append("lateFeeApplied", String(submissionData.lateFeeApplied));
+        payload.append("lateFeeAmount", submissionData.lateFeeAmount);
         payload.append("razorpayPaymentId", submissionData.razorpayPaymentId);
         payload.append("razorpayOrderId", submissionData.razorpayOrderId);
         payload.append("razorpaySignature", submissionData.razorpaySignature);
@@ -382,7 +433,7 @@ export default function RegistrationForm() {
         return;
       }
 
-      const totalAmount = calculateTotalAmount();
+      const totalAmount = paymentSummary.payableNow;
       if (!Number.isFinite(totalAmount) || totalAmount <= 0) {
         setErrorMessage("Invalid payment amount.");
         return;
@@ -398,9 +449,14 @@ export default function RegistrationForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: Math.round(totalAmount * 100),
+          orderType: "registration",
           currency: "INR",
           receipt: `rcpt_${Date.now()}`,
+          registration: {
+            category: formData.category,
+            paymentType: formData.paymentType,
+            participants,
+          },
         }),
       });
 
@@ -408,6 +464,26 @@ export default function RegistrationForm() {
       if (!createOrderResponse.ok || !orderData?.order_id) {
         throw new Error(orderData?.message || "Unable to create payment order");
       }
+
+      const calculated = orderData?.calculated || {};
+      const payableNow = Number(calculated.payableNow ?? completeDataBase.totalAmount);
+      const fullAmount = Number(calculated.fullAmount ?? completeDataBase.fullAmount);
+      const remainingAmount = Number(
+        calculated.remainingAmount ?? Math.max(0, fullAmount - payableNow)
+      );
+      const finalizedData = {
+        ...completeDataBase,
+        totalAmount: payableNow,
+        paidAmount: payableNow,
+        fullAmount,
+        remainingAmount,
+        paymentStatus: remainingAmount > 0 ? "pending" : "completed",
+        lateFeeApplied:
+          calculated.lateFeeApplied === undefined
+            ? completeDataBase.lateFeeApplied
+            : Boolean(calculated.lateFeeApplied),
+        lateFeeAmount: Number(calculated.lateFeeAmount ?? completeDataBase.lateFeeAmount),
+      };
 
       const paymentData = await new Promise((resolve, reject) => {
         const razorpay = new window.Razorpay({
@@ -450,12 +526,178 @@ export default function RegistrationForm() {
         throw new Error(verifyData?.message || "Payment verification failed");
       }
 
-      await submitToServer(completeDataBase, paymentData);
+      await submitToServer(finalizedData, paymentData);
+      setExistingRegistration({
+        name: finalizedData.name,
+        mobile: finalizedData.mobile,
+        category: finalizedData.category,
+        persons: finalizedData.persons,
+        paidAmount: finalizedData.paidAmount,
+        fullAmount: finalizedData.fullAmount,
+        remainingAmount: finalizedData.remainingAmount,
+        paymentStatus: finalizedData.paymentStatus,
+        paymentType: finalizedData.paymentType,
+      });
+      if (finalizedData.remainingAmount > 0) {
+        setViewMode("remaining");
+      } else {
+        setViewMode("completed");
+      }
     } catch (err) {
       console.error("Payment flow failed:", err);
       setErrorMessage(`Payment failed. ${err.message}`);
     }
   };
+
+  const handleMobileLogin = async (e) => {
+    e.preventDefault();
+    const mobile = authMobile.trim();
+
+    if (!mobile) {
+      setErrorMessage("Please enter mobile number.");
+      return;
+    }
+
+    try {
+      setIsCheckingStatus(true);
+      setErrorMessage("");
+
+      const response = await fetch(
+        apiUrl(`/api/registration/status?mobile=${encodeURIComponent(mobile)}`)
+      );
+      const data = await response.json();
+
+      if (!response.ok || !data?.success) {
+        throw new Error(data?.message || "Unable to check registration status");
+      }
+
+      if (data.requiresRegistration) {
+        setFormData((prev) => ({ ...prev, mobile }));
+        setViewMode("form");
+        return;
+      }
+
+      const registration = data.registration || null;
+      setExistingRegistration(registration);
+      if (registration?.remainingAmount > 0) {
+        setViewMode("remaining");
+      } else {
+        setViewMode("completed");
+      }
+    } catch (err) {
+      setErrorMessage(err.message || "Unable to login");
+    } finally {
+      setIsCheckingStatus(false);
+    }
+  };
+
+  const handleRemainingPayment = async () => {
+    try {
+      if (!existingRegistration?.remainingAmount || existingRegistration.remainingAmount <= 0) {
+        setViewMode("completed");
+        return;
+      }
+
+      const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID;
+      if (!razorpayKeyId) {
+        setErrorMessage("Payment is not configured. Please contact support.");
+        return;
+      }
+
+      setIsPayingRemaining(true);
+      const sdkLoaded = await loadRazorpayScript();
+      if (!sdkLoaded) {
+        throw new Error("Unable to load Razorpay Checkout. Please try again.");
+      }
+
+      const createOrderResponse = await fetch(apiUrl("/api/create-order"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderType: "remaining",
+          mobile: existingRegistration?.mobile,
+          currency: "INR",
+          receipt: `remaining_${Date.now()}`,
+        }),
+      });
+
+      const orderData = await createOrderResponse.json();
+      if (!createOrderResponse.ok || !orderData?.order_id) {
+        throw new Error(orderData?.message || "Unable to create payment order");
+      }
+
+      const paymentData = await new Promise((resolve, reject) => {
+        const razorpay = new window.Razorpay({
+          key: razorpayKeyId,
+          amount: orderData.amount,
+          currency: orderData.currency,
+          order_id: orderData.order_id,
+          name: "Sharanagati",
+          description: "Remaining Yatra Payment",
+          handler: (response) => resolve(response),
+          modal: {
+            ondismiss: () => reject(new Error("Payment cancelled by user")),
+          },
+          prefill: {
+            name: existingRegistration?.name || "",
+            contact: existingRegistration?.mobile || "",
+          },
+          theme: {
+            color: "#1E3A8A",
+          },
+        });
+
+        razorpay.on("payment.failed", (response) => {
+          const reason = response?.error?.description || "Payment failed";
+          reject(new Error(reason));
+        });
+
+        razorpay.open();
+      });
+
+      const verifyResponse = await fetch(apiUrl("/api/verify-payment"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(paymentData),
+      });
+      const verifyData = await verifyResponse.json();
+
+      if (!verifyResponse.ok || !verifyData?.success) {
+        throw new Error(verifyData?.message || "Payment verification failed");
+      }
+
+      const updateResponse = await fetch(apiUrl("/api/registration/complete-payment"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mobile: existingRegistration.mobile,
+          amountPaid: existingRegistration.remainingAmount,
+          razorpayPaymentId: paymentData?.razorpay_payment_id || "",
+          razorpayOrderId: paymentData?.razorpay_order_id || "",
+          razorpaySignature: paymentData?.razorpay_signature || "",
+        }),
+      });
+      const updateData = await updateResponse.json();
+
+      if (!updateResponse.ok || !updateData?.success) {
+        throw new Error(updateData?.message || "Unable to update remaining payment");
+      }
+
+      setExistingRegistration((prev) => ({
+        ...(prev || {}),
+        paidAmount: updateData.paidAmount,
+        remainingAmount: updateData.remainingAmount,
+        paymentStatus: updateData.paymentStatus,
+      }));
+      setViewMode(updateData.remainingAmount > 0 ? "remaining" : "completed");
+    } catch (err) {
+      setErrorMessage(`Payment failed. ${err.message}`);
+    } finally {
+      setIsPayingRemaining(false);
+    }
+  };
+
+  const paymentSummary = calculatePaymentSummary();
 
   return (
     <div
@@ -467,41 +709,118 @@ export default function RegistrationForm() {
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6 rounded-full bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white shadow-lg">
         Registrations: {savedRegistrations.length}
       </div>
-      {showConfirmation ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/40" />
-          <div className="relative bg-[#FFF7E0] rounded-2xl p-10 shadow-2xl max-w-lg w-full text-center space-y-6 border border-[#D4AF37]/20">
-            <h1 className="text-4xl font-semibold text-[#1E3A8A]">|| Hare Krishna ||</h1>
-            <p className="text-2xl font-medium text-[#475569]">Thanks for the Registration</p>
+      <div className="w-full max-w-xl bg-white/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/20 shadow-[0_8px_32px_0_rgba(30,58,138,0.12)]">
+        <div className="p-3 text-center border-b-2 border-[#D4AF37]/30">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-[#1E3A8A] tracking-wide">
+            Ahobilam - Vijayawada Dham Yatra 2026
+          </h2>
+        </div>
+
+        {showConfirmation && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/40" />
+            <div className="relative bg-[#FFF7E0] rounded-2xl p-10 shadow-2xl max-w-lg w-full text-center space-y-6 border border-[#D4AF37]/20">
+              <h1 className="text-4xl font-semibold text-[#1E3A8A]">|| Hare Krishna ||</h1>
+              <p className="text-2xl font-medium text-[#475569]">Thanks for the Registration</p>
+              <button
+                onClick={() => setShowConfirmation(false)}
+                className="mt-6 px-8 py-3 bg-[#F59E0B] text-white rounded-lg hover:bg-[#d97706] text-lg"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+
+        {errorMessage && (
+          <div className="mx-5 mt-5 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-red-700 text-sm">
+            {errorMessage}
+          </div>
+        )}
+
+        {viewMode === "login" && (
+          <form onSubmit={handleMobileLogin} className="p-5 space-y-6">
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] mb-4 text-center">
+              Login with Mobile
+            </h2>
+            <input
+              type="tel"
+              name="authMobile"
+              placeholder="Enter Mobile Number"
+              required
+              value={authMobile}
+              onChange={(e) => setAuthMobile(e.target.value)}
+              className="w-full px-4 py-3 border rounded-lg bg-white/80"
+            />
             <button
-              onClick={() => setShowConfirmation(false)}
-              className="mt-6 px-8 py-3 bg-[#F59E0B] text-white rounded-lg hover:bg-[#d97706] text-lg"
+              type="submit"
+              disabled={isCheckingStatus}
+              className="w-full px-8 py-3 bg-[#1E3A8A] hover:bg-[#142a63] disabled:bg-slate-400 text-white rounded-lg font-semibold tracking-wide shadow-lg"
             >
-              Close
+              {isCheckingStatus ? "Checking..." : "Continue"}
+            </button>
+          </form>
+        )}
+
+        {viewMode === "remaining" && (
+          <div className="p-5 space-y-5">
+            <h2 className="text-2xl font-semibold text-[#1E3A8A] text-center">Remaining Payment</h2>
+            <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4 space-y-2 text-[#475569]">
+              <p>
+                Devotee: <span className="font-semibold text-[#1E3A8A]">{existingRegistration?.name}</span>
+              </p>
+              <p>
+                Mobile: <span className="font-semibold text-[#1E3A8A]">{existingRegistration?.mobile}</span>
+              </p>
+              <p>
+                Paid: <span className="font-semibold text-[#1E3A8A]">{formatCurrency(Number(existingRegistration?.paidAmount || 0))}</span>
+              </p>
+              <p>
+                Remaining: <span className="font-semibold text-[#1E3A8A]">{formatCurrency(Number(existingRegistration?.remainingAmount || 0))}</span>
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleRemainingPayment}
+              disabled={isPayingRemaining}
+              className="w-full px-8 py-3 bg-[#F59E0B] hover:bg-[#d97706] disabled:bg-slate-400 text-white rounded-lg font-semibold tracking-wide shadow-lg"
+            >
+              {isPayingRemaining ? "Processing..." : "Pay Remaining Amount"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setViewMode("login");
+                setExistingRegistration(null);
+                setErrorMessage("");
+              }}
+              className="w-full px-8 py-3 border border-[#1E3A8A] text-[#1E3A8A] rounded-lg font-semibold"
+            >
+              Back to Login
             </button>
           </div>
-        </div>
-      ) : errorMessage ? (
-        <div className="bg-red-100 rounded-2xl p-10 shadow-2xl max-w-md w-full text-center space-y-6">
-          <h1 className="text-3xl font-semibold text-red-600">
-            ⚠️ Submission Failed
-          </h1>
-          <p className="text-base text-gray-700">{errorMessage}</p>
-          <button
-            onClick={() => setErrorMessage("")}
-            className="mt-4 px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-          >
-            Try Again
-          </button>
-        </div>
-      ) : (
-        <div className="w-full max-w-xl bg-white/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/20 shadow-[0_8px_32px_0_rgba(30,58,138,0.12)]">
-          <div className="p-3 text-center border-b-2 border-[#D4AF37]/30">
-            <h2 className="text-3xl sm:text-4xl font-semibold text-[#1E3A8A] tracking-wide">
-              Ahobilam - Vijayawada Dham Yatra 2026
-            </h2>
-          </div>
+        )}
 
+        {viewMode === "completed" && (
+          <div className="p-8 text-center space-y-4">
+            <h2 className="text-3xl font-semibold text-[#1E3A8A]">Payment Completed</h2>
+            <p className="text-[#475569]">No remaining amount is pending for this mobile number.</p>
+            <button
+              type="button"
+              onClick={() => {
+                setViewMode("login");
+                setExistingRegistration(null);
+                setErrorMessage("");
+                setAuthMobile("");
+              }}
+              className="mt-2 px-8 py-3 bg-[#1E3A8A] text-white rounded-lg hover:bg-[#142a63]"
+            >
+              Check Another Mobile
+            </button>
+          </div>
+        )}
+
+        {viewMode === "form" && (
           <form onSubmit={handleSubmit} className="p-5 space-y-6">
             <h2 className="text-2xl font-semibold text-[#1E3A8A] mb-4 text-center">
               Registration Form
@@ -739,7 +1058,7 @@ export default function RegistrationForm() {
                 type="text"
                 id="amount"
                 name="amount"
-                value={formatCurrency(calculateTotalAmount())}
+                value={formatCurrency(paymentSummary.payableNow)}
                 readOnly
                 className="flex-1 px-4 py-3 border rounded-lg bg-gray-100 text-[#1E3A8A]"
               />
@@ -769,8 +1088,18 @@ export default function RegistrationForm() {
                 </p>
                 <p>Additional child (age 3-17): Category fare applies</p>
                 <p>Child below 3 years: ₹0</p>
+                <p>Late Fee Policy (after 31 Jul 2026): ₹500</p>
+                <p>
+                  Late Fee Applied Now: {paymentSummary.lateFeeApplied ? "₹500" : "₹0"}
+                </p>
                 <p className="font-semibold text-[#1E3A8A]">
-                  Total Payable: {formatCurrency(calculateTotalAmount())}
+                  Payable Now: {formatCurrency(paymentSummary.payableNow)}
+                </p>
+                <p className="font-semibold text-[#1E3A8A]">
+                  Full Amount: {formatCurrency(paymentSummary.fullAmount)}
+                </p>
+                <p className="font-semibold text-[#1E3A8A]">
+                  Remaining Amount: {formatCurrency(paymentSummary.remainingAmount)}
                 </p>
               </div>
               {/* <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-4 space-y-4 lg:space-y-0">
@@ -814,61 +1143,23 @@ export default function RegistrationForm() {
                 Submit
               </button>
             </div>
+
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setViewMode("login");
+                  setErrorMessage("");
+                }}
+                className="px-6 py-2 border border-[#1E3A8A] text-[#1E3A8A] rounded-lg"
+              >
+                Back to Login
+              </button>
+            </div>
           </form>
 
-          {/* <div className={activeTab === "export" ? "p-5 space-y-4" : "hidden"}>
-            <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4 shadow-sm">
-              <h3 className="text-xl font-semibold text-[#1E3A8A]">
-                Shri Ahobilam-Vijayawada Dhaam Yatra
-              </h3>
-              <p className="text-sm text-[#475569] mt-1">Placeholder</p>
-            </div>
-
-            <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4 shadow-sm">
-              <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <h3 className="text-xl font-semibold text-[#1E3A8A]">Registered Entries</h3>
-                <button
-                  type="button"
-                  onClick={exportToCsv}
-                  className="rounded-lg bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white hover:bg-[#142a63]"
-                >
-                  Export CSV
-                </button>
-              </div>
-              {savedRegistrations.length === 0 ? (
-                <p className="text-sm text-[#475569]">No registrations yet.</p>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full text-left text-sm">
-                    <thead>
-                      <tr className="border-b border-[#D4AF37]/20 text-[#1E3A8A]">
-                        <th className="px-2 py-2">Name</th>
-                        <th className="px-2 py-2">Mobile</th>
-                        <th className="px-2 py-2">Category</th>
-                        <th className="px-2 py-2">Persons</th>
-                        <th className="px-2 py-2">Amount</th>
-                        <th className="px-2 py-2">Transaction ID</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {savedRegistrations.map((entry, index) => (
-                        <tr key={`${entry.mobile || index}-${index}`} className="border-b border-[#D4AF37]/10">
-                          <td className="px-2 py-2">{entry.name}</td>
-                          <td className="px-2 py-2">{entry.mobile}</td>
-                          <td className="px-2 py-2">{entry.category}</td>
-                          <td className="px-2 py-2">{entry.persons}</td>
-                          <td className="px-2 py-2">{formatCurrency(entry.totalAmount)}</td>
-                          <td className="px-2 py-2">{entry.transactionId}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          </div> */}
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
