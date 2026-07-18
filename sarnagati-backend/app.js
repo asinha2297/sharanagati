@@ -16,6 +16,7 @@ app.use(
 		origin: [
 			"http://localhost:5173",
 			"https://sharanagati-frontend-1.onrender.com",
+			"https://www.sharnagati.online",
 		],
 		credentials: true,
 	})
