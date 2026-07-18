@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import img from "../assets/Image.jpg";
 
 export default function RegistrationForm() {
-  const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
-  const apiUrl = (path) => `${apiBaseUrl}${path}`;
+  const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
+  const apiUrl = (path) => `${API_URL}${path}`;
 
   const [formData, setFormData] = useState({
     name: "",
