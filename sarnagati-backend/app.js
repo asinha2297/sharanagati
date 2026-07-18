@@ -11,7 +11,15 @@ const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 
-app.use(cors());
+app.use(
+	cors({
+		origin: [
+			"http://localhost:5173",
+			"https://sharanagati-frontend-1.onrender.com",
+		],
+		credentials: true,
+	})
+);
 
 app.use( helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }) );
 
