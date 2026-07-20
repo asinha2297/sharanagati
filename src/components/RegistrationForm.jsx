@@ -4,12 +4,16 @@ import img from "../assets/Image.jpg";
 const LATE_FEE_CUTOFF = new Date("2026-07-31T23:59:59+05:30");
 const LATE_FEE_AMOUNT = 500;
 
-const countRegisteredPersons = (registrations) => {
+const countCategoryAPersons = (registrations) => {
   if (!Array.isArray(registrations)) {
     return 0;
   }
 
   return registrations.reduce((total, entry) => {
+    if (entry?.category !== "A") {
+      return total;
+    }
+
     let personsCount = 0;
 
     if (typeof entry?.name === "string" && entry.name.trim()) {
@@ -57,8 +61,8 @@ export default function RegistrationForm() {
     const stored = localStorage.getItem("registrations");
     return stored ? JSON.parse(stored) : [];
   });
-  const [registeredPersonsCount, setRegisteredPersonsCount] = useState(() =>
-    countRegisteredPersons(savedRegistrations)
+  const [categoryAPersonsCount, setCategoryAPersonsCount] = useState(() =>
+    countCategoryAPersons(savedRegistrations)
   );
   const [authMobile, setAuthMobile] = useState("");
   const [isCheckingStatus, setIsCheckingStatus] = useState(false);
@@ -68,7 +72,7 @@ export default function RegistrationForm() {
 
   // Disable Category A once total registered person names reach the cap.
   const MAX_CATEGORY_A_REGISTRATIONS = 42;
-  const isCategoryADisabled = registeredPersonsCount >= MAX_CATEGORY_A_REGISTRATIONS;
+  const isCategoryADisabled = categoryAPersonsCount >= MAX_CATEGORY_A_REGISTRATIONS;
 
   const refreshRegistrationSummary = async () => {
     try {
@@ -76,7 +80,7 @@ export default function RegistrationForm() {
       const data = await response.json();
 
       if (response.ok && data?.success) {
-        setRegisteredPersonsCount(Number(data.totalRegisteredPersons) || 0);
+        setCategoryAPersonsCount(Number(data.totalCategoryAPersons) || 0);
       }
     } catch (err) {
       console.error("Unable to fetch registration summary:", err);
@@ -810,7 +814,7 @@ export default function RegistrationForm() {
       }}
     >
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6 rounded-full bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white shadow-lg">
-        Registrations: {registeredPersonsCount}
+        Category A Persons: {categoryAPersonsCount}
       </div>
       <div className="w-full max-w-xl bg-white/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/20 shadow-[0_8px_32px_0_rgba(30,58,138,0.12)]">
         <div className="p-3 text-center border-b-2 border-[#D4AF37]/30">

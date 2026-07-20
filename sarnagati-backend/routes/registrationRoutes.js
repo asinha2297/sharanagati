@@ -185,11 +185,19 @@ router.get("/summary", async (req, res) => {
       (total, entry) => total + countPersonsInEntry(entry),
       0
     );
+    const totalCategoryAPersons = list.reduce((total, entry) => {
+      if (entry?.category !== "A") {
+        return total;
+      }
+
+      return total + countPersonsInEntry(entry);
+    }, 0);
 
     return res.status(200).json({
       success: true,
       totalRegistrations: list.length,
       totalRegisteredPersons,
+      totalCategoryAPersons,
     });
   } catch (err) {
     console.error("Registration summary error:", err);
