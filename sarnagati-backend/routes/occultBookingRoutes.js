@@ -5,6 +5,16 @@ const OccultBooking = require("../models/OccultBooking");
 
 const router = express.Router();
 
+const getPublicBaseUrl = (req) => {
+  const envBaseUrl = process.env.PUBLIC_BASE_URL || process.env.APP_BASE_URL || "";
+
+  if (envBaseUrl) {
+    return envBaseUrl.replace(/\/$/, "");
+  }
+
+  return `${req.protocol}://${req.get("host")}`.replace(/\/$/, "");
+};
+
 router.post("/bookings", upload.single("paymentAttachment"), async (req, res) => {
   try {
     const {
@@ -40,6 +50,10 @@ router.post("/bookings", upload.single("paymentAttachment"), async (req, res) =>
       });
     }
 
+    const publicBaseUrl = getPublicBaseUrl(req);
+    const paymentAttachmentPath = `/uploads/${req.file.filename}`;
+    const paymentAttachmentUrl = `${publicBaseUrl}${paymentAttachmentPath}`;
+
     const booking = await OccultBooking.create({
       session: String(session).trim(),
       format: String(format).trim(),
@@ -51,12 +65,15 @@ router.post("/bookings", upload.single("paymentAttachment"), async (req, res) =>
       focus: String(focus).trim(),
       transactionId: String(transactionId).trim(),
       paymentAttachment: req.file.filename,
+      paymentAttachmentPath,
+      paymentAttachmentUrl,
     });
 
     return res.status(201).json({
       success: true,
       message: "Booking request submitted",
       bookingId: booking._id,
+      paymentAttachmentUrl,
     });
   } catch {
     return res.status(500).json({
