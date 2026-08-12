@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   LuCompass as Compass,
   LuHeart as Heart,
-  LuInfinity as Infinity,
+  LuInfinity as InfinityIcon,
   LuWaves as Waves,
   LuHourglass as Hourglass,
   LuSparkles as Sparkles,
 } from "react-icons/lu";
 import krsnaImage from "../assets/Krsna.jpg";
+import sharanagatiQrCode from "../assets/Sharanagati QRCode.jpeg";
 
 const ROBOTS_META_NAME = "robots";
 
@@ -25,7 +27,7 @@ const questionCards = [
   {
     title: "Repeating Patterns",
     description: "Notice experiences and inner loops that seem to return over time.",
-    icon: Infinity,
+    icon: InfinityIcon,
   },
   {
     title: "Emotional Themes",
@@ -76,11 +78,21 @@ const initialForm = {
   email: "",
   phone: "",
   focus: "",
+  transactionId: "",
 };
 
 const OccultScience = () => {
+  const API_URL = (
+    import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || ""
+  ).replace(/\/$/, "");
+  const apiUrl = (path) => `${API_URL}${path}`;
+
   const [showBookingForm, setShowBookingForm] = useState(false);
+  const [bookingStep, setBookingStep] = useState("details");
   const [form, setForm] = useState(initialForm);
+  const [paymentAttachment, setPaymentAttachment] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
@@ -110,9 +122,54 @@ const OccultScience = () => {
     };
   }, []);
 
-  const handleBookingSubmit = (event) => {
+  const handleBookingSubmit = async (event) => {
     event.preventDefault();
-    setSubmitted(true);
+    if (bookingStep === "details") {
+      setBookingStep("payment");
+      return;
+    }
+
+    if (!paymentAttachment) {
+      setSubmitError("Please upload your payment attachment before submitting.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setSubmitError("");
+
+      const payload = new FormData();
+      payload.append("session", form.session);
+      payload.append("format", form.format);
+      payload.append("date", form.date);
+      payload.append("time", form.time);
+      payload.append("name", form.name);
+      payload.append("email", form.email);
+      payload.append("phone", form.phone);
+      payload.append("focus", form.focus);
+      payload.append("transactionId", form.transactionId);
+      payload.append("paymentAttachment", paymentAttachment);
+
+      const response = await fetch(apiUrl("/api/occult/bookings"), {
+        method: "POST",
+        body: payload,
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Unable to submit booking request");
+      }
+
+      setSubmitted(true);
+      setBookingStep("details");
+      setForm(initialForm);
+      setPaymentAttachment(null);
+    } catch (error) {
+      setSubmitError(error.message || "Unable to submit booking request");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -267,6 +324,50 @@ const OccultScience = () => {
           </div>
         </section>
 
+        <section className="mt-12 rounded-3xl border border-[#1E3A8A]/10 bg-white/75 p-6 sm:p-8" aria-labelledby="meet-tamanna-heading">
+          <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_1fr]">
+            <div>
+              <h2
+                id="meet-tamanna-heading"
+                className="text-2xl font-semibold tracking-tight text-[#1E3A8A] sm:text-3xl"
+              >
+                Meet Tamanna
+              </h2>
+              <div className="mt-5 h-[2px] w-20 bg-[#F59E0B]/70" aria-hidden="true" />
+              <p className="mt-6 text-slate-700">
+                Every person&apos;s journey carries its own questions, experiences and
+                patterns. My role is not to tell you what your life should look like, but to
+                create a space where you can explore what lies beneath the questions you are
+                already asking.
+              </p>
+              <p className="mt-4 text-slate-600">
+                Tamanna Bhowmik is an Akashic Practitioner who facilitates guided sessions for
+                individuals seeking deeper reflection, perspective and understanding around
+                their personal journeys.
+              </p>
+              <p className="mt-4 text-sm text-slate-600">
+                [Add Tamanna&apos;s biography, training and experience]
+              </p>
+              {/* <Link
+                to="/about"
+                className="mt-8 inline-flex items-center rounded-xl bg-[#1E3A8A] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#142a63] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E3A8A]"
+              >
+                Read Tamanna&apos;s Story
+              </Link> */}
+            </div>
+
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] border border-[#D4AF37]/25 bg-white/70">
+              <div
+                className="pointer-events-none absolute inset-0 [background-size:30px_30px] [background-image:linear-gradient(to_right,rgba(30,58,138,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(30,58,138,0.08)_1px,transparent_1px)] opacity-50"
+                aria-hidden="true"
+              />
+              <p className="absolute bottom-5 left-5 text-xs uppercase tracking-[0.2em] text-slate-500">
+                Tamanna Bhowmik, Akashic Practitioner
+              </p>
+            </div>
+          </div>
+        </section>
+
         <section
           className="relative isolate mt-14 overflow-hidden rounded-3xl bg-[#FEF3C7] px-6 py-16 sm:px-8 lg:px-12"
           aria-labelledby="booking-cta-heading"
@@ -299,7 +400,11 @@ const OccultScience = () => {
                 type="button"
                 onClick={() => {
                   setShowBookingForm(true);
+                  setBookingStep("details");
+                  setForm(initialForm);
+                  setPaymentAttachment(null);
                   setSubmitted(false);
+                  setSubmitError("");
                 }}
                 className="rounded-xl bg-[#1E3A8A] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#142a63] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E3A8A]"
               >
@@ -311,19 +416,18 @@ const OccultScience = () => {
 
         {showBookingForm ? (
           <section className="mt-8" aria-labelledby="booking-form-heading">
-            <h2
-              id="booking-form-heading"
-              className="text-2xl font-semibold tracking-tight text-[#1E3A8A] sm:text-3xl"
-            >
-              Request your Akashic session
-            </h2>
-            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600 sm:text-base">
-              This form is a polished placeholder flow for V1 and can be connected to a
-              calendar, payment gateway or booking backend later.
-            </p>
+            {!submitted ? (
+              <>
+                <h2
+                  id="booking-form-heading"
+                  className="text-2xl font-semibold tracking-tight text-[#1E3A8A] sm:text-3xl"
+                >
+                  Request your Akashic session
+                </h2>
+                <p>The session will be conducted on Zoom calls.</p>
 
-            <div className="mt-6 mx-auto max-w-4xl rounded-[18px] border border-[#D4AF37]/25 bg-white/85 p-6 shadow-[0_12px_30px_rgba(30,58,138,0.1)] sm:p-8">
-              <form className="grid gap-4 md:grid-cols-2" onSubmit={handleBookingSubmit}>
+                <div className="mt-6 mx-auto max-w-4xl rounded-[18px] border border-[#D4AF37]/25 bg-white/85 p-6 shadow-[0_12px_30px_rgba(30,58,138,0.1)] sm:p-8">
+                  <form className="grid gap-4 md:grid-cols-2" onSubmit={handleBookingSubmit}>
                 <label className="text-sm font-semibold text-[#1E3A8A] md:col-span-2">
                   Choose a session
                   <select
@@ -414,7 +518,7 @@ const OccultScience = () => {
                 </label>
 
                 <label className="text-sm font-semibold text-[#1E3A8A] md:col-span-2">
-                  What would you like to explore?
+                  Please share your questions for the session here.
                   <textarea
                     className="mt-2 min-h-36 w-full rounded-xl border border-[#1E3A8A]/20 bg-white px-4 py-3 text-sm text-slate-700 outline-none ring-[#1E3A8A]/30 transition focus:ring"
                     value={form.focus}
@@ -425,21 +529,110 @@ const OccultScience = () => {
                   />
                 </label>
 
+                {bookingStep === "payment" ? (
+                  <div className="md:col-span-2 rounded-2xl border border-[#D4AF37]/35 bg-[#FEF3C7] p-4 sm:p-5">
+                    <h3 className="text-lg font-semibold text-[#1E3A8A]">Payment Details</h3>
+                    <p className="mt-2 text-sm text-slate-700">
+                      Please scan the QR Code given below, complete payment, then provide the
+                      transaction ID and payment attachment.
+                    </p>
+                      <div className="space-y-1 text-sm text-slate-700">
+                        <p className="font-semibold text-[#1E3A8A]">UPI Payment</p>
+                        <p>After payment, upload a screenshot and enter your transaction ID.</p>
+                      </div>
+                    <div className="mt-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+                      <img
+                        src={sharanagatiQrCode}
+                        alt="Sharanagati payment QR code"
+                        // className="h-72 w-72 border border-[#1E3A8A]/15 bg-white object-contain p-4 sm:h-80 sm:w-80"
+                      />
+                    </div>
+                  </div>
+                ) : null}
+
+                {bookingStep === "payment" ? (
+                  <>
+                    <label className="text-sm font-semibold text-[#1E3A8A] md:col-span-2">
+                      Transaction ID
+                      <input
+                        className="mt-2 w-full rounded-xl border border-[#1E3A8A]/20 bg-white px-4 py-3 text-sm text-slate-700 outline-none ring-[#1E3A8A]/30 transition focus:ring"
+                        value={form.transactionId}
+                        onChange={(event) =>
+                          setForm((prev) => ({ ...prev, transactionId: event.target.value }))
+                        }
+                        required
+                      />
+                    </label>
+
+                    <label className="cursor-pointer text-sm font-semibold text-[#1E3A8A] md:col-span-2">
+                      Payment Attachment (Screenshot)
+                      <input
+                        className="mt-2 w-full cursor-pointer rounded-xl border border-[#1E3A8A]/20 bg-white px-4 py-3 text-sm text-slate-700 file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-[#1E3A8A] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+                        type="file"
+                        accept="image/*"
+                        onChange={(event) => {
+                          const file = event.target.files?.[0] || null;
+                          setPaymentAttachment(file);
+                        }}
+                        required
+                      />
+                    </label>
+                  </>
+                ) : null}
+
+                {submitError ? (
+                  <div className="md:col-span-2 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {submitError}
+                  </div>
+                ) : null}
+
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="rounded-xl bg-[#F59E0B] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#d97706] md:col-span-2"
                 >
-                  Request a Session
+                  {bookingStep === "details"
+                    ? "Continue"
+                    : isSubmitting
+                      ? "Submitting..."
+                      : "Request a Session"}
                 </button>
               </form>
 
-              {submitted ? (
-                <div className="mt-5 rounded-xl border border-[#D4AF37]/35 bg-[#FEF3C7] px-4 py-4 text-sm text-[#1E3A8A]">
-                  Request received. This is a placeholder success state for V1. Connect this
-                  form to your booking backend and notifications workflow in the next phase.
+                  {bookingStep === "payment" ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setBookingStep("details");
+                        setSubmitError("");
+                      }}
+                      className="mt-4 text-sm font-semibold text-[#FFF7E0] underline-offset-4 hover:underline"
+                    >
+                      {"< Back to details"}
+                    </button>
+                  ) : null}
                 </div>
-              ) : null}
-            </div>
+              </>
+            ) : (
+              <div className="mx-auto max-w-4xl rounded-[18px] border border-[#D4AF37]/35 bg-[#FEF3C7] p-6 text-center shadow-[0_12px_30px_rgba(30,58,138,0.1)] sm:p-8">
+                <h2 className="text-2xl font-semibold text-[#1E3A8A] sm:text-3xl">
+                  Request Submitted Successfully
+                </h2>
+                <p className="mt-4 text-sm leading-relaxed text-slate-700 sm:text-base">
+                  Thank you. Your Akashic session request and payment details have been received. We will review your submission, and our team will contact you soon within 7 days.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSubmitted(false);
+                    setShowBookingForm(false);
+                  }}
+                  className="mt-6 rounded-xl bg-[#1E3A8A] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#142a63]"
+                >
+                  Close
+                </button>
+              </div>
+            )}
           </section>
         ) : null}
       </section>
