@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
+import OccultScience from "./pages/OccultScience";
 import AboutUs from "./components/AboutUs";
 import Gurukul from "./components/Gurukul";
 import Yatras from "./components/Yatras";
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/biography" element={<Biography />} />
+        <Route path="/occult-science" element={<OccultScience />} />
         <Route path="/gurukul" element={<Gurukul />} />
         <Route path="/yatras" element={<Yatras />} />
         <Route path="/contact" element={<ContactUs />} />
