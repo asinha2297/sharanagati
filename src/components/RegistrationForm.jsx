@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import img from "../assets/Image.jpg";
 
 const LATE_FEE_CUTOFF = new Date("2026-07-31T23:59:59+05:30");
 const LATE_FEE_AMOUNT = 500;
