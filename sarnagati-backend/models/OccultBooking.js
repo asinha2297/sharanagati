@@ -12,6 +12,8 @@ const occultBookingSchema = new mongoose.Schema(
     focus: { type: String, required: true, trim: true },
     transactionId: { type: String, required: true, trim: true },
     paymentAttachment: { type: String, required: true, trim: true },
+    paymentAttachmentPath: { type: String, required: true, trim: true },
+    paymentAttachmentUrl: { type: String, required: true, trim: true },
   },
   { timestamps: true }
 );
