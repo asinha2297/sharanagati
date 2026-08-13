@@ -101,7 +101,7 @@ const OccultScience = () => {
     const robotsMeta = existingRobotsMeta || document.createElement("meta");
     const previousRobotsContent = existingRobotsMeta?.getAttribute("content") || "";
 
-    document.title = "Occult Science";
+    document.title = "The Soul Archive";
 
     if (!existingRobotsMeta) {
       robotsMeta.setAttribute("name", ROBOTS_META_NAME);
