@@ -19,7 +19,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/biography" element={<Biography />} />
-        <Route path="/occult-science" element={<OccultScience />} />
+        <Route path="/the-soul-archive" element={<OccultScience />} />
         <Route path="/gurukul" element={<Gurukul />} />
         <Route path="/yatras" element={<Yatras />} />
         <Route path="/contact" element={<ContactUs />} />
