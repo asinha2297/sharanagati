@@ -454,7 +454,7 @@ const OccultScience = () => {
                   </select>
                 </label>
 
-                <label className="text-sm font-semibold text-[#1E3A8A]">
+                {/* <label className="text-sm font-semibold text-[#1E3A8A]">
                   Preferred date
                   <input
                     className="mt-2 w-full rounded-xl border border-[#1E3A8A]/20 bg-white px-4 py-3 text-sm text-slate-700 outline-none ring-[#1E3A8A]/30 transition focus:ring"
@@ -478,7 +478,7 @@ const OccultScience = () => {
                     }
                     required
                   />
-                </label>
+                </label> */}
 
                 <label className="text-sm font-semibold text-[#1E3A8A]">
                   Your name
@@ -536,7 +536,10 @@ const OccultScience = () => {
                       Please scan the QR Code given below, complete payment, then provide the
                       transaction ID and payment attachment.
                     </p>
-                      <div className="space-y-1 text-sm text-slate-700">
+                    <p className="mt-3 text-sm font-semibold text-[#1E3A8A]">
+                      Please note that energy exchange will be ₹2000.
+                    </p><br/>
+                    <div className="space-y-1 text-sm text-slate-700">
                         <p className="font-semibold text-[#1E3A8A]">UPI Payment</p>
                         <p>After payment, upload a screenshot and enter your transaction ID.</p>
                       </div>
