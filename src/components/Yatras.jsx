@@ -124,6 +124,10 @@ const Yatras = () => {
           Ahobilam-Vijayawada Dhaam Yatra
         </h2>
 
+        <h3 className="text-xl font-semibold text-red-600 mb-4">
+          🔔 Please Note: Registration for the Yatra has now been closed.
+        </h3>
+
         <div className="text-gray-700 text-left space-y-6 mb-6">
           <div className="space-y-2">
             {upcomingYatra.intro.map((line) => (
@@ -218,11 +222,20 @@ const Yatras = () => {
         </div>
 
         <button
+          disabled
+          style={{ cursor: "not-allowed" }}
+          className="px-6 py-3 bg-[#808080] text-red-500 font-semibold rounded-md shadow-md
+                    opacity-70"
+        >
+          Registration closed
+        </button>
+
+        {/* <button
           onClick={() => navigate("/register")}
           className="bounce-pulse px-6 py-3 bg-[#F59E0B] hover:bg-[#d97706] text-white font-semibold rounded-md shadow-md transition duration-300 cursor-pointer"
         >
           Register for Yatra
-        </button>
+        </button> */}
       </div>
       </div>
       <h1 className="page-title !text-left text-4xl !font-normal text-[#1E3A8A] mt-10 mb-10">
