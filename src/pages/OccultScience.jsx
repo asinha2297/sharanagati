@@ -9,6 +9,7 @@ import {
   LuSparkles as Sparkles,
 } from "react-icons/lu";
 import krsnaImage from "../assets/Krsna.jpg";
+import tamannaImage from "../assets/TamannaMtjEdited.png";
 import sharanagatiQrCode from "../assets/Sharanagati QRCode.jpeg";
 
 const ROBOTS_META_NAME = "robots";
@@ -325,46 +326,68 @@ const OccultScience = () => {
         </section>
 
         <section className="mt-12 rounded-3xl border border-[#1E3A8A]/10 bg-white/75 p-6 sm:p-8" aria-labelledby="meet-tamanna-heading">
-          <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_1fr]">
-            <div>
-              <h2
-                id="meet-tamanna-heading"
-                className="text-2xl font-semibold tracking-tight text-[#1E3A8A] sm:text-3xl"
-              >
-                Meet Tamanna
-              </h2>
-              <div className="mt-5 h-[2px] w-20 bg-[#F59E0B]/70" aria-hidden="true" />
-              <p className="mt-6 text-slate-700">
-                Every person&apos;s journey carries its own questions, experiences and
-                patterns. My role is not to tell you what your life should look like, but to
-                create a space where you can explore what lies beneath the questions you are
-                already asking.
-              </p>
-              <p className="mt-4 text-slate-600">
-                Tamanna Bhowmik is an Akashic Practitioner who facilitates guided sessions for
-                individuals seeking deeper reflection, perspective and understanding around
-                their personal journeys.
-              </p>
-              <p className="mt-4 text-sm text-slate-600">
-                [Add Tamanna&apos;s biography, training and experience]
-              </p>
-              {/* <Link
-                to="/about"
-                className="mt-8 inline-flex items-center rounded-xl bg-[#1E3A8A] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#142a63] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E3A8A]"
-              >
-                Read Tamanna&apos;s Story
-              </Link> */}
+          <div>
+            <h2
+              id="meet-tamanna-heading"
+              className="text-2xl font-semibold tracking-tight text-[#1E3A8A] sm:text-3xl"
+            >
+              Welcome to Your Akashic Journey
+            </h2>
+            <div className="mt-5 h-[2px] w-20 bg-[#F59E0B]/70" aria-hidden="true" />
+
+            {/* Image floats top-right; text wraps around it */}
+            <div className="relative float-none mx-auto mb-6 aspect-[4/5] w-full max-w-xs overflow-hidden rounded-[24px] border border-[#D4AF37]/25 bg-white/70 sm:float-right sm:mb-4 sm:ml-8 sm:mt-1 sm:w-64">
+              <img
+                src={tamannaImage}
+                alt="Tamanna Bhowmik"
+                className="h-full w-full object-cover"
+              />
+              {/* <p className="absolute bg-black-900/70 bottom-5 left-5 text-xs uppercase tracking-[0.2em] text-white drop-shadow">
+                Tamanna Bhowmik, Akashic Practitioner
+              </p> */}
             </div>
 
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] border border-[#D4AF37]/25 bg-white/70">
-              <div
-                className="pointer-events-none absolute inset-0 [background-size:30px_30px] [background-image:linear-gradient(to_right,rgba(30,58,138,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(30,58,138,0.08)_1px,transparent_1px)] opacity-50"
-                aria-hidden="true"
-              />
-              <p className="absolute bottom-5 left-5 text-xs uppercase tracking-[0.2em] text-slate-500">
-                Tamanna Bhowmik, Akashic Practitioner
-              </p>
-            </div>
+            <h3>
+              {/* <b>Welcome to Your Akashic Journey</b> */}
+              <br/>sacred space for insight, healing, and deeper self-discovery.
+            </h3>
+            <p className="mt-4 text-slate-600">
+              I’m <b>Tamanna Bhowmik</b>, an Akashic Reader and Healer, trained in <b>Akashic Level 1 (Reading)</b> and <b>Akashic Level 2 (Healing)</b>. I am currently continuing my spiritual journey through <b>Krishna Akashik Oracles</b>, further deepening my understanding and practice of the Akashic field.
+            </p>
+            <p className="mt-4 text-slate-600">
+              I believe that every individual carries a unique journey—one shaped by experiences, emotions, questions, relationships, and patterns. At times, we may simply need a safe and compassionate space to pause, reflect, gain perspective, and reconnect with ourselves.
+            </p>
+            <p className="mt-4 text-slate-600">
+              Through <b>Akashic Readings</b>, I offer a gentle space to explore the deeper patterns, questions, emotions, and experiences that may be present in your journey.
+            </p>
+            <p className="mt-4 text-slate-600">
+              Through <b>Akashic Healing</b>, I facilitate a supportive space for healing, release, alignment, and expanded inner awareness.
+            </p>
+            <p className="mt-4 text-slate-600">
+              My approach is rooted in <b>compassion</b>, <b>integrity</b>, <b>confidentiality</b>, and <b>respect for each person’s individual path</b>. I do not believe in imposing answers or telling you what your life should look like. Instead, my intention is to support you in connecting with the awareness, clarity, and inner wisdom that already exists within you.
+            </p>
+            <p className="mt-4 text-slate-600">
+              Here, <b>Akashic wisdom meets a grounded and compassionate perspective</b>, creating a space where you can explore your inner world with openness, clarity, and intention.
+            </p>
+            <h3
+              className="text-l font-semibold tracking-tight text-[#1E3A8A] sm:text-xl"
+            >
+              Read. Heal. Realign. Evolve.
+            </h3>
+            <h2
+              className="text-l font-semibold tracking-tight text-[#1E3A8A] sm:text-md"
+            >
+              Your journey is unique.<br/>
+              Your questions matter.<br/>
+              Your inner wisdom deserves to be heard.
+            </h2>
+            {/* <Link
+              to="/about"
+              className="mt-8 inline-flex items-center rounded-xl bg-[#1E3A8A] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#142a63] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E3A8A]"
+            >
+              Read Tamanna&apos;s Story
+            </Link> */}
+            <div className="clear-both" />
           </div>
         </section>
 
@@ -537,7 +560,7 @@ const OccultScience = () => {
                       transaction ID and payment attachment.
                     </p>
                     <p className="mt-3 text-sm font-semibold text-[#1E3A8A]">
-                      Please note that energy exchange will be ₹2000.
+                      Please note that the <b>energy exchange is ₹2,500 for up to 5 questions</b>, with an additional <b>₹300 for each question beyond the first 5</b>.
                     </p><br/>
                     <div className="space-y-1 text-sm text-slate-700">
                         <p className="font-semibold text-[#1E3A8A]">UPI Payment</p>
