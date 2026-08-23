@@ -447,7 +447,7 @@ const OccultScience = () => {
                 >
                   Request your Akashic session
                 </h2>
-                <p>The session will be conducted on Zoom calls.</p>
+                <p>The session will be conducted on phone calls.</p>
 
                 <div className="mt-6 mx-auto max-w-4xl rounded-[18px] border border-[#D4AF37]/25 bg-white/85 p-6 shadow-[0_12px_30px_rgba(30,58,138,0.1)] sm:p-8">
                   <form className="grid gap-4 md:grid-cols-2" onSubmit={handleBookingSubmit}>
