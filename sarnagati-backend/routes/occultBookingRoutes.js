@@ -20,8 +20,6 @@ router.post("/bookings", upload.single("paymentAttachment"), async (req, res) =>
     const {
       session,
       format,
-      date,
-      time,
       name,
       email,
       phone,
@@ -29,7 +27,7 @@ router.post("/bookings", upload.single("paymentAttachment"), async (req, res) =>
       transactionId,
     } = req.body || {};
 
-    if (!session || !format || !date || !time || !name || !email || !phone || !focus) {
+    if (!session || !format || !name || !email || !phone || !focus) {
       return res.status(400).json({
         success: false,
         message: "All booking fields are required",
@@ -57,8 +55,6 @@ router.post("/bookings", upload.single("paymentAttachment"), async (req, res) =>
     const booking = await OccultBooking.create({
       session: String(session).trim(),
       format: String(format).trim(),
-      date: String(date).trim(),
-      time: String(time).trim(),
       name: String(name).trim(),
       email: String(email).trim().toLowerCase(),
       phone: String(phone).trim(),

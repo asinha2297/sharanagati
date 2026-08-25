@@ -73,8 +73,6 @@ const processSteps = [
 const initialForm = {
   session: "Akashic Reading",
   format: "Online",
-  date: "",
-  time: "",
   name: "",
   email: "",
   phone: "",
@@ -142,8 +140,6 @@ const OccultScience = () => {
       const payload = new FormData();
       payload.append("session", form.session);
       payload.append("format", form.format);
-      payload.append("date", form.date);
-      payload.append("time", form.time);
       payload.append("name", form.name);
       payload.append("email", form.email);
       payload.append("phone", form.phone);
@@ -476,32 +472,6 @@ const OccultScience = () => {
                     <option>Online</option>
                   </select>
                 </label>
-
-                {/* <label className="text-sm font-semibold text-[#1E3A8A]">
-                  Preferred date
-                  <input
-                    className="mt-2 w-full rounded-xl border border-[#1E3A8A]/20 bg-white px-4 py-3 text-sm text-slate-700 outline-none ring-[#1E3A8A]/30 transition focus:ring"
-                    type="date"
-                    value={form.date}
-                    onChange={(event) =>
-                      setForm((prev) => ({ ...prev, date: event.target.value }))
-                    }
-                    required
-                  />
-                </label>
-
-                <label className="text-sm font-semibold text-[#1E3A8A]">
-                  Preferred time
-                  <input
-                    className="mt-2 w-full rounded-xl border border-[#1E3A8A]/20 bg-white px-4 py-3 text-sm text-slate-700 outline-none ring-[#1E3A8A]/30 transition focus:ring"
-                    type="time"
-                    value={form.time}
-                    onChange={(event) =>
-                      setForm((prev) => ({ ...prev, time: event.target.value }))
-                    }
-                    required
-                  />
-                </label> */}
 
                 <label className="text-sm font-semibold text-[#1E3A8A]">
                   Your name

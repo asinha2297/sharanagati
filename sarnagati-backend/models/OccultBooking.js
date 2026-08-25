@@ -4,8 +4,6 @@ const occultBookingSchema = new mongoose.Schema(
   {
     session: { type: String, required: true, trim: true },
     format: { type: String, required: true, trim: true },
-    date: { type: String, required: true, trim: true },
-    time: { type: String, required: true, trim: true },
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true, lowercase: true },
     phone: { type: String, required: true, trim: true },
