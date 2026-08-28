@@ -11,6 +11,7 @@ import {
 import krsnaImage from "../assets/Krsna.jpg";
 import tamannaImage from "../assets/TamannaMtjEdited.png";
 import sharanagatiQrCode from "../assets/Sharanagati QRCode.jpeg";
+import Testimonials from "../components/Testimonials";
 
 const ROBOTS_META_NAME = "robots";
 
@@ -384,6 +385,19 @@ const OccultScience = () => {
               Read Tamanna&apos;s Story
             </Link> */}
             <div className="clear-both" />
+          </div>
+        </section>
+
+        <section className="mt-14" aria-labelledby="testimonials-heading">
+          <h2
+            id="testimonials-heading"
+            className="text-2xl font-semibold tracking-tight text-[#1E3A8A] sm:text-3xl"
+          >
+            Voices from the Journey
+          </h2>
+          <div className="mt-2 h-[2px] w-20 bg-[#F59E0B]/70" aria-hidden="true" />
+          <div className="mt-6">
+            <Testimonials />
           </div>
         </section>
 
