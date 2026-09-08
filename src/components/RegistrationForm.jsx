@@ -93,7 +93,8 @@ export default function RegistrationForm() {
   );
   const [authMobile, setAuthMobile] = useState("");
   const [isCheckingStatus, setIsCheckingStatus] = useState(false);
-  const [isPayingRemaining, setIsPayingRemaining] = useState(false);
+  const [isConfirmingRemainingPayment, setIsConfirmingRemainingPayment] = useState(false);
+  // const [isPayingRemaining, setIsPayingRemaining] = useState(false);
   const [viewMode, setViewMode] = useState("login");
   const [existingRegistration, setExistingRegistration] = useState(null);
 
@@ -725,6 +726,7 @@ export default function RegistrationForm() {
     }
   };
 
+  /*
   const handleRemainingPayment = async () => {
     try {
       if (!existingRegistration?.remainingAmount || existingRegistration.remainingAmount <= 0) {
@@ -831,6 +833,49 @@ export default function RegistrationForm() {
       setIsPayingRemaining(false);
     }
   };
+  */
+
+  const handleRemainingPaymentConfirmation = async (event) => {
+    if (!event.target.checked) {
+      return;
+    }
+
+    try {
+      if (!existingRegistration?.remainingAmount || existingRegistration.remainingAmount <= 0) {
+        setViewMode("completed");
+        return;
+      }
+
+      setIsConfirmingRemainingPayment(true);
+      setErrorMessage("");
+
+      const updateResponse = await fetch(apiUrl("/api/registration/complete-payment"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mobile: existingRegistration.mobile,
+          amountPaid: existingRegistration.remainingAmount,
+        }),
+      });
+      const updateData = await updateResponse.json();
+
+      if (!updateResponse.ok || !updateData?.success) {
+        throw new Error(updateData?.message || "Unable to update remaining payment");
+      }
+
+      setExistingRegistration((prev) => ({
+        ...(prev || {}),
+        paidAmount: updateData.paidAmount,
+        remainingAmount: updateData.remainingAmount,
+        paymentStatus: updateData.paymentStatus,
+      }));
+      setViewMode(updateData.remainingAmount > 0 ? "remaining" : "completed");
+    } catch (err) {
+      setErrorMessage(`Unable to confirm payment. ${err.message}`);
+    } finally {
+      setIsConfirmingRemainingPayment(false);
+    }
+  };
 
   const paymentSummary = calculatePaymentSummary();
 
@@ -917,6 +962,7 @@ export default function RegistrationForm() {
                 Remaining: <span className="font-semibold text-[#1E3A8A]">{formatCurrency(Number(existingRegistration?.remainingAmount || 0))}</span>
               </p>
             </div>
+            {/*
             <button
               type="button"
               onClick={handleRemainingPayment}
@@ -925,6 +971,20 @@ export default function RegistrationForm() {
             >
               {isPayingRemaining ? "Processing..." : "Pay Remaining Amount"}
             </button>
+            */}
+            <label className="flex items-start gap-3 rounded-lg border border-[#D4AF37]/30 bg-[#FFF7E0] p-4 text-[#1E3A8A]">
+              <input
+                type="checkbox"
+                className="mt-1 h-5 w-5 accent-[#1E3A8A]"
+                onChange={handleRemainingPaymentConfirmation}
+                disabled={isConfirmingRemainingPayment}
+              />
+              <span className="font-semibold">
+                {isConfirmingRemainingPayment
+                  ? "Confirming remaining payment..."
+                  : "Have you completed the remaining payment?"}
+              </span>
+            </label>
             <button
               type="button"
               onClick={() => {
