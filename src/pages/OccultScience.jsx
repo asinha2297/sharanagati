@@ -78,7 +78,7 @@ const initialForm = {
   email: "",
   phone: "",
   focus: "",
-  transactionId: "",
+  // transactionId: "",
 };
 
 const OccultScience = () => {
@@ -90,7 +90,7 @@ const OccultScience = () => {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [bookingStep, setBookingStep] = useState("details");
   const [form, setForm] = useState(initialForm);
-  const [paymentAttachment, setPaymentAttachment] = useState(null);
+  // const [paymentAttachment, setPaymentAttachment] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -129,11 +129,6 @@ const OccultScience = () => {
       return;
     }
 
-    if (!paymentAttachment) {
-      setSubmitError("Please upload your payment attachment before submitting.");
-      return;
-    }
-
     try {
       setIsSubmitting(true);
       setSubmitError("");
@@ -145,8 +140,8 @@ const OccultScience = () => {
       payload.append("email", form.email);
       payload.append("phone", form.phone);
       payload.append("focus", form.focus);
-      payload.append("transactionId", form.transactionId);
-      payload.append("paymentAttachment", paymentAttachment);
+      // payload.append("transactionId", form.transactionId);
+      // payload.append("paymentAttachment", paymentAttachment);
 
       const response = await fetch(apiUrl("/api/occult/bookings"), {
         method: "POST",
@@ -162,7 +157,7 @@ const OccultScience = () => {
       setSubmitted(true);
       setBookingStep("details");
       setForm(initialForm);
-      setPaymentAttachment(null);
+      // setPaymentAttachment(null);
     } catch (error) {
       setSubmitError(error.message || "Unable to submit booking request");
     } finally {
@@ -435,7 +430,6 @@ const OccultScience = () => {
                   setShowBookingForm(true);
                   setBookingStep("details");
                   setForm(initialForm);
-                  setPaymentAttachment(null);
                   setSubmitted(false);
                   setSubmitError("");
                 }}
@@ -540,7 +534,7 @@ const OccultScience = () => {
                   <div className="md:col-span-2 rounded-2xl border border-[#D4AF37]/35 bg-[#FEF3C7] p-4 sm:p-5">
                     <h3 className="text-lg font-semibold text-[#1E3A8A]">Payment Details</h3>
                     <p className="mt-2 text-sm text-slate-700">
-                      Please scan the QR Code given below, complete payment, then provide the
+                      Please scan the QR Code given below to complete payment, then provide your
                       transaction ID and payment attachment.
                     </p>
                     <p className="mt-3 text-sm font-semibold text-[#1E3A8A]">
@@ -548,7 +542,7 @@ const OccultScience = () => {
                     </p><br/>
                     <div className="space-y-1 text-sm text-slate-700">
                         <p className="font-semibold text-[#1E3A8A]">UPI Payment</p>
-                        <p>After payment, upload a screenshot and enter your transaction ID.</p>
+                        {/* <p>After payment, upload a screenshot and enter your transaction ID.</p> */}
                       </div>
                     <div className="mt-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
                       <img
@@ -560,6 +554,7 @@ const OccultScience = () => {
                   </div>
                 ) : null}
 
+                {/*
                 {bookingStep === "payment" ? (
                   <>
                     <label className="text-sm font-semibold text-[#1E3A8A] md:col-span-2">
@@ -589,6 +584,7 @@ const OccultScience = () => {
                     </label>
                   </>
                 ) : null}
+                */}
 
                 {submitError ? (
                   <div className="md:col-span-2 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
