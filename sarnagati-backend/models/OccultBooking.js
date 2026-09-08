@@ -8,10 +8,10 @@ const occultBookingSchema = new mongoose.Schema(
     email: { type: String, required: true, trim: true, lowercase: true },
     phone: { type: String, required: true, trim: true },
     focus: { type: String, required: true, trim: true },
-    transactionId: { type: String, required: true, trim: true },
-    paymentAttachment: { type: String, required: true, trim: true },
-    paymentAttachmentPath: { type: String, required: true, trim: true },
-    paymentAttachmentUrl: { type: String, required: true, trim: true },
+    // transactionId: { type: String, required: true, trim: true },
+    // paymentAttachment: { type: String, required: true, trim: true },
+    // paymentAttachmentPath: { type: String, required: true, trim: true },
+    // paymentAttachmentUrl: { type: String, required: true, trim: true },
   },
   { timestamps: true }
 );
