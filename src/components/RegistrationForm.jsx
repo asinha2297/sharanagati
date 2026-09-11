@@ -73,8 +73,8 @@ export default function RegistrationForm() {
     email: "",
     category: "",
     paymentType: "advance",
-    transactionId: "",
-    paymentScreenshot: "",
+    // transactionId: "",
+    // paymentScreenshot: "",
     persons: "1",
   });
 
@@ -452,7 +452,7 @@ export default function RegistrationForm() {
       paymentType: formData.paymentType,
       mobile: formData.mobile,
       email: formData.email,
-      transactionId: formData.transactionId,
+      // transactionId: formData.transactionId,
       // paymentScreenshot will be ensured below
       persons: parseInt(formData.persons),
       amountPerPerson: perPersonAmounts[0] || 0,
@@ -496,7 +496,7 @@ export default function RegistrationForm() {
         payload.append("paymentType", submissionData.paymentType);
         payload.append("mobile", submissionData.mobile);
         payload.append("email", submissionData.email);
-        payload.append("transactionId", submissionData.transactionId);
+        // payload.append("transactionId", submissionData.transactionId);
         payload.append("persons", submissionData.persons);
         payload.append("amountPerPerson", submissionData.amountPerPerson);
         payload.append("totalAmount", submissionData.totalAmount);
@@ -549,8 +549,8 @@ export default function RegistrationForm() {
           email: "",
           category: "",
           paymentType: "advance",
-          transactionId: "",
-          paymentScreenshot: "",
+          // transactionId: "",
+          // paymentScreenshot: "",
           persons: "1",
         });
         setAdditionalPersons([]);
