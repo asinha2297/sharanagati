@@ -76,6 +76,10 @@ export default function JaipurRegistrationForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const paymentLabel = paymentType === "full" ? "full payment" : "advance payment";
+    const confirmed = window.confirm(`Submit ${paymentLabel} details for ₹${payableNow.toLocaleString("en-IN")}?`);
+    if (!confirmed) return;
+
     setError("");
     setIsSubmitting(true);
 
