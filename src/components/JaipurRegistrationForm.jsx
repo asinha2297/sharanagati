@@ -230,23 +230,29 @@ export default function JaipurRegistrationForm() {
               <p className="text-sm">Account Name: Annu Sinha</p>
               <div className="flex flex-wrap items-center gap-2 text-sm">
                 <span>Account Number: 35165460879</span>
-                <button type="button" onClick={() => copyPaymentDetail("Account number", "35165460879")} className="rounded border border-white bg-white p-1 text-[#1E3A8A] hover:bg-[#FFF7E0] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E3A8A]" aria-label="Copy account number" title="Copy account number"><LuCopy aria-hidden="true" size={16} /></button>
+                <button type="button" onClick={() => copyPaymentDetail("Account number", "35165460879")} className="rounded !border-white !bg-white p-1 text-[#1E3A8A] hover:!bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFFFFF]" aria-label="Copy account number" title="Copy account number"><LuCopy aria-hidden="true" size={16} /></button>
               </div>
               {/* <p className="text-sm">IFSC: BKID0004704</p> */}
               <p className="text-sm">Bank: State Bank of India (SBI)</p>
               <div className="flex flex-wrap items-center gap-2 text-sm">
                 <span>UPI ID: 7488136259@ybl</span>
-                <button type="button" onClick={() => copyPaymentDetail("UPI ID", "7488136259@ybl")} className="rounded border border-white bg-white p-1 text-[#1E3A8A] hover:bg-[#FFF7E0] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E3A8A]" aria-label="Copy UPI ID" title="Copy UPI ID"><LuCopy aria-hidden="true" size={16} /></button>
+                <button type="button" onClick={() => copyPaymentDetail("UPI ID", "7488136259@ybl")} className="rounded !border-white !bg-white p-1 text-[#1E3A8A] hover:!bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFFFFF]" aria-label="Copy UPI ID" title="Copy UPI ID"><LuCopy aria-hidden="true" size={16} /></button>
               </div>
               {copyStatus && <p className="text-xs text-slate-600" role="status" aria-live="polite">{copyStatus}</p>}
               <label className="block font-medium" htmlFor="paymentReference">UPI transaction ID / bank reference (optional)</label>
               <input id="paymentReference" className={inputClass} value={paymentReference} onChange={(event) => setPaymentReference(event.target.value)} />
-              <label className="block font-medium" htmlFor="paymentScreenshot">Payment screenshot (optional)</label>
-              <input id="paymentScreenshot" className="block w-full text-sm" type="file" accept="image/jpeg,image/png" onChange={(event) => setPaymentScreenshot(event.target.files?.[0] || null)} />
+              <label className="block font-medium" htmlFor="paymentScreenshot">Payment screenshot <span className="text-red-700">(required)</span></label>
+              <div className="flex flex-wrap items-center gap-3">
+                <label htmlFor="paymentScreenshot" className="inline-flex cursor-pointer items-center rounded-md border border-[#1E3A8A] bg-white px-4 py-2 font-semibold text-[#1E3A8A] underline decoration-transparent underline-offset-2 hover:bg-[#FFF7E0] hover:decoration-current focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[#1E3A8A]">
+                  Choose file
+                  <input id="paymentScreenshot" className="sr-only" type="file" accept="image/jpeg,image/png" required onChange={(event) => setPaymentScreenshot(event.target.files?.[0] || null)} />
+                </label>
+                <span className="text-sm" aria-live="polite">{paymentScreenshot?.name || "No file chosen"}</span>
+              </div>
             </section>
             {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">{error}</p>}
             <div className="flex items-center justify-between gap-4">
-              <button type="button" onClick={() => { setFormStep("details"); setError(""); }} className="rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-[#1E3A8A]">Previous</button>
+              <button type="button" onClick={() => { setFormStep("details"); setError(""); }} className="rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-white">Previous</button>
               <button type="submit" disabled={isSubmitting || payableNow < 100} className="rounded-md bg-[#F59E0B] px-5 py-3 font-semibold text-white shadow transition hover:bg-[#D97706] disabled:cursor-not-allowed disabled:opacity-60">{isSubmitting ? "Submitting..." : "Submit registration"}</button>
             </div>
               </>
