@@ -80,7 +80,6 @@ export default function JaipurRegistrationForm() {
     setIsSubmitting(true);
 
     try {
-      if (!paymentReference.trim()) throw new Error("Enter the UPI transaction ID or bank transfer reference.");
       const submission = new FormData();
       submission.append("roomType", roomType);
       submission.append("paymentType", paymentType);
@@ -196,8 +195,8 @@ export default function JaipurRegistrationForm() {
               <p className="text-sm">IFSC: BKID0004704</p>
               <p className="text-sm">Bank: Bank of India</p>
               <p className="text-sm">UPI ID: rounakrock.singh07-2@okhdfcbank</p>
-              <label className="block font-medium" htmlFor="paymentReference">UPI transaction ID / bank reference</label>
-              <input id="paymentReference" className={inputClass} required value={paymentReference} onChange={(event) => setPaymentReference(event.target.value)} />
+              <label className="block font-medium" htmlFor="paymentReference">UPI transaction ID / bank reference (optional)</label>
+              <input id="paymentReference" className={inputClass} value={paymentReference} onChange={(event) => setPaymentReference(event.target.value)} />
               <label className="block font-medium" htmlFor="paymentScreenshot">Payment screenshot (optional)</label>
               <input id="paymentScreenshot" className="block w-full text-sm" type="file" accept="image/jpeg,image/png" onChange={(event) => setPaymentScreenshot(event.target.files?.[0] || null)} />
             </section>

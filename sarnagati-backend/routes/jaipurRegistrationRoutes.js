@@ -25,10 +25,6 @@ router.post("/register", upload.single("paymentScreenshot"), async (req, res) =>
       return res.status(400).json({ success: false, message: "A valid mobile number and email are required." });
     }
 
-    if (!paymentReference) {
-      return res.status(400).json({ success: false, message: "UPI transaction ID or bank reference is required." });
-    }
-
     const amounts = calculateJaipurAmounts({
       roomType: req.body?.roomType,
       paymentType: req.body?.paymentType,
