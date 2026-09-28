@@ -78,7 +78,7 @@ export default function JaipurPaymentReview() {
             <p className="text-sm font-semibold uppercase tracking-widest text-[#B45309]">Organizer</p>
             <h1 className="mt-1 text-2xl font-semibold text-[#1E3A8A]">Jaipur Payment Review</h1>
           </div>
-          <button type="button" onClick={() => navigate("/yatras")} className="rounded-md border border-[#1E3A8A] px-4 py-2 font-semibold text-[#1E3A8A]">Back to Yatras</button>
+          <button type="button" onClick={() => navigate("/yatras")} className="rounded-md border border-[#1E3A8A] px-4 py-2 font-semibold text-[#FFF7E0]">Back to Yatras</button>
         </div>
 
         {!authenticated ? (
@@ -94,8 +94,8 @@ export default function JaipurPaymentReview() {
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <p className="text-slate-700"><strong>{pendingCount}</strong> awaiting verification · {registrations.length} total</p>
               <div className="flex gap-2">
-                <button type="button" onClick={() => loadRegistrations()} disabled={isLoading} className="rounded-md border border-[#1E3A8A] px-4 py-2 font-semibold text-[#1E3A8A] disabled:opacity-50">Refresh</button>
-                <button type="button" onClick={() => { setAuthenticated(false); setPassword(""); setRegistrations([]); setNotes({}); }} className="rounded-md border border-slate-400 px-4 py-2 font-semibold text-slate-700">Sign out</button>
+                <button type="button" onClick={() => loadRegistrations()} disabled={isLoading} className="rounded-md border border-[#1E3A8A] px-4 py-2 font-semibold text-[#FFF7E0] disabled:opacity-50">Refresh</button>
+                <button type="button" onClick={() => { setAuthenticated(false); setPassword(""); setRegistrations([]); setNotes({}); }} className="rounded-md border border-slate-400 px-4 py-2 font-semibold text-[#FFF7E0]">Sign out</button>
               </div>
             </div>
             {error && <p className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">{error}</p>}
