@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LuCopy } from "react-icons/lu";
 
@@ -15,16 +15,16 @@ const createParticipant = () => ({
 const participantDeposit = (person, roomType) => {
   const age = Number(person.age);
   if (age < 5) return 0;
-  if (person.medicalStudent === "Medical Student" || (age >= 11 && age <= 17)) return 3800;
-  if (age < 11) return 3800;
+  if (person.medicalStudent === "Medical Student" || (age >= 10 && age <= 17)) return 3800;
+  if (age < 10) return 3800;
   return roomType === "double" ? 4800 : 4400;
 };
 
 const participantTotal = (person, roomType) => {
   const age = Number(person.age);
   if (age < 5) return 0;
-  if (person.medicalStudent === "Medical Student" || (age >= 11 && age <= 17)) return 6800;
-  if (age < 11) return 4700;
+  if (person.medicalStudent === "Medical Student" || (age >= 10 && age <= 17)) return 6800;
+  if (age < 10) return 4700;
   return roomType === "double" ? 9500 : 8800;
 };
 
@@ -40,6 +40,7 @@ export default function JaipurRegistrationForm() {
   const [existingRegistration, setExistingRegistration] = useState(null);
   const [paymentReference, setPaymentReference] = useState("");
   const [paymentScreenshot, setPaymentScreenshot] = useState(null);
+  const paymentScreenshotInput = useRef(null);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -62,6 +63,11 @@ export default function JaipurRegistrationForm() {
     } catch {
       setCopyStatus(`Could not copy ${label.toLowerCase()}`);
     }
+  };
+
+  const removePaymentScreenshot = () => {
+    setPaymentScreenshot(null);
+    if (paymentScreenshotInput.current) paymentScreenshotInput.current.value = "";
   };
 
   const handleContinue = (event) => {
@@ -184,7 +190,6 @@ export default function JaipurRegistrationForm() {
             <section className="space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-2">
                 <h2 className="text-lg font-semibold text-[#1E3A8A]">Devotee Details</h2>
-                <button type="button" disabled={participants.length >= 5} onClick={() => setParticipants((current) => [...current, createParticipant()])} className="rounded-md border border-[#1E3A8A] px-3 py-2 text-sm font-semibold text-[#FFF7E0] disabled:opacity-50">Add devotee</button>
               </div>
               {participants.map((person, index) => (
                 <fieldset key={index} className="rounded-lg border border-slate-200 p-4">
@@ -193,13 +198,16 @@ export default function JaipurRegistrationForm() {
                     <label className="font-medium text-slate-700">Full name<input className={`${inputClass} mt-2 font-normal`} type="text" required value={person.name} onChange={(event) => updateParticipant(index, "name", event.target.value)} /></label>
                     <label className="font-medium text-slate-700">Age<input className={`${inputClass} mt-2 font-normal`} type="number" min="0" max="120" required value={person.age} onChange={(event) => updateParticipant(index, "age", event.target.value)} /></label>
                     <label className="font-medium text-slate-700">Gender<select className={`${inputClass} mt-2 font-normal`} required value={person.gender} onChange={(event) => updateParticipant(index, "gender", event.target.value)}><option value="">Select gender</option><option value="Male">Male</option><option value="Female">Female</option></select></label>
-                    <label className="font-medium text-slate-700">Medical student status<select className={`${inputClass} mt-2 font-normal`} value={person.medicalStudent} onChange={(event) => updateParticipant(index, "medicalStudent", event.target.value)}><option value="No">Not a medical student / intern / PGT / house staff</option><option value="Medical Student">Medical student</option><option value="Medical Intern/PGT/House Staff">Medical intern / PGT / house staff</option></select></label>
+                    <label className="font-medium text-slate-700">Devotee Type<select className={`${inputClass} mt-2 font-normal`} value={person.medicalStudent} onChange={(event) => updateParticipant(index, "medicalStudent", event.target.value)}><option value="No">Congregation Devotee/Youth</option><option value="Medical Student">Medical student</option><option value="Medical Intern/PGT/House Staff">Medical intern / PGT / house staff</option></select></label>
                     <label className="font-medium text-slate-700 sm:col-span-2">Do you attend classes regularly?<select className={`${inputClass} mt-2 font-normal`} required value={person.attendingClasses} onChange={(event) => updateParticipant(index, "attendingClasses", event.target.value)}><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option></select></label>
                   </div>
                   {participants.length > 1 && <button type="button" onClick={() => setParticipants((current) => current.filter((_, personIndex) => personIndex !== index))} className="mt-4 text-sm font-semibold text-red-700 underline">Remove devotee</button>}
                 </fieldset>
               ))}
             </section>
+            <div className="flex justify-end">
+              <button type="button" disabled={participants.length >= 5} onClick={() => setParticipants((current) => [...current, createParticipant()])} className="rounded-md border border-[#1E3A8A] px-3 py-2 text-sm font-semibold text-[#1E3A8A] disabled:cursor-not-allowed disabled:opacity-50">Add devotee</button>
+            </div>
 
             <section className="rounded-lg bg-[#FFF7E0] p-4 text-slate-700">
               <h2 className="font-semibold text-[#1E3A8A]">Registration Deposit</h2>
@@ -213,7 +221,7 @@ export default function JaipurRegistrationForm() {
                 <div className="space-y-3">
                   {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">{error}</p>}
                   <button type="submit" disabled={payableNow < 100} className="w-full rounded-md bg-[#F59E0B] px-6 py-3 font-semibold text-white shadow transition hover:bg-[#D97706] disabled:cursor-not-allowed disabled:opacity-60">Continue</button>
-                  <button type="button" onClick={() => { setViewMode("login"); setError(""); }} className="w-full rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-[#1E3A8A]">Back to mobile login</button>
+                  <button type="button" onClick={() => { setViewMode("login"); setError(""); }} className="w-full rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-white">Back to mobile login</button>
                 </div>
               </>
             ) : (
@@ -245,14 +253,15 @@ export default function JaipurRegistrationForm() {
               <div className="flex flex-wrap items-center gap-3">
                 <label htmlFor="paymentScreenshot" className="inline-flex cursor-pointer items-center rounded-md border border-[#1E3A8A] bg-white px-4 py-2 font-semibold text-[#1E3A8A] underline decoration-transparent underline-offset-2 hover:bg-[#FFF7E0] hover:decoration-current focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[#1E3A8A]">
                   Choose file
-                  <input id="paymentScreenshot" className="sr-only" type="file" accept="image/jpeg,image/png" required onChange={(event) => setPaymentScreenshot(event.target.files?.[0] || null)} />
+                  <input ref={paymentScreenshotInput} id="paymentScreenshot" className="sr-only" type="file" accept="image/jpeg,image/png" required onChange={(event) => setPaymentScreenshot(event.target.files?.[0] || null)} />
                 </label>
                 <span className="text-sm" aria-live="polite">{paymentScreenshot?.name || "No file chosen"}</span>
+                {paymentScreenshot && <button type="button" onClick={removePaymentScreenshot} className="text-sm font-semibold text-red-700 underline">Remove attachment</button>}
               </div>
             </section>
             {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">{error}</p>}
             <div className="flex items-center justify-between gap-4">
-              <button type="button" onClick={() => { setFormStep("details"); setError(""); }} className="rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-white">Previous</button>
+              <button type="button" onClick={() => { setFormStep("details"); setError(""); }} className="rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-white">Back to Registration Details</button>
               <button type="submit" disabled={isSubmitting || payableNow < 100} className="rounded-md bg-[#F59E0B] px-5 py-3 font-semibold text-white shadow transition hover:bg-[#D97706] disabled:cursor-not-allowed disabled:opacity-60">{isSubmitting ? "Submitting..." : "Submit registration"}</button>
             </div>
               </>
