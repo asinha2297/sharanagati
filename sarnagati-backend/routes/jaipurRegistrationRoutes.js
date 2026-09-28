@@ -4,8 +4,16 @@ const calculateJaipurAmounts = require("../utils/jaipurPricing");
 const upload = require("../middlewares/uploadMiddleware");
 
 const router = express.Router();
+const ADMIN_PASSWORD = process.env.REGISTRATION_ACCESS_PASSWORD || "Sharanagati@2026";
 
 const normalizeMobile = (mobile) => String(mobile || "").trim();
+const requireJaipurAdmin = (req, res, next) => {
+  const suppliedPassword = req.get("x-registration-password") || "";
+  if (suppliedPassword !== ADMIN_PASSWORD) {
+    return res.status(401).json({ success: false, message: "Invalid admin access code." });
+  }
+  return next();
+};
 
 router.post("/register", upload.single("paymentScreenshot"), async (req, res) => {
   try {
@@ -71,7 +79,9 @@ router.get("/status", async (req, res) => {
     if (!mobile) {
       return res.status(400).json({ success: false, message: "Mobile number is required." });
     }
-    const registration = await JaipurRegistration.findOne({ mobile }).lean();
+    const registration = await JaipurRegistration.findOne({ mobile })
+      .select("mobile paymentType totalAmount amountSubmitted paidAmount remainingAmount paymentStatus paymentVerificationStatus participants.name")
+      .lean();
     return res.status(200).json({
       success: true,
       requiresRegistration: !registration,
@@ -81,6 +91,73 @@ router.get("/status", async (req, res) => {
   } catch (error) {
     console.error("Jaipur registration lookup error:", error);
     return res.status(500).json({ success: false, message: "Unable to fetch Jaipur registration." });
+  }
+});
+
+router.get("/admin/registrations", requireJaipurAdmin, async (req, res) => {
+  try {
+    const registrations = await JaipurRegistration.find()
+      .sort({ createdAt: -1 })
+      .lean();
+    return res.status(200).json({ success: true, registrations });
+  } catch (error) {
+    console.error("Jaipur admin list error:", error);
+    return res.status(500).json({ success: false, message: "Unable to fetch Jaipur registrations." });
+  }
+});
+
+router.patch("/admin/registrations/:id/verify", requireJaipurAdmin, async (req, res) => {
+  try {
+    const registration = await JaipurRegistration.findById(req.params.id);
+    if (!registration) {
+      return res.status(404).json({ success: false, message: "Jaipur registration not found." });
+    }
+    if (registration.paymentVerificationStatus === "verified") {
+      return res.status(409).json({ success: false, message: "This payment has already been verified." });
+    }
+
+    registration.paidAmount = registration.amountSubmitted;
+    registration.remainingAmount = Math.max(registration.totalAmount - registration.paidAmount, 0);
+    registration.paymentStatus = registration.remainingAmount > 0 ? "pending" : "completed";
+    registration.paymentVerificationStatus = "verified";
+    registration.paymentVerificationNote = String(req.body?.note || "").trim();
+    registration.paymentVerifiedAt = new Date();
+    await registration.save();
+
+    return res.status(200).json({ success: true, registration });
+  } catch (error) {
+    console.error("Jaipur payment verification error:", error);
+    return res.status(500).json({ success: false, message: "Unable to verify Jaipur payment." });
+  }
+});
+
+router.patch("/admin/registrations/:id/reject", requireJaipurAdmin, async (req, res) => {
+  try {
+    const note = String(req.body?.note || "").trim();
+    if (!note) {
+      return res.status(400).json({ success: false, message: "A reason is required when rejecting a payment." });
+    }
+
+    const registration = await JaipurRegistration.findById(req.params.id);
+    if (!registration) {
+      return res.status(404).json({ success: false, message: "Jaipur registration not found." });
+    }
+    if (registration.paymentVerificationStatus === "verified") {
+      return res.status(409).json({ success: false, message: "A verified payment cannot be rejected." });
+    }
+
+    registration.paymentVerificationStatus = "rejected";
+    registration.paymentVerificationNote = note;
+    registration.paymentVerifiedAt = null;
+    registration.paidAmount = 0;
+    registration.remainingAmount = registration.totalAmount;
+    registration.paymentStatus = "pending";
+    await registration.save();
+
+    return res.status(200).json({ success: true, registration });
+  } catch (error) {
+    console.error("Jaipur payment rejection error:", error);
+    return res.status(500).json({ success: false, message: "Unable to reject Jaipur payment." });
   }
 });
 

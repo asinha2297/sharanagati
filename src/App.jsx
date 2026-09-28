@@ -10,6 +10,7 @@ import ContactUs from "./components/ContactUs";
 import Biography from "./components/Biography";
 import RegistrationForm from "./components/RegistrationForm";
 import JaipurRegistrationForm from "./components/JaipurRegistrationForm";
+import JaipurPaymentReview from "./components/JaipurPaymentReview";
 import Footer from "./components/Footer";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/register" element={<RegistrationForm />} />
         <Route path="/register/jaipur" element={<JaipurRegistrationForm />} />
+        <Route path="/admin/jaipur-payments" element={<JaipurPaymentReview />} />
       </Routes>
       <Footer />
     </Router>
