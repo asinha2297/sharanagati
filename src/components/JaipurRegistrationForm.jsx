@@ -41,6 +41,7 @@ export default function JaipurRegistrationForm() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [copyStatus, setCopyStatus] = useState("");
 
   const deposit = participants.reduce((sum, person) => sum + participantDeposit(person, roomType), 0);
   const fullAmount = participants.reduce((sum, person) => sum + participantTotal(person, roomType), 0);
@@ -50,6 +51,15 @@ export default function JaipurRegistrationForm() {
     setParticipants((current) => current.map((person, personIndex) =>
       personIndex === index ? { ...person, [field]: value } : person
     ));
+  };
+
+  const copyPaymentDetail = async (label, value) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopyStatus(`${label} copied`);
+    } catch {
+      setCopyStatus(`Could not copy ${label.toLowerCase()}`);
+    }
   };
 
   const handleMobileLogin = async (event) => {
@@ -195,10 +205,17 @@ export default function JaipurRegistrationForm() {
               <h2 className="font-semibold text-[#1E3A8A]">Manual Payment</h2>
               <p className="text-sm">Pay by bank transfer or UPI, then provide the transaction reference below. Registration is saved as awaiting verification until the payment is confirmed.</p>
               <p className="text-sm">Account Name: Annu Sinha</p>
-              <p className="text-sm">Account Number: 35165460879</p>
+              <div className="flex flex-wrap items-center gap-2 text-sm">
+                <span>Account Number: 35165460879</span>
+                <button type="button" onClick={() => copyPaymentDetail("Account number", "35165460879")} className="rounded border border-[#1E3A8A] px-2 py-1 text-xs font-semibold text-[#1E3A8A] hover:bg-white">Copy</button>
+              </div>
               {/* <p className="text-sm">IFSC: BKID0004704</p> */}
               <p className="text-sm">Bank: State Bank of India (SBI)</p>
-              <p className="text-sm">UPI ID: 7488136259@ybl</p>
+              <div className="flex flex-wrap items-center gap-2 text-sm">
+                <span>UPI ID: 7488136259@ybl</span>
+                <button type="button" onClick={() => copyPaymentDetail("UPI ID", "7488136259@ybl")} className="rounded border border-[#1E3A8A] px-2 py-1 text-xs font-semibold text-[#1E3A8A] hover:bg-white">Copy</button>
+              </div>
+              {copyStatus && <p className="text-xs text-slate-600" role="status" aria-live="polite">{copyStatus}</p>}
               <label className="block font-medium" htmlFor="paymentReference">UPI transaction ID / bank reference (optional)</label>
               <input id="paymentReference" className={inputClass} value={paymentReference} onChange={(event) => setPaymentReference(event.target.value)} />
               <label className="block font-medium" htmlFor="paymentScreenshot">Payment screenshot (optional)</label>
