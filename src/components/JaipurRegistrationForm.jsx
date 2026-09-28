@@ -14,16 +14,16 @@ const createParticipant = () => ({
 const participantDeposit = (person, roomType) => {
   const age = Number(person.age);
   if (age < 5) return 0;
-  if (person.medicalStudent === "Medical Student" || (age >= 10 && age <= 17)) return 3800;
-  if (age < 10) return 3800;
+  if (person.medicalStudent === "Medical Student" || (age >= 11 && age <= 17)) return 3800;
+  if (age < 11) return 3800;
   return roomType === "double" ? 4800 : 4400;
 };
 
 const participantTotal = (person, roomType) => {
   const age = Number(person.age);
   if (age < 5) return 0;
-  if (person.medicalStudent === "Medical Student" || (age >= 10 && age <= 17)) return 6800;
-  if (age < 10) return 4700;
+  if (person.medicalStudent === "Medical Student" || (age >= 11 && age <= 17)) return 6800;
+  if (age < 11) return 4700;
   return roomType === "double" ? 9500 : 8800;
 };
 
@@ -76,8 +76,8 @@ export default function JaipurRegistrationForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const paymentLabel = paymentType === "full" ? "full payment" : "advance payment";
-    const confirmed = window.confirm(`Submit ${paymentLabel} details for ₹${payableNow.toLocaleString("en-IN")}?`);
+    // const paymentLabel = paymentType === "full" ? "full payment" : "advance payment";
+    const confirmed = window.confirm(`Submit registration for ₹${payableNow.toLocaleString("en-IN")}?`);
     if (!confirmed) return;
 
     setError("");
