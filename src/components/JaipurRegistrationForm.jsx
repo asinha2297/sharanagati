@@ -190,11 +190,11 @@ export default function JaipurRegistrationForm() {
             <section className="space-y-3 rounded-lg border border-slate-200 p-4 text-slate-700">
               <h2 className="font-semibold text-[#1E3A8A]">Manual Payment</h2>
               <p className="text-sm">Pay by bank transfer or UPI, then provide the transaction reference below. Registration is saved as awaiting verification until the payment is confirmed.</p>
-              <p className="text-sm">Account Name: Rounak Ranjan Singh</p>
-              <p className="text-sm">Account Number: 470410110004309</p>
-              <p className="text-sm">IFSC: BKID0004704</p>
-              <p className="text-sm">Bank: Bank of India</p>
-              <p className="text-sm">UPI ID: rounakrock.singh07-2@okhdfcbank</p>
+              <p className="text-sm">Account Name: Annu Sinha</p>
+              <p className="text-sm">Account Number: 35165460879</p>
+              {/* <p className="text-sm">IFSC: BKID0004704</p> */}
+              <p className="text-sm">Bank: State Bank of India (SBI)</p>
+              <p className="text-sm">UPI ID: 7488136259@ybl</p>
               <label className="block font-medium" htmlFor="paymentReference">UPI transaction ID / bank reference (optional)</label>
               <input id="paymentReference" className={inputClass} value={paymentReference} onChange={(event) => setPaymentReference(event.target.value)} />
               <label className="block font-medium" htmlFor="paymentScreenshot">Payment screenshot (optional)</label>
@@ -203,8 +203,8 @@ export default function JaipurRegistrationForm() {
 
             {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">{error}</p>}
             <button type="submit" disabled={isSubmitting || payableNow < 100} className="w-full rounded-md bg-[#F59E0B] px-6 py-3 font-semibold text-white shadow transition hover:bg-[#D97706] disabled:cursor-not-allowed disabled:opacity-60">{isSubmitting ? "Submitting registration..." : `Submit ${paymentType === "full" ? "full payment" : "advance payment"} details · ₹${payableNow.toLocaleString("en-IN")}`}</button>
-            <button type="button" onClick={() => { setViewMode("login"); setError(""); }} className="w-full rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-[#1E3A8A]">Back to mobile login</button>
-            <p className="text-center text-xs text-slate-500">Registration amount is due by 01 Oct 2026. Full payment is due by 21 Oct 2026. For questions: Raunak prabhu, +91 79721 85705.</p>
+            <button type="button" onClick={() => { setViewMode("login"); setError(""); }} className="w-full rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-[#fff7e0]">Back to mobile login</button>
+            <p className="text-center text-xs text-slate-500">Registration amount is due by 01 Oct 2026. Full payment is due by 21 Oct 2026. For questions: Rounak prabhu, +91 79721 85705.</p>
           </form>
         )}
       </div>
