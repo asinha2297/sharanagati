@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LuCopy } from "react-icons/lu";
+import sbiQrImage from "../assets/sbiQR.jpeg";
 
 const API_URL = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
 const apiUrl = (path) => `${API_URL}${path}`;
@@ -206,7 +207,7 @@ export default function JaipurRegistrationForm() {
               ))}
             </section>
             <div className="flex justify-end">
-              <button type="button" disabled={participants.length >= 5} onClick={() => setParticipants((current) => [...current, createParticipant()])} className="rounded-md border border-[#1E3A8A] px-3 py-2 text-sm font-semibold text-[#1E3A8A] disabled:cursor-not-allowed disabled:opacity-50">Add devotee</button>
+              <button type="button" disabled={participants.length >= 5} onClick={() => setParticipants((current) => [...current, createParticipant()])} className="rounded-md border border-[#1E3A8A] px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50">Add devotee</button>
             </div>
 
             <section className="rounded-lg bg-[#FFF7E0] p-4 text-slate-700">
@@ -243,8 +244,12 @@ export default function JaipurRegistrationForm() {
               {/* <p className="text-sm">IFSC: BKID0004704</p> */}
               <p className="text-sm">Bank: State Bank of India (SBI)</p>
               <div className="flex flex-wrap items-center gap-2 text-sm">
-                <span>UPI ID: 7488136259@ybl</span>
-                <button type="button" onClick={() => copyPaymentDetail("UPI ID", "7488136259@ybl")} className="rounded !border-white !bg-white p-1 text-[#1E3A8A] hover:!bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFFFFF]" aria-label="Copy UPI ID" title="Copy UPI ID"><LuCopy aria-hidden="true" size={16} /></button>
+                <span>UPI ID: 7488136259@sbi</span>
+                <button type="button" onClick={() => copyPaymentDetail("UPI ID", "7488136259@sbi")} className="rounded !border-white !bg-white p-1 text-[#1E3A8A] hover:!bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFFFFF]" aria-label="Copy UPI ID" title="Copy UPI ID"><LuCopy aria-hidden="true" size={16} /></button>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Please scan the QR code below to make the payment.</p>
+                <img src={sbiQrImage} alt="SBI UPI payment QR code" className="h-auto w-full max-w-xs rounded-md border border-slate-200 object-contain" />
               </div>
               {copyStatus && <p className="text-xs text-slate-600" role="status" aria-live="polite">{copyStatus}</p>}
               <label className="block font-medium" htmlFor="paymentReference">UPI transaction ID / bank reference (optional)</label>
