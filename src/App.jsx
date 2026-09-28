@@ -9,6 +9,7 @@ import Yatras from "./components/Yatras";
 import ContactUs from "./components/ContactUs";
 import Biography from "./components/Biography";
 import RegistrationForm from "./components/RegistrationForm";
+import JaipurRegistrationForm from "./components/JaipurRegistrationForm";
 import Footer from "./components/Footer";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/yatras" element={<Yatras />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/register" element={<RegistrationForm />} />
+        <Route path="/register/jaipur" element={<JaipurRegistrationForm />} />
       </Routes>
       <Footer />
     </Router>

@@ -7,6 +7,7 @@ const express = require("express"); const path = require("path"); const cors = r
 const registrationRoutes = require("./routes/registrationRoutes"); const adminRoutes = require("./routes/adminRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const occultBookingRoutes = require("./routes/occultBookingRoutes");
+const jaipurRegistrationRoutes = require("./routes/jaipurRegistrationRoutes");
 
 const errorHandler = require("./middlewares/errorHandler");
 
@@ -37,7 +38,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/health", (req, res) => { res.status(200).json({ status: "OK" }); });
 
-app.use("/api/registration", registrationRoutes); app.use("/api/admin", adminRoutes); app.use("/api", paymentRoutes); app.use("/api/occult", occultBookingRoutes);
+app.use("/api/registration", registrationRoutes); app.use("/api/jaipur-registration", jaipurRegistrationRoutes); app.use("/api/admin", adminRoutes); app.use("/api", paymentRoutes); app.use("/api/occult", occultBookingRoutes);
 
 app.use(errorHandler);
 
