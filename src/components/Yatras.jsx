@@ -110,6 +110,45 @@ const Yatras = () => {
     ],
   };
 
+  const jaipurYatra = {
+    places: [
+      "Pushkar (150 km): Brahma Ji Temple and Savitri Devi Temple.",
+      "Karauli (180 km): Sri Sri Radha Madan Mohan, originally served by Srila Sanatana Gosvami in Vrindavan.",
+      "Jaipur temples: Sri Sri Radha Govind Dev (originally served by Srila Rupa Goswami), Radha Gopinath (Madhu Pandit), Radha Vinodilal (Srila Lokanath Goswami), and Radha Madhava at Kanak Vrindavan (Srila Jayadeva Goswami).",
+      "Sightseeing: City Palace, Jantar Mantar, Amer Fort, Jal Mahal, Kanak Vrindavan, Jaigarh Fort, Nahargarh Fort, Galtaji, and Hawa Mahal.",
+    ],
+    itinerary: [
+      "03 Dec: Depart Kolkata for Jaipur by train.",
+      "04 Dec: Arrive in Jaipur; hotel check-in, katha, darshan of Radha Govind Dev, Radha Damodar, and Radha Vinodilal, followed by kirtan and prasadam.",
+      "05 Dec (Utpanna Ekadashi): Mangala Aarti and japa; parikrama and dancing kirtan at Radha Govind Dev; Radha Gopinath darshan, local sightseeing, classes, kirtan, and prasadam.",
+      "06 Dec (fast breaking): After Mangala Aarti, travel to Karauli for Radha Madan Mohan darshan; Galtaji if time permits, then Radha Gopinath darshan.",
+      "07 Dec: Mangala Aarti, japa, classes, Kanak Vrindavan, Amer Fort, and Jaipur sightseeing.",
+      "08 Dec: Mangala Aarti, japa, depart for Pushkar, classes, and kirtan.",
+      "09 Dec: Galtaji, Jaigarh Fort, and Nahargarh Fort.",
+      "10 Dec: Depart Jaipur by train. Arrival in Kolkata is expected on 11 Dec.",
+    ],
+    trains: [
+      "Outbound, Thu 03 Dec: First preference Ananya Express 12315, Kolkata 13:10 to Jaipur 15:55 next day (26h 45m). Alternatives: HWH BKN Express 22307, Howrah 23:30 to 23:35 next day; SDAH-ALL SF Express 12987, Sealdah 22:55 to 23:15 next day. Star-marked trains are preferred to match the yatra schedule.",
+      "Return, Thu 10 Dec: Pratap SF Express 12495, 11:35 to 13:05; ALL-SDAH SF Express 12988, 14:40 to 15:50 next day (25h 10m); JU HWH SF Express 12308, 04:40 to 04:55 next day (24h 15m).",
+      "Approximate one-way fares: Sleeper ₹700, 3E ₹1,680, 3A ₹1,780, 2A ₹2,530, 1A ₹4,250. Outbound booking opens 04 Oct 2026 at 8:00 AM IST; return booking opens 10 or 11 Oct depending on train.",
+    ],
+    expenses: [
+      "Hotel: AC double sharing ₹9,500 per person; AC triple sharing ₹8,800 per person.",
+      "Children below 5: no charge. Ages 5–10: ₹4,700. Ages 10–17 and medical students: ₹6,800.",
+      "Registration deposit: double sharing ₹4,800; triple sharing ₹4,400; child/medical student ₹3,800. Deposit is adjusted against the total.",
+      "Registration opens online 28 Sep. Registration closes 01 Oct; full payment is due 21 Oct 2026.",
+      "Train tickets and train prasadam, station pickup/drop, journey prasadam, local temple transport, sightseeing entry tickets, and the Pushkar ropeway are not included. Budget approximately ₹1,250 per adult or ₹500–₹600 per student for entry and local travel; carry student ID for discounts.",
+      "Indicative entry fees: Amer Fort ₹200 adult/₹50 student; Jantar Mantar and Hawa Mahal ₹100/₹20; Nahargarh Fort ₹100/₹20; City Palace ₹300 adult/₹150 student or child; Jaigarh Fort ₹150 adult/₹50 student/₹75 child; Savitri Temple ropeway ₹180 adult/₹140 child (ages 3–10).",
+      "Room capacity at the first hotel is 75. Allocation is first-come, first-served; early registrants receive priority at the program hotel. After checkout on 10 Dec, further stay is self-arranged.",
+    ],
+    guidelines: [
+      "Children below 5 are free; children aged 5–10 pay ₹4,700; ages 10–17 and medical students pay ₹6,800.",
+      "Students with at least 75% class attendance receive first priority. Medical-student sponsorship is subject to at least 75% attendance and room availability; otherwise full payment applies.",
+      "This is a spiritual yatra. Participants are expected to attend lectures, follow the schedule, and maintain the devotional mood. Failure to follow the yatra expectations may result in being asked to leave the hotel.",
+      "Only devotees who pay the registration deposit will be added to the yatra WhatsApp group for updates.",
+    ],
+  };
+
   return (
     <div className="contact-us-container px-4 py-10 bg-[#FFF7E0] min-h-screen">
       <h1 className="page-title text-center text-4xl font-bold text-[#1E3A8A] mb-10">
@@ -238,6 +277,41 @@ const Yatras = () => {
         </button>
       </div>
       </div>
+      <section className="mt-10 max-w-full rounded-2xl border border-[#D4AF37]/20 bg-white p-6 shadow-lg md:p-8">
+        <div className="mb-8 text-center">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-[#B45309]">December 2026</p>
+          <h2 className="text-2xl font-semibold text-[#1E3A8A] md:text-3xl">Journey to Gupta Vrindavan: Jaipur Yatra</h2>
+          <p className="mt-3 text-gray-700">The important deities of Vrindavan were moved to Jaipur and Karauli around 300 years ago. Join us for darshan, katha, kirtan, and a journey through these sacred places.</p>
+        </div>
+        <div className="space-y-7 text-left text-gray-700">
+          <section>
+            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Sacred Places and Sightseeing</h3>
+            <ul className="space-y-2">{jaipurYatra.places.map((place) => <li key={place}>• {place}</li>)}</ul>
+          </section>
+          <section>
+            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Tentative Itinerary</h3>
+            <ol className="space-y-2">{jaipurYatra.itinerary.map((item) => <li key={item}>{item}</li>)}</ol>
+          </section>
+          <section>
+            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Train Details and Booking</h3>
+            <ul className="space-y-2">{jaipurYatra.trains.map((item) => <li key={item}>• {item}</li>)}</ul>
+          </section>
+          <section>
+            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Stay, Costs, and Important Notes</h3>
+            <ul className="space-y-2">{jaipurYatra.expenses.map((item) => <li key={item}>• {item}</li>)}</ul>
+          </section>
+          <section>
+            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Registration Guidelines</h3>
+            <ul className="space-y-2">{jaipurYatra.guidelines.map((item) => <li key={item}>• {item}</li>)}</ul>
+            <p className="mt-4 font-semibold text-[#1E3A8A]">Contact: Raunak prabhu, +91 79721 85705</p>
+          </section>
+        </div>
+        <div className="mt-8 text-center">
+          <button onClick={() => navigate("/register/jaipur")} className="rounded-md bg-[#F59E0B] px-6 py-3 font-semibold text-white shadow-md transition hover:bg-[#D97706]">
+            Register for Jaipur Yatra
+          </button>
+        </div>
+      </section>
       <h1 className="page-title !text-left text-4xl !font-normal text-[#1E3A8A] mt-10 mb-10">
         Previous Yatra
       </h1>
