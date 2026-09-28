@@ -32,7 +32,7 @@ const jaipurRegistrationSchema = new mongoose.Schema(
       enum: ["awaiting_verification", "verified", "rejected"],
       default: "awaiting_verification",
     },
-    paymentReference: { type: String, required: true, trim: true },
+    paymentReference: { type: String, default: "", trim: true },
     paymentScreenshot: String,
   },
   { timestamps: true }
