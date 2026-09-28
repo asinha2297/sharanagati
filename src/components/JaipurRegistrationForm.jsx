@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LuCopy } from "react-icons/lu";
 
 const API_URL = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
 const apiUrl = (path) => `${API_URL}${path}`;
@@ -207,13 +208,13 @@ export default function JaipurRegistrationForm() {
               <p className="text-sm">Account Name: Annu Sinha</p>
               <div className="flex flex-wrap items-center gap-2 text-sm">
                 <span>Account Number: 35165460879</span>
-                <button type="button" onClick={() => copyPaymentDetail("Account number", "35165460879")} className="rounded border border-[#1E3A8A] px-2 py-1 text-xs font-semibold text-[#1E3A8A] hover:bg-white">Copy</button>
+                <button type="button" onClick={() => copyPaymentDetail("Account number", "35165460879")} className="rounded p-1 text-[#1E3A8A] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E3A8A]" aria-label="Copy account number" title="Copy account number"><LuCopy aria-hidden="true" size={16} /></button>
               </div>
               {/* <p className="text-sm">IFSC: BKID0004704</p> */}
               <p className="text-sm">Bank: State Bank of India (SBI)</p>
               <div className="flex flex-wrap items-center gap-2 text-sm">
                 <span>UPI ID: 7488136259@ybl</span>
-                <button type="button" onClick={() => copyPaymentDetail("UPI ID", "7488136259@ybl")} className="rounded border border-[#1E3A8A] px-2 py-1 text-xs font-semibold text-[#1E3A8A] hover:bg-white">Copy</button>
+                <button type="button" onClick={() => copyPaymentDetail("UPI ID", "7488136259@ybl")} className="rounded p-1 text-[#1E3A8A] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E3A8A]" aria-label="Copy UPI ID" title="Copy UPI ID"><LuCopy aria-hidden="true" size={16} /></button>
               </div>
               {copyStatus && <p className="text-xs text-slate-600" role="status" aria-live="polite">{copyStatus}</p>}
               <label className="block font-medium" htmlFor="paymentReference">UPI transaction ID / bank reference (optional)</label>
