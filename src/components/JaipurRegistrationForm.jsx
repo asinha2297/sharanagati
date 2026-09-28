@@ -34,6 +34,7 @@ export default function JaipurRegistrationForm() {
   const [contact, setContact] = useState({ mobile: "", email: "" });
   const [roomType, setRoomType] = useState("double");
   const [paymentType, setPaymentType] = useState("advance");
+  const [formStep, setFormStep] = useState("details");
   const [authMobile, setAuthMobile] = useState("");
   const [viewMode, setViewMode] = useState("login");
   const [existingRegistration, setExistingRegistration] = useState(null);
@@ -61,6 +62,12 @@ export default function JaipurRegistrationForm() {
     } catch {
       setCopyStatus(`Could not copy ${label.toLowerCase()}`);
     }
+  };
+
+  const handleContinue = (event) => {
+    event.preventDefault();
+    setError("");
+    setFormStep("payment");
   };
 
   const handleMobileLogin = async (event) => {
@@ -153,7 +160,9 @@ export default function JaipurRegistrationForm() {
             <button type="button" onClick={() => { setViewMode("login"); setExistingRegistration(null); setError(""); }} className="w-full rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-[#1E3A8A]">Check another mobile</button>
           </section>
         ) : (
-          <form onSubmit={handleSubmit} className="mt-8 space-y-7">
+          <form onSubmit={formStep === "details" ? handleContinue : handleSubmit} className="mt-8 space-y-7">
+            {formStep === "details" ? (
+              <>
             <section className="space-y-4">
               <h2 className="border-b border-slate-200 pb-2 text-lg font-semibold text-[#1E3A8A]">Booking Details</h2>
               <label className="block font-medium text-slate-700" htmlFor="roomType">Room sharing preference</label>
@@ -201,7 +210,20 @@ export default function JaipurRegistrationForm() {
               <p className="mt-1 flex justify-between text-sm"><span>Advance amount</span><span>₹{deposit.toLocaleString("en-IN")}</span></p>
               <p className="mt-1 flex justify-between text-sm"><span>Remaining after payment</span><span>₹{Math.max(fullAmount - payableNow, 0).toLocaleString("en-IN")}</span></p>
             </section>
-
+                <div className="space-y-3">
+                  {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">{error}</p>}
+                  <button type="submit" disabled={payableNow < 100} className="w-full rounded-md bg-[#F59E0B] px-6 py-3 font-semibold text-white shadow transition hover:bg-[#D97706] disabled:cursor-not-allowed disabled:opacity-60">Continue</button>
+                  <button type="button" onClick={() => { setViewMode("login"); setError(""); }} className="w-full rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-[#1E3A8A]">Back to mobile login</button>
+                </div>
+              </>
+            ) : (
+              <>
+            <section className="rounded-lg bg-[#FFF7E0] p-4 text-slate-700">
+              <h2 className="font-semibold text-[#1E3A8A]">Payment Summary</h2>
+              <p className="mt-2 flex justify-between font-semibold"><span>{paymentType === "full" ? "Full payment due now" : "Advance deposit due now"}</span><span>₹{payableNow.toLocaleString("en-IN")}</span></p>
+              <p className="mt-1 flex justify-between text-sm"><span>Estimated yatra cost</span><span>₹{fullAmount.toLocaleString("en-IN")}</span></p>
+              <p className="mt-1 flex justify-between text-sm"><span>Remaining after payment</span><span>₹{Math.max(fullAmount - payableNow, 0).toLocaleString("en-IN")}</span></p>
+            </section>
             <section className="space-y-3 rounded-lg border border-slate-200 p-4 text-slate-700">
               <h2 className="font-semibold text-[#1E3A8A]">Manual Payment</h2>
               <p className="text-sm">Pay by bank transfer or UPI, then provide the transaction reference below. Registration is saved as awaiting verification until the payment is confirmed.</p>
@@ -222,10 +244,13 @@ export default function JaipurRegistrationForm() {
               <label className="block font-medium" htmlFor="paymentScreenshot">Payment screenshot (optional)</label>
               <input id="paymentScreenshot" className="block w-full text-sm" type="file" accept="image/jpeg,image/png" onChange={(event) => setPaymentScreenshot(event.target.files?.[0] || null)} />
             </section>
-
             {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">{error}</p>}
-            <button type="submit" disabled={isSubmitting || payableNow < 100} className="w-full rounded-md bg-[#F59E0B] px-6 py-3 font-semibold text-white shadow transition hover:bg-[#D97706] disabled:cursor-not-allowed disabled:opacity-60">{isSubmitting ? "Submitting registration..." : `Submit registration details · ₹${payableNow.toLocaleString("en-IN")}`}</button>
-            <button type="button" onClick={() => { setViewMode("login"); setError(""); }} className="w-full rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-[#fff7e0]">Back to mobile login</button>
+            <div className="flex items-center justify-between gap-4">
+              <button type="button" onClick={() => { setFormStep("details"); setError(""); }} className="rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-[#1E3A8A]">Previous</button>
+              <button type="submit" disabled={isSubmitting || payableNow < 100} className="rounded-md bg-[#F59E0B] px-5 py-3 font-semibold text-white shadow transition hover:bg-[#D97706] disabled:cursor-not-allowed disabled:opacity-60">{isSubmitting ? "Submitting..." : "Submit registration"}</button>
+            </div>
+              </>
+            )}
             <p className="text-center text-xs text-slate-500">Registration amount is due by 01 Oct 2026. Full payment is due by 21 Oct 2026. For questions: Rounak prabhu, +91 79721 85705.</p>
           </form>
         )}
