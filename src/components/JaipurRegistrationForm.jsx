@@ -119,7 +119,7 @@ export default function JaipurRegistrationForm() {
         {success ? (
           <div className="mt-8 rounded-lg bg-emerald-50 p-6 text-center text-emerald-900" role="status">
             <h2 className="text-xl font-semibold">Registration submitted</h2>
-            <p className="mt-2">Your transfer details have been received. Payment remains pending until verified. Contact Raunak prabhu at +91 79721 85705 for updates.</p>
+            <p className="mt-2">Your transfer details have been received. Payment remains pending until verified. Contact Rounak Prabhu at +91 79721 85705 for updates.</p>
             <button type="button" onClick={() => navigate("/yatras")} className="mt-5 rounded-md bg-[#1E3A8A] px-5 py-3 font-semibold text-white">Return to Yatras</button>
           </div>
         ) : viewMode === "login" ? (
@@ -206,7 +206,7 @@ export default function JaipurRegistrationForm() {
             </section>
 
             {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">{error}</p>}
-            <button type="submit" disabled={isSubmitting || payableNow < 100} className="w-full rounded-md bg-[#F59E0B] px-6 py-3 font-semibold text-white shadow transition hover:bg-[#D97706] disabled:cursor-not-allowed disabled:opacity-60">{isSubmitting ? "Submitting registration..." : `Submit ${paymentType === "full" ? "full payment" : "advance payment"} details · ₹${payableNow.toLocaleString("en-IN")}`}</button>
+            <button type="submit" disabled={isSubmitting || payableNow < 100} className="w-full rounded-md bg-[#F59E0B] px-6 py-3 font-semibold text-white shadow transition hover:bg-[#D97706] disabled:cursor-not-allowed disabled:opacity-60">{isSubmitting ? "Submitting registration..." : `Submit registration details · ₹${payableNow.toLocaleString("en-IN")}`}</button>
             <button type="button" onClick={() => { setViewMode("login"); setError(""); }} className="w-full rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-[#fff7e0]">Back to mobile login</button>
             <p className="text-center text-xs text-slate-500">Registration amount is due by 01 Oct 2026. Full payment is due by 21 Oct 2026. For questions: Rounak prabhu, +91 79721 85705.</p>
           </form>
