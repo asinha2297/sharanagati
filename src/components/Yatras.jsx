@@ -158,6 +158,71 @@ const Yatras = () => {
       <h1 className="page-title !text-left text-4xl !font-normal text-[#1E3A8A] mb-10">
         Upcoming Yatra
       </h1>
+      <section className="mb-10 max-w-full rounded-2xl border border-[#D4AF37]/20 bg-white p-6 text-center shadow-lg md:p-8">
+        <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-[#B45309]">December 2026</p>
+        <h2 className="mb-4 text-2xl font-semibold text-[#1E3A8A] md:text-3xl">Journey to Gupta Vrindavan: Jaipur Yatra</h2>
+        <p className="mb-6 text-left leading-relaxed text-gray-700">The important deities of Vrindavan were moved to Jaipur and Karauli around 300 years ago. Join us for darshan, katha, kirtan, and a journey through these sacred places.</p>
+
+        <div className="mb-6 space-y-6 text-left text-gray-700">
+          <section className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Sacred Places and Sightseeing</h3>
+            <ul className="space-y-2 text-sm leading-relaxed md:text-base">
+              {jaipurYatra.places.map((place) => <li key={place}>• {place}</li>)}
+            </ul>
+          </section>
+
+          <section className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Tentative Itinerary</h3>
+            <ol className="space-y-2 text-sm leading-relaxed md:text-base">
+              {jaipurYatra.itinerary.map((item) => <li key={item}>• {item}</li>)}
+            </ol>
+          </section>
+
+          <section className="space-y-3">
+            <h3 className="text-lg font-semibold text-[#1E3A8A]">Train Details and Booking</h3>
+            <div className="grid gap-3 md:grid-cols-3">
+              {jaipurYatra.trains.map((item, index) => (
+                <div key={item} className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4 text-left">
+                  <h4 className="mb-2 font-semibold text-[#1E3A8A]">{["Kolkata to Jaipur", "Jaipur to Kolkata", "Train Fares and Booking Dates"][index]}</h4>
+                  <p className="text-sm leading-relaxed">{item}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <section className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+              <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Stay, Registration, and Room Allocation</h3>
+              <ul className="space-y-2 text-sm leading-relaxed">
+                {[...jaipurYatra.expenses.slice(0, 4), jaipurYatra.expenses[6]].map((item) => <li key={item}>• {item}</li>)}
+              </ul>
+            </section>
+
+            <section className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+              <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Registration Guidelines</h3>
+              <ul className="space-y-2 text-sm leading-relaxed">
+                {jaipurYatra.guidelines.map((item) => <li key={item}>• {item}</li>)}
+              </ul>
+            </section>
+          </div>
+
+          <section className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Travel Exclusions and Sightseeing Fees</h3>
+            <ul className="space-y-2 text-sm leading-relaxed">
+              {jaipurYatra.expenses.slice(4, 6).map((item) => <li key={item}>• {item}</li>)}
+            </ul>
+          </section>
+
+          <section className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4">
+            <h3 className="mb-2 text-lg font-semibold text-[#1E3A8A]">Contact Details</h3>
+            <p className="text-sm leading-relaxed">Rounak prabhu: +91 79721 85705</p>
+          </section>
+        </div>
+
+        <button onClick={() => navigate("/register/jaipur")} className="rounded-md bg-[#F59E0B] px-6 py-3 font-semibold text-white shadow-md transition hover:bg-[#D97706]">
+          Register for Jaipur Yatra
+        </button>
+      </section>
       <div className="max-w-full mx-auto bg-white rounded-2xl border border-[#D4AF37]/20 shadow-lg p-6 md:p-8 text-center">
         <h2 className="text-2xl font-semibold text-[#1E3A8A] mb-4">
           Ahobilam-Vijayawada Dhaam Yatra
@@ -277,41 +342,6 @@ const Yatras = () => {
         </button>
       </div>
       </div>
-      <section className="mt-10 max-w-full rounded-2xl border border-[#D4AF37]/20 bg-white p-6 shadow-lg md:p-8">
-        <div className="mb-8 text-center">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-[#B45309]">December 2026</p>
-          <h2 className="text-2xl font-semibold text-[#1E3A8A] md:text-3xl">Journey to Gupta Vrindavan: Jaipur Yatra</h2>
-          <p className="mt-3 text-gray-700">The important deities of Vrindavan were moved to Jaipur and Karauli around 300 years ago. Join us for darshan, katha, kirtan, and a journey through these sacred places.</p>
-        </div>
-        <div className="space-y-7 text-left text-gray-700">
-          <section>
-            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Sacred Places and Sightseeing</h3>
-            <ul className="space-y-2">{jaipurYatra.places.map((place) => <li key={place}>• {place}</li>)}</ul>
-          </section>
-          <section>
-            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Tentative Itinerary</h3>
-            <ol className="space-y-2">{jaipurYatra.itinerary.map((item) => <li key={item}>{item}</li>)}</ol>
-          </section>
-          <section>
-            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Train Details and Booking</h3>
-            <ul className="space-y-2">{jaipurYatra.trains.map((item) => <li key={item}>• {item}</li>)}</ul>
-          </section>
-          <section>
-            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Stay, Costs, and Important Notes</h3>
-            <ul className="space-y-2">{jaipurYatra.expenses.map((item) => <li key={item}>• {item}</li>)}</ul>
-          </section>
-          <section>
-            <h3 className="mb-3 text-lg font-semibold text-[#1E3A8A]">Registration Guidelines</h3>
-            <ul className="space-y-2">{jaipurYatra.guidelines.map((item) => <li key={item}>• {item}</li>)}</ul>
-            <p className="mt-4 font-semibold text-[#1E3A8A]">Contact: Raunak prabhu, +91 79721 85705</p>
-          </section>
-        </div>
-        <div className="mt-8 text-center">
-          <button onClick={() => navigate("/register/jaipur")} className="rounded-md bg-[#F59E0B] px-6 py-3 font-semibold text-white shadow-md transition hover:bg-[#D97706]">
-            Register for Jaipur Yatra
-          </button>
-        </div>
-      </section>
       <h1 className="page-title !text-left text-4xl !font-normal text-[#1E3A8A] mt-10 mb-10">
         Previous Yatra
       </h1>
