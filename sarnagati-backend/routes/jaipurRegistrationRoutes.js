@@ -4,7 +4,7 @@ const calculateJaipurAmounts = require("../utils/jaipurPricing");
 const upload = require("../middlewares/uploadMiddleware");
 
 const router = express.Router();
-const ADMIN_PASSWORD = process.env.REGISTRATION_ACCESS_PASSWORD || "Sharanagati@2026";
+const ADMIN_PASSWORD = process.env.REGISTRATION_ACCESS_PASSWORD || "Prabhupada@1008";
 
 const normalizeMobile = (mobile) => String(mobile || "").trim();
 const requireJaipurAdmin = (req, res, next) => {
