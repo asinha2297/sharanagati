@@ -128,9 +128,22 @@ const Yatras = () => {
       "10 Dec: Depart Jaipur by train. Arrival in Kolkata is expected on 11 Dec.",
     ],
     trains: [
-      "Outbound, Thu 03 Dec: First preference Ananya Express 12315, Kolkata 13:10 to Jaipur 15:55 next day (26h 45m). Alternatives: HWH BKN Express 22307, Howrah 23:30 to 23:35 next day; SDAH-ALL SF Express 12987, Sealdah 22:55 to 23:15 next day. Star-marked trains are preferred to match the yatra schedule.",
-      "Return, Thu 10 Dec: Pratap SF Express 12495, 11:35 to 13:05; ALL-SDAH SF Express 12988, 14:40 to 15:50 next day (25h 10m); JU HWH SF Express 12308, 04:40 to 04:55 next day (24h 15m).",
-      "Approximate one-way fares: Sleeper ₹700, 3E ₹1,680, 3A ₹1,780, 2A ₹2,530, 1A ₹4,250. Outbound booking opens 04 Oct 2026 at 8:00 AM IST; return booking opens 10 or 11 Oct depending on train.",
+      [
+        "First preference, Thu 03 Dec: Ananya Express (12315), Kolkata 13:10 to Jaipur 15:55 next day (26h 45m).",
+        "Alternative: HWH BKN Express (22307), Howrah 23:30 to Jaipur 23:35 next day.",
+        "Alternative: SDAH-ALL SF Express (12987), Sealdah 22:55 to Jaipur 23:15 next day.",
+        "Star-marked trains are preferred to match the yatra schedule.",
+      ],
+      [
+        "Thu 10 Dec: Pratap SF Express (12495), departure 11:35, arrival 13:05.",
+        "ALL-SDAH SF Express (12988), departure 14:40, arrival 15:50 next day (25h 10m).",
+        "JU HWH SF Express (12308), departure 04:40, arrival 04:55 next day (24h 15m).",
+      ],
+      [
+        "Approximate one-way fares: Sleeper ₹700; 3E ₹1,680; 3A ₹1,780; 2A ₹2,530; 1A ₹4,250.",
+        "Outbound booking opens 04 Oct 2026 at 8:00 AM IST.",
+        "Return booking opens 10 or 11 Oct, depending on the train.",
+      ],
     ],
     expenses: [
       "Hotel: AC double sharing ₹9,500 per person; AC triple sharing ₹8,800 per person.",
@@ -184,7 +197,9 @@ const Yatras = () => {
               {jaipurYatra.trains.map((item, index) => (
                 <div key={item} className="rounded-xl border border-[#D4AF37]/20 bg-[#FFF7E0] p-4 text-left">
                   <h4 className="mb-2 font-semibold text-[#1E3A8A]">{["Kolkata to Jaipur", "Jaipur to Kolkata", "Train Fares and Booking Dates"][index]}</h4>
-                  <p className="text-sm leading-relaxed">{item}</p>
+                  <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed">
+                    {item.map((detail) => <li key={detail}>{detail}</li>)}
+                  </ul>
                 </div>
               ))}
             </div>
