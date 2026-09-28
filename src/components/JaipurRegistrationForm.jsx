@@ -145,7 +145,7 @@ export default function JaipurRegistrationForm() {
           <div className="mt-8 rounded-lg bg-emerald-50 p-6 text-center text-emerald-900" role="status">
             <h2 className="text-xl font-semibold">Registration submitted</h2>
             <p className="mt-2">Your transfer details have been received. Payment remains pending until verified. Contact Rounak Prabhu at +91 79721 85705 for updates.</p>
-            <button type="button" onClick={() => navigate("/yatras")} className="mt-5 rounded-md bg-[#1E3A8A] px-5 py-3 font-semibold text-white">Return to Yatras</button>
+            <button type="button" onClick={() => { setSuccess(false); setViewMode("login"); setAuthMobile(""); }} className="mt-5 rounded-md bg-[#1E3A8A] px-5 py-3 font-semibold text-white">Return to mobile login page</button>
           </div>
         ) : viewMode === "login" ? (
           <form onSubmit={handleMobileLogin} className="mx-auto mt-8 max-w-lg space-y-5">
@@ -161,10 +161,10 @@ export default function JaipurRegistrationForm() {
             <p>Mobile: <strong>{existingRegistration?.mobile}</strong></p>
             <p>Lead devotee: <strong>{existingRegistration?.participants?.[0]?.name}</strong></p>
             <p>Payment type: <strong>{existingRegistration?.paymentType === "full" ? "Full" : "Advance"}</strong></p>
-            <p>Payment verification: <strong>{existingRegistration?.paymentVerificationStatus === "verified" ? "Verified" : existingRegistration?.paymentVerificationStatus === "rejected" ? "Needs attention" : "Awaiting verification"}</strong></p>
+            {/* <p>Payment verification: <strong>{existingRegistration?.paymentVerificationStatus === "verified" ? "Verified" : existingRegistration?.paymentVerificationStatus === "rejected" ? "Needs attention" : "Awaiting verification"}</strong></p> */}
             <p>Amount submitted: <strong>₹{Number(existingRegistration?.amountSubmitted || 0).toLocaleString("en-IN")}</strong></p>
-            <p>Estimated balance after verification: <strong>₹{Math.max(Number(existingRegistration?.totalAmount || 0) - Number(existingRegistration?.amountSubmitted || 0), 0).toLocaleString("en-IN")}</strong></p>
-            <button type="button" onClick={() => { setViewMode("login"); setExistingRegistration(null); setError(""); }} className="w-full rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-[#1E3A8A]">Check another mobile</button>
+            <p>Estimated balance remaining: <strong>₹{Math.max(Number(existingRegistration?.totalAmount || 0) - Number(existingRegistration?.amountSubmitted || 0), 0).toLocaleString("en-IN")}</strong></p>
+            <button type="button" onClick={() => { setViewMode("login"); setExistingRegistration(null); setError(""); }} className="w-full rounded-md border border-[#1E3A8A] px-5 py-3 font-semibold text-white">Check another mobile</button>
           </section>
         ) : (
           <form onSubmit={formStep === "details" ? handleContinue : handleSubmit} className="mt-8 space-y-7">
