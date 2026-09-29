@@ -2,7 +2,6 @@ const express = require("express");
 const JaipurRegistration = require("../models/JaipurRegistration");
 const calculateJaipurAmounts = require("../utils/jaipurPricing");
 const upload = require("../middlewares/uploadMiddleware");
-const { uploadImageToDrive } = require("../services/googleDriveService");
 
 const router = express.Router();
 const ADMIN_PASSWORD = process.env.REGISTRATION_ACCESS_PASSWORD || "Prabhupada@1008";
@@ -16,12 +15,8 @@ const requireJaipurAdmin = (req, res, next) => {
   return next();
 };
 
-router.post("/register", upload.single("paymentScreenshot"), async (req, res, next) => {
+router.post("/register", upload.single("paymentScreenshot"), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: "Payment screenshot is required." });
-    }
-
     const mobile = normalizeMobile(req.body?.mobile);
     const email = String(req.body?.email || "").trim().toLowerCase();
     let participants = req.body?.participants;
@@ -47,12 +42,7 @@ router.post("/register", upload.single("paymentScreenshot"), async (req, res, ne
       return res.status(400).json({ success: false, message: "Please check the Jaipur registration details." });
     }
 
-    const driveFile = await uploadImageToDrive({
-      buffer: req.file.buffer,
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-    });
-    const paymentScreenshot = driveFile.webViewLink || `https://drive.google.com/file/d/${driveFile.fileId}/view`;
+    const paymentScreenshot = req.file ? `/uploads/${req.file.filename}` : "";
 
     const registration = await JaipurRegistration.create({
       mobile,
@@ -66,9 +56,6 @@ router.post("/register", upload.single("paymentScreenshot"), async (req, res, ne
       paymentVerificationStatus: "awaiting_verification",
       paymentReference,
       paymentScreenshot,
-      paymentScreenshotDriveFileId: driveFile.fileId,
-      paymentScreenshotFileName: driveFile.fileName,
-      paymentScreenshotMimeType: driveFile.mimeType,
     });
 
     return res.status(201).json({
@@ -83,7 +70,8 @@ router.post("/register", upload.single("paymentScreenshot"), async (req, res, ne
     if (error?.code === 11000) {
       return res.status(409).json({ success: false, message: "This mobile number already has a Jaipur Yatra registration." });
     }
-    return next(error);
+    console.error("Jaipur registration save error:", error);
+    return res.status(500).json({ success: false, message: "Unable to save Jaipur registration." });
   }
 });
 
