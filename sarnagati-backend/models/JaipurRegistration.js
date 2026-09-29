@@ -36,6 +36,9 @@ const jaipurRegistrationSchema = new mongoose.Schema(
     paymentVerificationNote: { type: String, trim: true, default: "" },
     paymentReference: { type: String, default: "", trim: true },
     paymentScreenshot: String,
+    paymentScreenshotDriveFileId: String,
+    paymentScreenshotFileName: String,
+    paymentScreenshotMimeType: String,
   },
   { timestamps: true }
 );
