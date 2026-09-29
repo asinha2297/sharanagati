@@ -174,7 +174,7 @@ export default function JaipurRegistrationForm() {
             <h2 className="text-center text-xl font-semibold text-[#1E3A8A]">Continue with Mobile Number</h2>
             <p className="mx-auto w-fit rounded-full bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white">Registration: {registeredPersonsCount}</p>
             <label className="block font-medium text-slate-700" htmlFor="jaipurLoginMobile">Mobile number</label>
-            <p className="-mt-3 text-sm text-slate-600">Enter your 10-digit mobile number without spaces (for example, 9876543210). <span style={{ color: 'red', fontWeight: 'bold' }}> Don't </span> use Country Codes such as <b>+91</b>.</p>
+            <p className="-mt-3 text-sm text-slate-600">Enter your 10-digit mobile number without spaces (for example, 9876543201). <span style={{ color: 'red', fontWeight: 'bold' }}> Don't </span> use Country Codes such as <b>+91</b>.</p>
             <input id="jaipurLoginMobile" className={inputClass} type="tel" inputMode="tel" autoComplete="tel" required value={authMobile} onChange={(event) => setAuthMobile(event.target.value)} placeholder="Enter your mobile number" />
             <p className="-mt-3 text-sm text-slate-600">Kindly use only this number for future login purposes.</p>
             {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">{error}</p>}
