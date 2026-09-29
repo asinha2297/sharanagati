@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LuCopy } from "react-icons/lu";
 import sbiQrImage from "../assets/sbiQR.jpeg";
@@ -46,6 +46,28 @@ export default function JaipurRegistrationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [copyStatus, setCopyStatus] = useState("");
+  const [registeredPersonsCount, setRegisteredPersonsCount] = useState(0);
+
+  useEffect(() => {
+    let isActive = true;
+
+    const loadRegistrationCount = async () => {
+      try {
+        const response = await fetch(apiUrl("/api/jaipur-registration/summary"));
+        const data = await response.json();
+        if (isActive && response.ok && data?.success) {
+          setRegisteredPersonsCount(Number(data.totalRegisteredPersons) || 0);
+        }
+      } catch (error) {
+        console.error("Unable to fetch Jaipur registration count:", error);
+      }
+    };
+
+    loadRegistrationCount();
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   const deposit = participants.reduce((sum, person) => sum + participantDeposit(person, roomType), 0);
   const fullAmount = participants.reduce((sum, person) => sum + participantTotal(person, roomType), 0);
@@ -150,8 +172,11 @@ export default function JaipurRegistrationForm() {
         ) : viewMode === "login" ? (
           <form onSubmit={handleMobileLogin} className="mx-auto mt-8 max-w-lg space-y-5">
             <h2 className="text-center text-xl font-semibold text-[#1E3A8A]">Continue with Mobile Number</h2>
+            <p className="mx-auto w-fit rounded-full bg-[#1E3A8A] px-4 py-2 text-sm font-semibold text-white">Registration: {registeredPersonsCount}</p>
             <label className="block font-medium text-slate-700" htmlFor="jaipurLoginMobile">Mobile number</label>
+            <p className="-mt-3 text-sm text-slate-600">Enter your 10-digit mobile number without spaces (for example, 9876543210). <span style={{ color: 'red', fontWeight: 'bold' }}> Don't </span> use Country Codes such as <b>+91</b>.</p>
             <input id="jaipurLoginMobile" className={inputClass} type="tel" inputMode="tel" autoComplete="tel" required value={authMobile} onChange={(event) => setAuthMobile(event.target.value)} placeholder="Enter your mobile number" />
+            <p className="-mt-3 text-sm text-slate-600">Kindly use only this number for future login purposes.</p>
             {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">{error}</p>}
             <button type="submit" disabled={isSubmitting} className="w-full rounded-md bg-[#1E3A8A] px-6 py-3 font-semibold text-white disabled:opacity-60">{isSubmitting ? "Checking..." : "Continue"}</button>
           </form>

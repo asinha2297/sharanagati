@@ -134,7 +134,7 @@ export default function JaipurPaymentReview() {
                         ))}
                       </div>
                       {registration.paymentScreenshot && (
-                        <a className="mt-3 inline-block font-semibold text-[#1E3A8A] underline" href={`${API_URL}${registration.paymentScreenshot}`} target="_blank" rel="noreferrer">View payment screenshot</a>
+                        <a className="mt-3 inline-block font-semibold text-[#1E3A8A] underline" href={registration.paymentScreenshot.startsWith("http") ? registration.paymentScreenshot : `${API_URL}${registration.paymentScreenshot}`} target="_blank" rel="noreferrer">View payment screenshot</a>
                       )}
                       {registration.paymentVerificationNote && <p className="mt-3 text-sm text-slate-600">Review note: {registration.paymentVerificationNote}</p>}
 
