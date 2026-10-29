@@ -78,7 +78,6 @@ const initialForm = {
   email: "",
   phone: "",
   focus: "",
-  // transactionId: "",
 };
 
 const OccultScience = () => {
@@ -90,7 +89,6 @@ const OccultScience = () => {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [bookingStep, setBookingStep] = useState("details");
   const [form, setForm] = useState(initialForm);
-  // const [paymentAttachment, setPaymentAttachment] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -133,19 +131,10 @@ const OccultScience = () => {
       setIsSubmitting(true);
       setSubmitError("");
 
-      const payload = new FormData();
-      payload.append("session", form.session);
-      payload.append("format", form.format);
-      payload.append("name", form.name);
-      payload.append("email", form.email);
-      payload.append("phone", form.phone);
-      payload.append("focus", form.focus);
-      // payload.append("transactionId", form.transactionId);
-      // payload.append("paymentAttachment", paymentAttachment);
-
       const response = await fetch(apiUrl("/api/occult/bookings"), {
         method: "POST",
-        body: payload,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
       });
 
       const data = await response.json().catch(() => ({}));
@@ -157,7 +146,6 @@ const OccultScience = () => {
       setSubmitted(true);
       setBookingStep("details");
       setForm(initialForm);
-      // setPaymentAttachment(null);
     } catch (error) {
       setSubmitError(error.message || "Unable to submit booking request");
     } finally {
@@ -534,8 +522,7 @@ const OccultScience = () => {
                   <div className="md:col-span-2 rounded-2xl border border-[#D4AF37]/35 bg-[#FEF3C7] p-4 sm:p-5">
                     <h3 className="text-lg font-semibold text-[#1E3A8A]">Payment Details</h3>
                     <p className="mt-2 text-sm text-slate-700">
-                      Please scan the QR Code given below to complete payment, then provide your
-                      transaction ID and payment attachment.
+                      Please scan the QR code below to complete your payment.
                     </p>
                     <p className="mt-3 text-sm font-semibold text-[#1E3A8A]">
                       Please note that the <b>energy exchange is ₹2,500 for up to 5 questions</b>, with an additional <b>₹300 for each question beyond the first 5</b>.
@@ -553,38 +540,6 @@ const OccultScience = () => {
                     </div>
                   </div>
                 ) : null}
-
-                {/*
-                {bookingStep === "payment" ? (
-                  <>
-                    <label className="text-sm font-semibold text-[#1E3A8A] md:col-span-2">
-                      Transaction ID
-                      <input
-                        className="mt-2 w-full rounded-xl border border-[#1E3A8A]/20 bg-white px-4 py-3 text-sm text-slate-700 outline-none ring-[#1E3A8A]/30 transition focus:ring"
-                        value={form.transactionId}
-                        onChange={(event) =>
-                          setForm((prev) => ({ ...prev, transactionId: event.target.value }))
-                        }
-                        required
-                      />
-                    </label>
-
-                    <label className="cursor-pointer text-sm font-semibold text-[#1E3A8A] md:col-span-2">
-                      Payment Attachment (Screenshot)
-                      <input
-                        className="mt-2 w-full cursor-pointer rounded-xl border border-[#1E3A8A]/20 bg-white px-4 py-3 text-sm text-slate-700 file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-[#1E3A8A] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
-                        type="file"
-                        accept="image/*"
-                        onChange={(event) => {
-                          const file = event.target.files?.[0] || null;
-                          setPaymentAttachment(file);
-                        }}
-                        required
-                      />
-                    </label>
-                  </>
-                ) : null}
-                */}
 
                 {submitError ? (
                   <div className="md:col-span-2 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
