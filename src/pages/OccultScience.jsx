@@ -10,7 +10,7 @@ import {
 } from "react-icons/lu";
 import krsnaImage from "../assets/Krsna.jpg";
 import tamannaImage from "../assets/TamannaMtjEdited.png";
-import sharanagatiQrCode from "../assets/Sharanagati QRCode.jpeg";
+import sharanagatiQrCode from "../assets/TamannaUPI.jpeg";
 import Testimonials from "../components/Testimonials";
 
 const ROBOTS_META_NAME = "robots";
@@ -344,7 +344,7 @@ const OccultScience = () => {
               <br/>sacred space for insight, healing, and deeper self-discovery.
             </h3>
             <p className="mt-4 text-slate-600">
-              I’m <b>Tamanna Bhowmik</b>, an Akashic Reader and Healer, trained in <b>Akashic Level 1 (Reading)</b> and <b>Akashic Level 2 (Healing)</b>. I am currently continuing my spiritual journey through <b>Krishna Akashik Oracles</b>, further deepening my understanding and practice of the Akashic field.
+              I’m <b>Tamanna Bhowmik</b>, an Akashic Reader and Healer, trained in <b>Akashic Level 1 (Reading)</b> and <b>Akashic Level 2 (Healing)</b>. I am continuing my spiritual journey by completing <b>Krishna Akashik Oracles</b>, further deepening my understanding and practice of the Akashic field.
             </p>
             <p className="mt-4 text-slate-600">
               I believe that every individual carries a unique journey—one shaped by experiences, emotions, questions, relationships, and patterns. At times, we may simply need a safe and compassionate space to pause, reflect, gain perspective, and reconnect with ourselves.
